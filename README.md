@@ -6,6 +6,6 @@ Environnement : Système d’exploitation (Windows version), environnement de d�
 Pour construire et contrôler le robot, nous allons utiliser un kit Lego Mindstorm EV3. Le code de contrôle pour le robot va être codé en Java avec l’API leJOS (https://lejos.sourceforge.io/ev3.php)
 
 Pour créer une map à partir des données, on va utiliser matplotlib ¬¬¬une librairie de Python pour analyser du data et générer des maps à partir de cette data.
-pour le code du mapping voir : https://github.com/RodriTP/MapleBot-Mapping 
+Pour voir le code du mapping : https://github.com/RodriTP/MapleBot-Mapping 
 
 Pour la génération de trajectoire, on pourrait le faire nous même (les algorithmes) en s’inspirant ou utilisant des librairies déjà existantes.
