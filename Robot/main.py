@@ -14,7 +14,12 @@ from pybricks.media.ev3dev import SoundFile, ImageFile
 
 # Create your objects here.
 ev3 = EV3Brick()
-
+obstacle_sensor = UltrasonicSensor(Port.S4)
+sensor = InfraredSensor(Port.S3)
 
 # Write your program here.
 ev3.speaker.beep()
+
+while True :
+    print(sensor.distance())
+
