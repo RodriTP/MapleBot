@@ -1,9 +1,17 @@
 #!/usr/bin/env pybricks-micropython
 from pybricks.hubs import EV3Brick
+from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
+                                 InfraredSensor, UltrasonicSensor, GyroSensor)
+from pybricks.parameters import Port, Stop, Direction, Button, Color
+from pybricks.tools import wait, StopWatch, DataLog
+from pybricks.robotics import DriveBase
+from pybricks.media.ev3dev import SoundFile, ImageFile
 from pybricks.messaging import BluetoothMailboxServer, TextMailbox
 
 ev3 = EV3Brick()
-ev3.speaker.beep()
+obstacle_sensor = UltrasonicSensor(Port.S4)
+#ev3.speaker.beep()
+
 
 server = BluetoothMailboxServer()
 mbox = TextMailbox('greeting', server)
@@ -19,3 +27,7 @@ mbox.wait()
 print(mbox.read())
 mbox.send('hello to you!')
 
+while True :
+    mbox.send(obstacle_sensor.distance())
+    mbox.wait()
+    mbox.read()

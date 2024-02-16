@@ -28,6 +28,15 @@ print("connected!")
 
 # In this program, the client sends the first message and then waits for the
 # server to reply.
+#Envoie de message
 mbox.send("hello!")
 mbox.wait()
+#exemple de truc à recevoir
 print(mbox.read())
+
+x=0
+while True:
+    mbox.wait()
+    print(mbox.read())
+    mbox.send(x)
+    x+=1
