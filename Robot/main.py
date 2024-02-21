@@ -26,10 +26,11 @@ d._init_()
 #20.6  2 rotations
 #10    1 rotation
 #40.4  10 rotations
+d.turn(90, 100)
+d.turn(-180, 100)
 #while True:
+    #print(d._kGyro.angle())
     #d._kLeftMotor.run(200)
     #d._kRightMotor.run(-200)
     #if d._kLeftMotor.angle() >= 360*float(9.745):
     #    d.stop()
-d.turn(180, 100)
-    

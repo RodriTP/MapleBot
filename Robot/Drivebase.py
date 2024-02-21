@@ -28,8 +28,8 @@ class Drivebase :
         self._kGyro.reset_angle(float(angle))
     
     def stop(self):
-        self._kLeftMotor.brake()
-        self._kRightMotor.brake()
+        self._kLeftMotor.run(0)
+        self._kRightMotor.run(0)
     
     def setSpeed(self, speed):
         self._kLeftMotor.run(speed)
@@ -44,16 +44,27 @@ class Drivebase :
     def getAngle(self):
         angle = self._kGyro.angle()
         return angle
-    
+
     def turn(self, angle, speed):
-        if(angle - self.getAngle()> 0):
-            rightSpeed = float(speed)
-            leftSpeed = float(speed)*-1
-        else:
+        targetAngle = self.getAngle()+angle     #
+        print(float(targetAngle))
+        if(angle > 0):
             rightSpeed = float(speed)*-1
             leftSpeed = float(speed)
+        else:
+            rightSpeed = float(speed)
+            leftSpeed = float(speed)*-1
 
-        while self.getAngle() != float(angle):
-            print(self.getAngle())
-            self._kLeftMotor.run(leftSpeed)
-            self._kRightMotor.run(rightSpeed)
+        self._kLeftMotor.run(leftSpeed)
+        self._kRightMotor.run(rightSpeed)
+        
+        while True:
+            #peux faire mieux pour plus de précision mais flemme/condition 
+            #bcp plus complexe faut vérifier sens de rotation
+            if(int(self.getAngle()) == int(targetAngle)): 
+                self.stop()
+                break
+
+        #while self.getAngle() != targetAngle:
+
+        
