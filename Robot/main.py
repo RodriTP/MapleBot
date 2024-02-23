@@ -7,14 +7,17 @@ from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 from pybricks.messaging import BluetoothMailboxServer, TextMailbox
+from drivebase import Drivebase
 
 ev3 = EV3Brick()
-obstacle_sensor = UltrasonicSensor(Port.S4)
-#ev3.speaker.beep()
-
 
 server = BluetoothMailboxServer()
 mbox = TextMailbox('greeting', server)
+
+d = Drivebase()
+d._init_()
+# Write your program here.
+#ev3.speaker.beep()
 
 # The server must be started before the client!
 print('waiting for connection...')
@@ -27,7 +30,9 @@ mbox.wait()
 print(mbox.read())
 mbox.send('hello to you!')
 
-while True :
-    mbox.send(obstacle_sensor.distance())
-    mbox.wait()
-    mbox.read()
+#d.setSpeed(200)
+#20.6  2 rotations
+#10    1 rotation
+#40.4  10 rotations
+d.turn(90, 100)
+d.turn(-180, 100)
