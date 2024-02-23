@@ -16,12 +16,10 @@ from sensors import Sensors
 
 # Create your objects here.
 ev3 = EV3Brick()
-obstacle_sensor = UltrasonicSensor(Port.S4)
-sensor = InfraredSensor(Port.S3)
+s = Sensors()
 d = Drivebase()
 d._init_()
 # Write your program here.
-#ev3.speaker.beep()
 
 #d.setSpeed(200)
 #20.6  2 rotations
@@ -29,9 +27,10 @@ d._init_()
 #40.4  10 rotations
 #d.turn(90, 100)
 #d.turn(-180, 100)
-x = float(obstacle_sensor.distance())
+d.moveAuto(s)
 while True:
-    print(float(x))
+    s.update()
+    
     #print(d._kGyro.angle())
     #d._kLeftMotor.run(200)
     #d._kRightMotor.run(-200)
