@@ -8,6 +8,7 @@ from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 from pybricks.messaging import BluetoothMailboxServer, TextMailbox
 from drivebase import Drivebase
+from sensors import Sensors
 
 ev3 = EV3Brick()
 
@@ -32,7 +33,15 @@ mbox.send('hello to you!')
 
 #d.setSpeed(200)
 #20.6  2 rotations
-#10    1 rotation
+#9.745    1 rotation
 #40.4  10 rotations
-d.turn(90, 100)
-d.turn(-180, 100)
+#d.turn(90, 100)
+#d.turn(-180, 100)
+x = float(obstacle_sensor.distance())
+while True:
+    print(float(x))
+    #print(d._kGyro.angle())
+    #d._kLeftMotor.run(200)
+    #d._kRightMotor.run(-200)
+    #if d._kLeftMotor.angle() >= 360*float(9.745):
+    #    d.stop()
