@@ -47,8 +47,7 @@ class Drivebase :
         return float(self._kLeftMotor.angle()*self._kWheelCirconference)
     
     def getAngle(self):
-        angle = self._kGyro.angle()
-        return angle
+        return float(self._kGyro.angle())
 
     def turn(self, angle, speed):
         targetAngle = self.getAngle()+angle     #

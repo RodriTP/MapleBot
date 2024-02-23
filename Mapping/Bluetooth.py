@@ -34,9 +34,7 @@ mbox.wait()
 #exemple de truc à recevoir
 print(mbox.read())
 
-x=0
 while True:
     mbox.wait()
     print(mbox.read())
-    mbox.send(x)
-    x+=1
+    mbox.send('0')
