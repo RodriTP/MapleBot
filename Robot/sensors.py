@@ -6,7 +6,7 @@ from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 
-class sensors :
+class Sensors :
     _frontInfrared = InfraredSensor(Port.S2)
     _leftUltrasonic = UltrasonicSensor(Port.S1)
     _rightUltrasonic = UltrasonicSensor(Port.S3)

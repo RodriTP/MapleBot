@@ -8,6 +8,7 @@ from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 
 from drivebase import Drivebase
+from sensors import Sensors
 
 # This program requires LEGO EV3 MicroPython v2.0 or higher.
 # Click "Open user guide" on the EV3 extension tab for more information.
@@ -24,11 +25,13 @@ d._init_()
 
 #d.setSpeed(200)
 #20.6  2 rotations
-#10    1 rotation
+#9.745    1 rotation
 #40.4  10 rotations
-d.turn(90, 100)
-d.turn(-180, 100)
-#while True:
+#d.turn(90, 100)
+#d.turn(-180, 100)
+x = float(obstacle_sensor.distance())
+while True:
+    print(float(x))
     #print(d._kGyro.angle())
     #d._kLeftMotor.run(200)
     #d._kRightMotor.run(-200)
