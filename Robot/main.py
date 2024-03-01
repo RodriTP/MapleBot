@@ -9,27 +9,23 @@ from pybricks.media.ev3dev import SoundFile, ImageFile
 from pybricks.messaging import BluetoothMailboxServer, TextMailbox
 from drivebase import Drivebase
 from sensors import Sensors
+#from bluetooth import Bluetooth
 
 ev3 = EV3Brick()
+s = Sensors()
 
-server = BluetoothMailboxServer()
-mbox = TextMailbox('greeting', server)
+#b = Bluetooth()
 
 d = Drivebase()
 d._init_()
+
+#TODO : TESTER GYRO
+#       BLUETOOTH CONNECTION
+#       ligne droite
+#       Infrarouge code rodrigo
+      
 # Write your program here.
 #ev3.speaker.beep()
-
-# The server must be started before the client!
-print('waiting for connection...')
-server.wait_for_connection()
-print('connected!')
-
-# In this program, the server waits for the client to send the first message
-# and then sends a reply.
-mbox.wait()
-print(mbox.read())
-mbox.send('hello to you!')
 
 #d.setSpeed(200)
 #20.6  2 rotations
@@ -37,9 +33,20 @@ mbox.send('hello to you!')
 #40.4  10 rotations
 #d.turn(90, 100)
 #d.turn(-180, 100)
+d._kLeftMotor.run(-400)
+d._kRightMotor.run(-400)
+#d._kLeftMotor.runAngle(-200)
+#d._kRightMotor.run(-200)
 
+#self.setSpeed(-200)
 while True:
-    b.sendSensorData()
+    print(s.getFrontDistance())
+    if(s.getFrontDistance()<35):
+        d.stopMotors()
+#while True:
+#    d.turn(90, 100)
+#    d.turn(-90, 100)
+    #b.sendSensorData()
     #print(d._kGyro.angle())
     #d._kLeftMotor.run(200)
     #d._kRightMotor.run(-200)

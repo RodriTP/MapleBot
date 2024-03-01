@@ -7,16 +7,14 @@ from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 
 class Sensors :
-    _frontInfrared = InfraredSensor(Port.S4)        #Left infrared, à changer de place, maybe??
-    _leftUltrasonic = UltrasonicSensor(Port.S3)     #Front ultrasonic, à changer de place, maybe??
-    _rightUltrasonic = UltrasonicSensor(Port.S1)    #Right ultrasonic
+    _frontInfrared = InfraredSensor(Port.S3)        #Left infrared, à changer de place, maybe??
+    _leftUltrasonic = UltrasonicSensor(Port.S1)     #Front ultrasonic, à changer de place, maybe??
+    _rightUltrasonic = UltrasonicSensor(Port.S4)    #Right ultrasonic
 
     def getLeftDistance(self):
-        return self._leftUltrasonic.distance() #mm  
-    
+        return self._leftUltrasonic.distance(True) #mm      
     def getRightDistance(self):
-        return self._rightUltrasonic.distance() #mm
-    
+        return self._rightUltrasonic.distance(True) #mm
     def getFrontDistance(self):
         return self._frontInfrared.distance() #retourne une val entre 0 et 100
     

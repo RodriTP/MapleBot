@@ -13,6 +13,9 @@ class Drivebase :
     _kRightMotor = Motor(Port.A)
     _kGyro = GyroSensor(Port.S2, Direction.COUNTERCLOCKWISE)
     _kWheelCirconference = float(3.14159*1.5*2)
+    _hasFinishedAction = False
+    VALUE_FROM_OBSTACLE = 50.0
+
     
     def _init_(self):
         self.setEncoders(0)
@@ -48,10 +51,13 @@ class Drivebase :
     
     def getAngle(self):
         return float(self._kGyro.angle())
-
+    
+    def getAngleSpeed(self):
+        return float(self._kGyro.speed())
+        
     def turn(self, angle, speed):
         targetAngle = self.getAngle()+angle     #
-        print(float(targetAngle))
+        
         if(angle > 0):
             rightSpeed = float(speed)*-1
             leftSpeed = float(speed)
@@ -72,14 +78,19 @@ class Drivebase :
         #while self.getAngle() != targetAngle:
 
     def avanceUntilObstacle(self, sensor):
-        self.setSpeed(200)
+        self._hasFinishedAction = False
+        #self._kLeftMotor.run(-200)
+        #self._kRightMotor.run(-200)
+        #self.setSpeed(-200)
         while True:
-            if(sensor.getFrontDistance()<25):
+            if(sensor.getFrontValue()<self.VALUE_FROM_OBSTACLE):
                 self.stopMotors()
+                self._hasFinishedAction = True
+
 
     def avanceDistance(self, distance):
         self.setEncoders(0)
-        self.setSpeed(200)
+        self.setSpeed(-200)
         while True:
             if self._kLeftMotor.angle() >= (float(distance)*360.0)/float(9.745):#9.745 en cm
                 self.stop()
