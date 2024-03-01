@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import linregress
 import array as arr 
+import math
 
 #Sert à représenter les données qui seront reçus par le robot (À ENLEVER APRÈS)
 data = np.array([[1.1938581609876833,0.7421619548480648], 
@@ -190,6 +191,119 @@ data = np.array([[1.1938581609876833,0.7421619548480648],
 [21.948980147931373,1.7687441801726658], 
 [20.460327650825924,0.8549061551666589], 
 [20.390032418133153,1.7687441801726658]])
+
+espacement = 0.1
+
+
+def trouverMaxX(data):  #Pour trouver la valeur maximale en X
+    maxX = data[0,0]
+    for point in range(len(data)):
+        if maxX < data[point,0]:
+            maxX = data[point,0]
+        
+     
+    return maxX
+
+def trouverMinX(data):  #Pour trouver la valeur minimale en X
+    minX = data[0,0]
+    for point in range(len(data)):
+        if minX > data[point,0]:
+            minX = data[point,0]
+        
+     
+    return minX
+
+def trouverMaxY(data):  #Pour trouver la valeur maximale en Y
+    maxY = data[0,1]
+    for point in range(len(data)):
+        if maxY < data[point,1]:
+            maxY = data[point,1]
+        
+     
+    return maxY
+
+def trouverMinY(data):  #Pour trouver la valeur minimale en Y
+    minY = data[0,1]
+    for point in range(len(data)):
+        if minY > data[point,1]:
+            minY = data[point,1]
+        
+     
+    return minY
+
+
+#-- Les méthodes d'écart types risques d'être inutiles --
+
+def ecartTypeX(data):  #Écart type de la coordonée X de chaque point
+    sommeX = 0
+    for point in range(len(data)):
+        sommeX += data[point, 0]
+    moyenneX = sommeX/len(data)
+
+    sommeEcartX = 0
+    for point in range(len(data)):
+        sommeEcartX += pow((data[point, 0]-moyenneX), 2)
+    
+    return (math.sqrt(sommeEcartX/len(data)))
+
+def ecartTypeY(data):  #Écart type de la coordonée Y de chaque point
+    sommeY = 0
+    for point in range(len(data)):
+        sommeY += data[point, 1]
+    moyenneY = sommeY/len(data)
+
+    sommeEcartY = 0
+    for point in range(len(data)):
+        sommeEcartY += pow((data[point, 1]-moyenneY), 2)
+    
+    return (math.sqrt(sommeEcartY/len(data)))
+
+
+
+class grilleSalle:
+        mur = False
+        dataGrille = []
+        quantite = 0
+        limiteSuppX = 0
+        limiteInfX = 0
+        limiteSuppY = trouverMaxY(data)
+        limiteInfY = trouverMaxY(data)
+
+def creerGrille(data):
+    grille = [[grilleSalle for i in range(int((trouverMaxX(data)-trouverMinX(data))/espacement)+1)] for j in range(int((trouverMaxY(data)-trouverMinY(data))/espacement)+1)]
+    pointeurLimSuppX = 0
+    pointeurLimInfX = 0
+    
+    for i in range(len(grille[0])):
+        pointeurLimSuppY = trouverMaxY(data)
+        pointeurLimInfY = trouverMaxY(data)
+        pointeurLimInfX= pointeurLimSuppX
+
+        if (trouverMaxX(data) - pointeurLimSuppX) < espacement:
+            pointeurLimSuppX = trouverMaxX(data)
+        else: 
+            pointeurLimSuppX += espacement
+
+        for j in range (len(grille)):
+            pointeurLimSuppY = pointeurLimInfY
+            if abs(trouverMinY(data) - pointeurLimInfX) < espacement:
+                pointeurLimSuppY = 0
+            else: 
+                pointeurLimInfY -= espacement
+            
+
+            grille[i][j].limiteSuppX = pointeurLimSuppX
+            grille[i][j].limiteInfX = pointeurLimInfX
+            grille[i][j].limiteSuppY = pointeurLimSuppY
+            grille[i][j].limiteInfY = pointeurLimInfY
+            print("Point (", i, ", ", j, ") : LimiteSuppX = ", grille[i][j].limiteSuppX, "; LimiteInfX = ", grille[i][j].limiteInfX, "; LimiteSuppY = ", grille[i][j].limiteSuppY, "; LimiteInfY = ",grille[i][j].limiteInfY)
+    
+
+            
+
+
+creerGrille(data)
+
 
 
 plt.scatter(data[:,0], data[:,1]) # Ajoute le nuage de point, c-à-d les données que le robot à collecter, au plot 
