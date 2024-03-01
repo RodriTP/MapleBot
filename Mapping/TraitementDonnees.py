@@ -270,11 +270,11 @@ class grilleSalle:
         limiteInfY = trouverMaxY(data)
 
 def creerGrille(data):
-    grille = [[grilleSalle for i in range(int((trouverMaxX(data)-trouverMinX(data))/espacement)+1)] for j in range(int((trouverMaxY(data)-trouverMinY(data))/espacement)+1)]
-    pointeurLimSuppX = 0
-    pointeurLimInfX = 0
+    grille = [[grilleSalle for i in range(int((trouverMaxY(data)-trouverMinY(data))/espacement)+1)] for j in range(int((trouverMaxX(data)-trouverMinX(data))/espacement)+1)]
+    pointeurLimSuppX = trouverMinX(data)
+    pointeurLimInfX = trouverMinX(data)
     
-    for i in range(len(grille[0])):
+    for i in range(len(grille)):
         pointeurLimSuppY = trouverMaxY(data)
         pointeurLimInfY = trouverMaxY(data)
         pointeurLimInfX= pointeurLimSuppX
@@ -284,7 +284,7 @@ def creerGrille(data):
         else: 
             pointeurLimSuppX += espacement
 
-        for j in range (len(grille)):
+        for j in range (len(grille[0])):
             pointeurLimSuppY = pointeurLimInfY
             if abs(trouverMinY(data) - pointeurLimInfX) < espacement:
                 pointeurLimSuppY = 0
