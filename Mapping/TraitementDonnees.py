@@ -1351,8 +1351,8 @@ def creerGrille(data): #métode pour creer un grillage et séparer les données
 
         for j in range (len(grille[0])): # on parcours les lignes -
             pointeurLimSuppY = pointeurLimInfY #la limite suppérieure de la nouvelle case est égale à la limite inférieure de l'acienne case
-            if abs(trouverMinY(data) - pointeurLimInfX) < espacement:
-                pointeurLimSuppY = trouverMinY(data)
+            if (pointeurLimInfY - trouverMinY(data)) < espacement:
+                pointeurLimInfY = trouverMinY(data)
             else: 
                 pointeurLimInfY -= espacement
             
@@ -1372,6 +1372,10 @@ creerGrille(data)
 
 
 plt.scatter(data[:,0], data[:,1]) # Ajoute le nuage de point, c-à-d les données que le robot à collecter, au plot 
+print("max X: ", trouverMaxX(data))
+print("min X: ", trouverMinX(data))
+print("max Y: ", trouverMaxY(data))
+print("min Y: ", trouverMinY(data))
 
 stats = linregress(data[:,0], data[:,1]) # Régression linéaire
 f = stats.slope * data[:,0] + stats.intercept # Droite
