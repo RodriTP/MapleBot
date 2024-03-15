@@ -24,7 +24,6 @@ class Drivebase :
     
     def _init_(self):
         self.setEncoders(0)
-        self.setGyro(0)
         _pos = RobotPose(0,0,0)
 
     def _str_(self):
@@ -37,9 +36,6 @@ class Drivebase :
     def setEncoders(self, angle):
         self._kLeftMotor.reset_angle(float(angle))
         self._kRightMotor.reset_angle(float(angle))
-
-    def setGyro(self, angle):
-        self._kGyro.reset_angle(float(angle))
     
     def stopMotors(self):
         self._kLeftMotor.run(0)
@@ -91,7 +87,7 @@ class Drivebase :
     def avanceDistance(self, distance):
         self._hasFinishedAction = False
         self.setEncoders(0)
-        self.setSpeed(200)
+        self.setSpeed(-200)
         while True:
             if self._kLeftMotor.angle() >= (float(distance)*360.0)/float(9.745):#9.745 en cm
                 self.stopMotors()

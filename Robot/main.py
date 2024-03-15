@@ -6,29 +6,24 @@ from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
+from pybricks.messaging import BluetoothMailboxServer, TextMailbox
 import math
-from drivebase import Drivebase
+#from drivebase import Drivebase
 from sensors import Sensors
+from bluetooth import Bluetooth
 
-# This program requires LEGO EV3 MicroPython v2.0 or higher.
-# Click "Open user guide" on the EV3 extension tab for more information.
-
-
-# Create your objects here.
 ev3 = EV3Brick()
-d = Drivebase()
 s = Sensors()
+
+
+#d = Drivebase()
 #d._init_()
-#x : float = 0
-#y : float = 0
-#dist est le rapport de déplacement sur le temps utilisé pour le faire
-#dist : float = 0
-
-#pos = [x,y]
-
+      
+b = Bluetooth()
 # Write your program here.
 #ev3.speaker.beep()
-
+b.sendTestArray()
+print("send")
 #d.setSpeed(200)
 #20.6  2 rotations
 #9.745 rotations = 102.616 cm   1 rotation
