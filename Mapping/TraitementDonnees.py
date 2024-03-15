@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.stats import linregress
+#from scipy.stats import linregress
 
 #Sert à représenter les données qui seront reçus par le robot (À ENLEVER APRÈS)
 data = []

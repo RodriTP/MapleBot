@@ -65,5 +65,3 @@ class Bluetooth:
 
     def separateData(self):
         return self.dataRecieved[0].split(",")
-
-        
