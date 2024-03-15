@@ -8,7 +8,7 @@ from pybricks.media.ev3dev import SoundFile, ImageFile
 #import adafruit_bno055, board
 from pybricks.hubs import EV3Brick
 from pybricks.iodevices import I2CDevice
-from bno055 import *
+#from bno055 import *
 
 #!/usr/bin/env pybricks-micropython
 from pybricks.parameters import Port, Color, Button, Direction, Stop
@@ -68,7 +68,11 @@ class Sensors :
     _isObstacleLeft = False
     _gyroOffset = None
     #sys, gyro,accel, mag
+    def __init__(self) :
+        self.degrés()
+    
     def degrés(self):
+    
         line = []
         gay = True
         while gay == True: 
@@ -77,7 +81,7 @@ class Sensors :
                     line.append(chr(c))
                 if chr(c) == '\n':
                     strline=''.join(str(v) for v in line) 
-                    #print(float(strline))
+                    #print(strline)
                     line = []
                     gay = False
                     if self._gyroOffset == None:
