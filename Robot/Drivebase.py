@@ -12,14 +12,12 @@ from pybricks.robotics import DriveBase
 class Drivebase :
     _kLeftMotor = Motor(Port.D)
     _kRightMotor = Motor(Port.A)
-    #_kGyro = GyroSensor(Port.S2, Direction.COUNTERCLOCKWISE)
     _kWheelCirconference = float(3.14159*1.5*2)
     VALUE_FROM_OBSTACLE = 50.0
     _hasFinishedAction = False
     
     def _init_(self):
         self.setEncoders(0)
-        self.setGyro(0)
 
     def _str_(self):
         self._kLeftMotor.angle()
@@ -31,9 +29,6 @@ class Drivebase :
     def setEncoders(self, angle):
         self._kLeftMotor.reset_angle(float(angle))
         self._kRightMotor.reset_angle(float(angle))
-
-    def setGyro(self, angle):
-        self._kGyro.reset_angle(float(angle))
     
     def stopMotors(self):
         self._kLeftMotor.run(0)

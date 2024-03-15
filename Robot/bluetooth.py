@@ -1,10 +1,9 @@
 #!/usr/bin/env pybricks-micropython
 from pybricks.messaging import BluetoothMailboxServer, Mailbox
 from sensors import Sensors
+from drivebase import Drivebase
 
 class Bluetooth :
-    s = Sensors()
-
     server = BluetoothMailboxServer()
     mbox = Mailbox('greeting', server)
     # The server must be started before the client!
@@ -17,6 +16,15 @@ class Bluetooth :
     mbox.wait()
     print(mbox.read())
     mbox.send('hello to you!')
+
+    def sendPositionAndSensor(self, s:Sensors, b:Drivebase):
+        #Position X et Y du robot dans un string (en attente de l'odométrie)
+        #data += "x" + str(d.positionX)
+        #data += ",y" + str(d.positionY)
+        data = " , "
+        data += ",G" + str(s.degrés)
+        data += ",UL" + str(s.getLeftDistance)
+        data += ",UR" + str(s.getRightDistance)
 
     def sendSensorData(self):
         self.mbox.send('U1:' + str(self.s.getLeftDistance()))

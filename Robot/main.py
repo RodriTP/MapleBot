@@ -6,71 +6,30 @@ from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
-<<<<<<< HEAD
 from pybricks.messaging import BluetoothMailboxServer, TextMailbox
-=======
 import math
->>>>>>> d69961f4cad1b70f3e1785e91f9e9d92ff1989fc
-from drivebase import Drivebase
+#from drivebase import Drivebase
 from sensors import Sensors
-#from bluetooth import Bluetooth
+from bluetooth import Bluetooth
 
 ev3 = EV3Brick()
-<<<<<<< HEAD
 s = Sensors()
 
-#b = Bluetooth()
 
-d = Drivebase()
-d._init_()
-
-#TODO : TESTER GYRO
-#       BLUETOOTH CONNECTION
-#       ligne droite
-#       Infrarouge code rodrigo
-      
-=======
-d = Drivebase()
-s = Sensors()
+#d = Drivebase()
 #d._init_()
-#x : float = 0
-#y : float = 0
-#dist est le rapport de déplacement sur le temps utilisé pour le faire
-#dist : float = 0
-
-#pos = [x,y]
-
->>>>>>> d69961f4cad1b70f3e1785e91f9e9d92ff1989fc
+      
+b = Bluetooth()
 # Write your program here.
 #ev3.speaker.beep()
-
+b.sendTestArray()
+print("send")
 #d.setSpeed(200)
 #20.6  2 rotations
 #9.745 rotations = 102.616 cm   1 rotation
 #40.4  10 rotations
 #d.turn(90, 100)
 #d.turn(-180, 100)
-<<<<<<< HEAD
-d._kLeftMotor.run(-400)
-d._kRightMotor.run(-400)
-#d._kLeftMotor.runAngle(-200)
-#d._kRightMotor.run(-200)
-
-#self.setSpeed(-200)
-while True:
-    print(s.getFrontDistance())
-    if(s.getFrontDistance()<35):
-        d.stopMotors()
-#while True:
-#    d.turn(90, 100)
-#    d.turn(-90, 100)
-    #b.sendSensorData()
-    #print(d._kGyro.angle())
-    #d._kLeftMotor.run(200)
-    #d._kRightMotor.run(-200)
-    #if d._kLeftMotor.angle() >= 360*float(9.745):
-    #d.stop()
-=======
 
 #cette fonction reçoit dist : le rapport de déplacement sur un temps déterminé, et reçoit angle : la valeur que le gyro retourne.
 def newPos(dist : float, angle : float):
@@ -158,4 +117,3 @@ def testerGyro(x, y , z):
 testerGyro(0,0,0)
 #ligneDroite(3,0)
 #ligneDroiteSans(3,0)
->>>>>>> d69961f4cad1b70f3e1785e91f9e9d92ff1989fc

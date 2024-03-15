@@ -62,3 +62,8 @@ class Bluetooth:
     #Reset les données obtenues, à faire après les getter
     def resetData(self):
         self.dataRecieved.clear()
+
+    def separateData(self):
+        if(len(self.dataRecieved ==0)):
+            return null
+        
