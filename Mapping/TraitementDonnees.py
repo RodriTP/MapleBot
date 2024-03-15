@@ -1338,7 +1338,7 @@ def creerGrille(data): #métode pour creer un grillage et séparer les données
 
             for point in range(len(data)): # on parcours les points des données originales
                 if (data[point][0] >= grille[i][j].limiteInfX and data[point][0] <= grille[i][j].limiteSuppX) and (data[point][1] >= grille[i][j].limiteInfY and data[point][1] <= grille[i][j].limiteSuppY):
-                    grille[i][j].dataGrille.append(data[point]) 
+                  grille[i][j].dataGrille.append(data[point]) 
 
             grille[i][j].quantite = len(grille[i][j].dataGrille)
             print(grille[i][j].quantite)
