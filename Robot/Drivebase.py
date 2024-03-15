@@ -22,13 +22,12 @@ class Drivebase :
     #Odometrie
     _pos = None
     
-    def _init_(self):
+    def __init__(self):
         self.setEncoders(0)
         _pos = RobotPose(0,0,0)
 
-    def _str_(self):
-        self._kLeftMotor.angle()
-        self._kRightMotor.angle()
+    def __str__(self):
+        return f"LM_Angle={self._kLeftMotor.angle()};RM_Angle={self._kRightMotor.angle()}"
 
     #def periodic():
     
