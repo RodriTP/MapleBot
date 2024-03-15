@@ -6,13 +6,13 @@ from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
 from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.robotics import DriveBase
-from pybricks.media.ev3dev import SoundFile, ImageFile
+#from pybricks.media.ev3dev import SoundFile, ImageFile
 
 
 class Drivebase :
     _kLeftMotor = Motor(Port.D)
     _kRightMotor = Motor(Port.A)
-    _kGyro = GyroSensor(Port.S2, Direction.COUNTERCLOCKWISE)
+    #_kGyro = GyroSensor(Port.S2, Direction.COUNTERCLOCKWISE)
     _kWheelCirconference = float(3.14159*1.5*2)
     VALUE_FROM_OBSTACLE = 50.0
     _hasFinishedAction = False

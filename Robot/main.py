@@ -1,3 +1,4 @@
+#!/usr/bin/env pybricks-micropython
 from pybricks.hubs import EV3Brick
 from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
                                  InfraredSensor, UltrasonicSensor, GyroSensor)
@@ -16,7 +17,8 @@ from sensors import Sensors
 # Create your objects here.
 ev3 = EV3Brick()
 d = Drivebase()
-d._init_()
+s = Sensors()
+#d._init_()
 #x : float = 0
 #y : float = 0
 #dist est le rapport de déplacement sur le temps utilisé pour le faire
@@ -36,8 +38,8 @@ d._init_()
 
 #cette fonction reçoit dist : le rapport de déplacement sur un temps déterminé, et reçoit angle : la valeur que le gyro retourne.
 def newPos(dist : float, angle : float):
-    x = x + math.cos(angle % 360) * dist, 
-    y = y + math.sin(angle % 360) * dist
+    x = x + math.cos(Sensors.degrés() % 360) * dist, 
+    y = y + math.sin(Sensors.degrés() % 360) * dist
     
 #Cette fonction reçoit la distance en centimètres et retourne le nombre de degrés que les moteurs doivent tourner
 def cmToAngleRot(dist : float): 
@@ -57,21 +59,25 @@ def cmToAngleRot(dist : float):
         #d.stop()
 
 def ligneDroite(speedLvl, distance):
-    baseAngle = d._kGyro.angle()
+    baseAngle = Sensors.degrés()
     baseSpeed = -speedLvl * 90
     while (True):
-        print(d._kGyro.angle())
-        print(baseAngle)
+        print(str(round(Sensors.degrés() - baseAngle, 3)) + " Diff")
+        print(str(baseAngle) + "  Base Angle")
+        print(str(Sensors.degrés()) + "  Current")
         #baseAngle = baseAngle + 0.0007
-        if d._kGyro.angle() > baseAngle: 
-            d._kLeftMotor.run(baseSpeed - 10 )
-            d._kRightMotor.run(baseSpeed + 10)
-        elif d._kGyro.angle() < baseAngle:
-            d._kLeftMotor.run(baseSpeed + 10)
-            d._kRightMotor.run(baseSpeed - 10)
+        if Sensors.degrés() > baseAngle + 1: 
+            d._kLeftMotor.run(baseSpeed - 5)
+            d._kRightMotor.run(baseSpeed + 5)
+            print("GOING LEFT (too much right)")
+        elif Sensors.degrés() < baseAngle - 1:
+            d._kLeftMotor.run(baseSpeed + 5)
+            d._kRightMotor.run(baseSpeed - 5)
+            print("GOING RIGHT (too much left)")
         else:
             d._kLeftMotor.run(baseSpeed)
             d._kRightMotor.run(baseSpeed)
+            print("STRAIGHT")
         #if d._kLeftMotor.angle() >= cmToAngleRot(30):
             #d.stop()
 
@@ -80,33 +86,39 @@ def ligneDroiteSans(speedLvl, distance):
     while (True):
         d._kLeftMotor.run(baseSpeed)
         d._kRightMotor.run(baseSpeed)
+        print
 
 def testerGyro(x, y , z):
-    baseAngle = d._kGyro.angle()
-    while (x < 300):
-        print(d._kGyro.angle())
-        print(baseAngle)
+    #baseAngle = Sensors.degrés()
+    while (True):
+        print(Sensors.degrés())
+    #     print(baseAngle)
         #print(x)
-        if d._kGyro.angle() > baseAngle: 
-            d._kLeftMotor.run(- 10 )
-            d._kRightMotor.run(+ 10)
-        elif d._kGyro.angle() < baseAngle:
-            d._kLeftMotor.run(+ 10)
-            d._kRightMotor.run(- 10)
-        x = x + 1
-    while (y < 50000):
-        print(d._kGyro.angle())
+        # if Sensors.degrés() > baseAngle: 
+        #     d._kLeftMotor.run(- 10 )
+        #     d._kRightMotor.run(+ 10)
+        # elif Sensors.degrés() < baseAngle:
+        #     d._kLeftMotor.run(+ 10)
+        #     d._kRightMotor.run(- 10)
+        # x = x + 1
+    # while (y < 50000):
+    #     print(Sensors.degrés())
         #print(baseAngle)
         #print(y)
-        if y%10000 < 5000: 
-            d._kLeftMotor.run(- 60 )
-            d._kRightMotor.run(+ 60)
-        elif y%10000 > 5000:
-            d._kLeftMotor.run(+ 60)
-            d._kRightMotor.run(- 60)
-        y = y + 1
+        # if y%10000 < 5000: 
+        #     d._kLeftMotor.run(- 60 )
+        #     d._kRightMotor.run(+ 60)
+        # elif y%10000 > 5000:
+        #     d._kLeftMotor.run(+ 60)
+        #     d._kRightMotor.run(- 60)
+        # y = y + 1
     
 
-#testerGyro(0,0,0)
+# while True:
+#     degGyro = Sensors.degrés()
+#     print(degGyro)
+
+
+testerGyro(0,0,0)
 #ligneDroite(3,0)
-ligneDroiteSans(3,0)
+#ligneDroiteSans(3,0)
