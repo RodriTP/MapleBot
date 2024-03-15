@@ -146,9 +146,3 @@ class Drivebase :
     #Cette fonction reçoit la distance en centimètres et retourne le nombre de degrés que les moteurs doivent tourner
     def cmToAngleRot(dist : float): 
         return ((dist * 0.0949) * 360)
-    
-    def getPosX(self):
-        return self._x
-    #return the x position
-    def getPosY(self):
-        return self._y

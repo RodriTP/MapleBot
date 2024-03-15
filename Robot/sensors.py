@@ -66,8 +66,9 @@ class Sensors :
     _rightUltrasonic = UltrasonicSensor(Port.S4)
     _isObstacleRight = False
     _isObstacleLeft = False
+    _gyroOffset = None
     #sys, gyro,accel, mag
-    def degrés():
+    def degrés(self):
         line = []
         gay = True
         while gay == True: 
@@ -79,7 +80,11 @@ class Sensors :
                     #print(float(strline))
                     line = []
                     gay = False
-                    return float(strline)
+                    if self._gyroOffset == None:
+                        self._gyroOffset = float(strline)
+                        return self._gyroOffset
+                    else :
+                        return (float(strline)-self._gyroOffset)%float(360)
     
     _DISTANCE_FROM_OBSTACLE = float(200.0)
 
