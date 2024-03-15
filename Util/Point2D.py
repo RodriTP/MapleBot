@@ -9,7 +9,7 @@ class Point2D:
         self._y = y
     
     def __str__(self):
-        return f"x:{self._x};y:{self._y}"
+        return "x:{self._x};y:{self._y}"
 
     #getters: always return a float
     def getX(self):
