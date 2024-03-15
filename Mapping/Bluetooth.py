@@ -47,9 +47,10 @@ class Bluetooth:
         self.mbox.wait()
         self.dataRecieved.append(self.mbox.read())
         if(len(self.dataToSend)==0):
-            self.mbox.send('0')
+            self.mbox.send("null")
         else:
-            self.mbox.send(dataToSend[0])
+            self.mbox.send(self.dataToSend)
+            self.dataToSend.clear()
         
     #Ajoute des données qui vont être transmises
     def addDataToSend(self, dataToSend):

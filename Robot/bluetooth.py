@@ -17,14 +17,13 @@ class Bluetooth :
     print(mbox.read())
     mbox.send('hello to you!')
 
-    def sendPositionAndSensor(self, s:Sensors, b:Drivebase):
+    def sendPositionAndSensor(self, s:Sensors, d:Drivebase):
         #Position X et Y du robot dans un string (en attente de l'odométrie)
-        #data += "x" + str(d.positionX)
-        #data += ",y" + str(d.positionY)
-        data = " , "
-        data += ",G" + str(s.degrés)
-        data += ",UL" + str(s.getLeftDistance)
-        data += ",UR" + str(s.getRightDistance)
+        data += "x" + str(d._pos.getX())
+        data += ",y" + str(d._pos.getY())
+        data += ",G" + str(s._pos.getOrientation())
+        data += ",UL" + str(s.getLeftDistance())
+        data += ",UR" + str(s.getRightDistance())
 
     def sendSensorData(self):
         self.mbox.send('U1:' + str(self.s.getLeftDistance()))
