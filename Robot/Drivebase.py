@@ -1,5 +1,7 @@
 #!/usr/bin/env pybricks-micropython
 from sensors import Sensors
+from Util.Point2D import RobotPose
+import math
 
 from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
                                  InfraredSensor, UltrasonicSensor, GyroSensor)
@@ -13,13 +15,17 @@ class Drivebase :
     _kLeftMotor = Motor(Port.D)
     _kRightMotor = Motor(Port.A)
     #_kGyro = GyroSensor(Port.S2, Direction.COUNTERCLOCKWISE)
-    _kWheelCirconference = float(3.14159*1.5*2)
+    _kWheelCirconference = float(math.pi*1.5*2)
     VALUE_FROM_OBSTACLE = 50.0
     _hasFinishedAction = False
+
+    #Odometrie
+    _pos = None
     
     def _init_(self):
         self.setEncoders(0)
         self.setGyro(0)
+        _pos = RobotPose(0,0,0)
 
     def _str_(self):
         self._kLeftMotor.angle()
@@ -48,10 +54,6 @@ class Drivebase :
     
     def getDistance(self):
         return float(self._kLeftMotor.angle()*self._kWheelCirconference)
-    
-    def getAngle(self):
-        angle = self._kGyro.angle()
-        return angle
     
     #droite = angle positif, gauche = angle négatif
     def turn(self, angle, speed):
@@ -125,8 +127,6 @@ class Drivebase :
                 
                 hasObstacleInFront = not self._hasFinishedAction
                 print("obstacle avoided")
-            
-    
     
     def equalsWithTolerance(self, value, tolerance):
         if(float(value) <= float(value) + float(tolerance) 
@@ -136,5 +136,19 @@ class Drivebase :
             return False
     
 
-
-        
+    #cette fonction reçoit dist : le rapport de déplacement sur un temps déterminé, et reçoit angle : la valeur que le gyro retourne.
+    def computePos(self):
+        self._pos.set(
+            self._pos.getX() + math.cos(Sensors.degrés()) * self.getDistance(), 
+            self._pos.getY() + math.sin(Sensors.degrés()) * self.getDistance(),
+            Sensors.degrés()) 
+    
+    #Cette fonction reçoit la distance en centimètres et retourne le nombre de degrés que les moteurs doivent tourner
+    def cmToAngleRot(dist : float): 
+        return ((dist * 0.0949) * 360)
+    
+    def getPosX(self):
+        return self._x
+    #return the x position
+    def getPosY(self):
+        return self._y
