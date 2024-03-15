@@ -1,5 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import math
+import sys
+sys.path.append('Util')
+from Convertions import Convertions
+from Point2D import RobotPose
 #from scipy.stats import linregress
 
 #Sert à représenter les données qui seront reçus par le robot (À ENLEVER APRÈS)
@@ -1290,6 +1295,11 @@ def trouverMinY(data):  #Pour trouver la valeur minimale en Y
         
      
     return minY
+
+def ajouterData(data, rPose : RobotPose, wd : float):
+    x = rPose.getX() + wd*math.cos(Convertions.degreesToRadians(rPose.getOrientation()))
+    y = rPose.getY() + wd*math.sin(Convertions.degreesToRadians(rPose.getOrientation()))
+    data.append([x,y])
 
 
 class grilleSalle: #Classe du grillage pour que chaque case ait les variables suivantes
