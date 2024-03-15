@@ -8,7 +8,7 @@ from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 from pybricks.messaging import BluetoothMailboxServer, TextMailbox
 import math
-#from drivebase import Drivebase
+from Drivebase import Drivebase
 from sensors import Sensors
 from bluetooth import Bluetooth
 
@@ -16,14 +16,14 @@ ev3 = EV3Brick()
 s = Sensors()
 
 
-#d = Drivebase()
-#d._init_()
+d = Drivebase()
       
 b = Bluetooth()
 # Write your program here.
 #ev3.speaker.beep()
-b.sendTestArray()
-print("send")
+while True:
+    b.sendPositionAndSensor(s, d)
+    print("send")
 #d.setSpeed(200)
 #20.6  2 rotations
 #9.745 rotations = 102.616 cm   1 rotation

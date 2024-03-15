@@ -1,6 +1,9 @@
 #!/usr/bin/env pybricks-micropython
 from sensors import Sensors
-from Util.Point2D import RobotPose
+import sys
+sys.path.append('/home/robot/MapleBot/Util')
+from Point2D import RobotPose
+#from Util.Point2D import RobotPose
 import math
 
 from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
@@ -26,8 +29,9 @@ class Drivebase :
         self.setEncoders(0)
         _pos = RobotPose(0,0,0)
 
-    def __str__(self):
-        return f"LM_Angle={self._kLeftMotor.angle()};RM_Angle={self._kRightMotor.angle()}"
+    def _str_(self):
+        self._kLeftMotor.angle()
+        self._kRightMotor.angle()
 
     #def periodic():
     
