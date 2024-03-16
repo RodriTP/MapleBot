@@ -18,6 +18,10 @@ from sensors import Sensors
 ev3 = EV3Brick()
 d = Drivebase()
 s = Sensors()
+indiceDeCorrection = 0
+x = 0
+y = 0
+pos = [x,y]
 #d._init_()
 #x : float = 0
 #y : float = 0
@@ -37,9 +41,10 @@ s = Sensors()
 #d.turn(-180, 100)
 
 #cette fonction reçoit dist : le rapport de déplacement sur un temps déterminé, et reçoit angle : la valeur que le gyro retourne.
-def newPos(dist : float, angle : float):
-    x = x + math.cos(s.degrés()) * dist, 
-    y = y + math.sin(s.degrés()) * dist
+def newPos(dist, angle, x, y):
+    X = x + math.cos(angle) * dist 
+    Y = y + math.sin(angle) * dist
+    return [X,Y]
     
 #Cette fonction reçoit la distance en centimètres et retourne le nombre de degrés que les moteurs doivent tourner
 def cmToAngleRot(dist : float): 
@@ -61,168 +66,99 @@ def cmToAngleRot(dist : float):
 #             print(s.degrés())
 #     d.stopMotors()
 
-def tourneXDegres(deg, speedLvl):
-    baseSpeed = speedLvl * 45
-    #SIKE = str(s.degrés()) 
-    angleVoulu = float(((s.degrés() + deg)%360))
-    
-    #print("cur : " + str(s.degrés()) + " ; Voulu " + str(angleVoulu) + " :deg " + str(deg))
-    turn = True 
-    if angleVoulu < s.degrés() and deg > 0 and turn :
-        print("i tried")
-        if angleVoulu > speedLvl * 10: 
-            while(angleVoulu < s.degrés()):
-                d._kLeftMotor.run(-baseSpeed)
-                d._kRightMotor.run(baseSpeed)
-                print(str(s.degrés()) + " : 1-0")
-            while(angleVoulu > s.degrés() + 10*speedLvl):
-                d._kLeftMotor.run(-baseSpeed)
-                d._kRightMotor.run(baseSpeed)
-                print(str(s.degrés()) + " : 1-1")
-            while angleVoulu > s.degrés() + 1*speedLvl:
-                d._kLeftMotor.run(-baseSpeed/8*speedLvl)
-                d._kRightMotor.run(baseSpeed/8*speedLvl)
-                print("derniers 1: " + str(s.degrés()))
-            print(str(s.degrés()- angleVoulu))
-        if angleVoulu <= speedLvl * 10:
-            while(s.degrés() <= 360 - speedLvl* 10 + angleVoulu):
-                d._kLeftMotor.run(-baseSpeed)
-                d._kRightMotor.run(baseSpeed)
-                print(str(s.degrés()) + " : 1-2")
-            while(s.degrés() >= 360 - speedLvl* 10 + angleVoulu):
-                d._kLeftMotor.run(-baseSpeed/8*speedLvl)
-                d._kRightMotor.run(baseSpeed/8*speedLvl)
-                print(str(s.degrés()) + " : 1-3")
-            while angleVoulu > s.degrés() + 1*speedLvl:
-                d._kLeftMotor.run(-baseSpeed/8*speedLvl)
-                d._kRightMotor.run(baseSpeed/8*speedLvl)
-                print("derniers 1: " + str(s.degrés()))
-            print(str(s.degrés()- angleVoulu))
-        turn = False
-    if angleVoulu < s.degrés() and deg < 0 and turn:
-        while(angleVoulu < s.degrés() - 10*speedLvl):
-            d._kLeftMotor.run(baseSpeed)
-            d._kRightMotor.run(-baseSpeed)
-            print(str(s.degrés()) + " : 2")
-        while angleVoulu < s.degrés() - 1*speedLvl:
-            d._kLeftMotor.run(baseSpeed/8*speedLvl)
-            d._kRightMotor.run(-baseSpeed/8*speedLvl)
-            print("derniers 2: " + str(s.degrés()))
-        print(str(s.degrés()- angleVoulu))
-        turn = False
+# def tournerXDegres(deg, speedLvl, indiceDeCorrection):
+#     baseSpeed = speedLvl * 45
+#     #angleVoulu = float(((s.degrés() + deg)%360))
+#     angleVoulu = float(((indiceDeCorrection + deg)%360))
+#     #print("cur : " + str(s.degrés()) + " ; Voulu " + str(angleVoulu) + " :deg " + str(deg))
+#     turn = True 
+
+#     if angleVoulu < s.degrés() and deg > 0 and turn :
+#         print("i tried")
+#         if angleVoulu > speedLvl * 10: 
+#             while(angleVoulu < s.degrés()):
+#                 d._kLeftMotor.run(-baseSpeed)
+#                 d._kRightMotor.run(baseSpeed)
+#                 print(str(s.degrés()) + " : 1-0")
+#             while(angleVoulu > s.degrés() + 10*speedLvl):
+#                 d._kLeftMotor.run(-baseSpeed)
+#                 d._kRightMotor.run(baseSpeed)
+#                 print(str(s.degrés()) + " : 1-1")
+#             while angleVoulu > s.degrés() + 1*speedLvl:
+#                 d._kLeftMotor.run(-baseSpeed/(8*speedLvl))
+#                 d._kRightMotor.run(baseSpeed/(8*speedLvl))
+#                 print("derniers 1: " + str(s.degrés()))
+#             print(str(s.degrés()- angleVoulu))
+#         if angleVoulu <= speedLvl * 10:
+#             while(s.degrés() <= 360 - speedLvl* 10 + angleVoulu):
+#                 d._kLeftMotor.run(-baseSpeed)
+#                 d._kRightMotor.run(baseSpeed)
+#                 print(str(s.degrés()) + " : 1-2")
+#             while(s.degrés() >= 360 - speedLvl* 10 + angleVoulu):
+#                 d._kLeftMotor.run(-baseSpeed/(8*speedLvl))
+#                 d._kRightMotor.run(baseSpeed/(8*speedLvl))
+#                 print(str(s.degrés()) + " : 1-3")
+#             while angleVoulu > s.degrés() + 1*speedLvl:
+#                 d._kLeftMotor.run(-baseSpeed/(8*speedLvl))
+#                 d._kRightMotor.run(baseSpeed/(8*speedLvl))
+#                 print("derniers 1: " + str(s.degrés()))
+#             print(str(s.degrés()- angleVoulu))
+#         turn = False
+#     if angleVoulu < s.degrés() and deg < 0 and turn:
+#         while(angleVoulu < s.degrés() - 10*speedLvl):
+#             d._kLeftMotor.run(baseSpeed)
+#             d._kRightMotor.run(-baseSpeed)
+#             print(str(s.degrés()) + " : 2")
+#         while angleVoulu < s.degrés() - 1*speedLvl:
+#             d._kLeftMotor.run(baseSpeed/(8))
+#             d._kRightMotor.run(-baseSpeed/(8))
+#             print("derniers 2: " + str(s.degrés()))
+#         print(str(s.degrés()- angleVoulu))
+#         turn = False
+#     if angleVoulu > s.degrés() and deg > 0 and turn:
+#         print("degrés voulu : " + str(angleVoulu))
+#         while(angleVoulu > s.degrés() + 10 * speedLvl):
+#             d._kLeftMotor.run(-baseSpeed)
+#             d._kRightMotor.run(baseSpeed)
+#             print(str(s.degrés()) + " : 3")
+#         while angleVoulu > s.degrés() + 1 * speedLvl:
+#             d._kLeftMotor.run(-baseSpeed/8)
+#             d._kRightMotor.run(baseSpeed/8)
+#             print("derniers 3: " + str(s.degrés()))
+#         print(str(s.degrés()- angleVoulu))
+#         turn = False
+#     if angleVoulu > s.degrés() and deg < 0 and turn :
+#         if angleVoulu < 360 - speedLvl * 10: 
+#             while(angleVoulu > s.degrés()):
+#                 d._kLeftMotor.run(baseSpeed)
+#                 d._kRightMotor.run(-baseSpeed)
+#                 print(str(round(s.degrés(),3)) + " : 4-0")
+#             while(angleVoulu < s.degrés() - 10*speedLvl):
+#                 d._kLeftMotor.run(baseSpeed)
+#                 d._kRightMotor.run(-baseSpeed)
+#                 print(str(round(s.degrés(),3)) + " : 4-1")
+#             while angleVoulu < s.degrés() - 1*speedLvl:
+#                 d._kLeftMotor.run(baseSpeed/(8))
+#                 d._kRightMotor.run(-baseSpeed/(8))
+#                 print("derniers 4: " + str(round(s.degrés(),3)))
+#             print(str(s.degrés()- angleVoulu))
+#         if angleVoulu > 360 - speedLvl * 10:
+#             while(s.degrés() >= speedLvl* 10 + angleVoulu - 360):
+#                 d._kLeftMotor.run(baseSpeed)
+#                 d._kRightMotor.run(-baseSpeed)
+#                 print(str(round(s.degrés(),3)) + " : 4-2")
+#             while(s.degrés() < speedLvl * 10 + angleVoulu - 360):
+#                 d._kLeftMotor.run(baseSpeed/(8*speedLvl))
+#                 d._kRightMotor.run(-baseSpeed/(8*speedLvl))
+#                 print("derniers 4: " + str(round(s.degrés(),3)))
+#             print(str(s.degrés()- angleVoulu))
+#         turn = False
 
 
-
-    if angleVoulu > s.degrés()  and deg > 0 and turn:
-        print("degrés voulu : " + str(angleVoulu))
-        while(angleVoulu > s.degrés() + 10*speedLvl):
-            d._kLeftMotor.run(-baseSpeed)
-            d._kRightMotor.run(baseSpeed)
-            print(str(s.degrés()) + " : 3")
-        while angleVoulu > s.degrés() + 1*speedLvl:
-            d._kLeftMotor.run(-baseSpeed/8*speedLvl)
-            d._kRightMotor.run(baseSpeed/8*speedLvl)
-            print("derniers 3: " + str(s.degrés()))
-        print(str(s.degrés()- angleVoulu))
-        turn = False
-        
-    if angleVoulu > s.degrés() and deg < 0 and turn :
-        if angleVoulu < 360 - speedLvl * 10: 
-            while(angleVoulu > s.degrés()):
-                d._kLeftMotor.run(baseSpeed)
-                d._kRightMotor.run(-baseSpeed)
-                print(str(s.degrés()) + " : 4-0")
-            while(angleVoulu < s.degrés() - 10*speedLvl):
-                d._kLeftMotor.run(baseSpeed)
-                d._kRightMotor.run(-baseSpeed)
-                print(str(s.degrés()) + " : 4-1")
-            while angleVoulu < s.degrés() - 1*speedLvl:
-                d._kLeftMotor.run(baseSpeed/8*speedLvl)
-                d._kRightMotor.run(-baseSpeed/8*speedLvl)
-                print("derniers 1: " + str(s.degrés()))
-            print(str(s.degrés()- angleVoulu))
-        if angleVoulu > 360 - speedLvl * 10:
-            while(s.degrés() >= speedLvl* 10 + angleVoulu - 360):
-                d._kLeftMotor.run(baseSpeed)
-                d._kRightMotor.run(-baseSpeed)
-                print(str(s.degrés()) + " : 4-2")
-            while(s.degrés() <= speedLvl* 10 + angleVoulu - 360):
-                d._kLeftMotor.run(baseSpeed/8*speedLvl)
-                d._kRightMotor.run(-baseSpeed/8*speedLvl)
-                print(str(s.degrés()) + " : 4-3")
-            while angleVoulu < s.degrés() + 1*speedLvl:
-                d._kLeftMotor.run(baseSpeed/8*speedLvl)
-                d._kRightMotor.run(-baseSpeed/8*speedLvl)
-                print("derniers 1: " + str(s.degrés()))
-            print(str(s.degrés()- angleVoulu))
-        turn = False
-
-
-    # if angleVoulu > s.degrés()  and deg < 0 and turn:
-    #     while(angleVoulu > s.degrés() - 10*speedLvl):
-    #         d._kLeftMotor.run(baseSpeed)
-    #         d._kRightMotor.run(-baseSpeed)
-    #         print(str(s.degrés()) + " : 4")
-    #     while angleVoulu > s.degrés() - 1*speedLvl:
-    #         d._kLeftMotor.run(baseSpeed/8*speedLvl)
-    #         d._kRightMotor.run(-baseSpeed/8*speedLvl)
-    #         print(str(angleVoulu) + "derniers 4: " + str(s.degrés()))
-    #         print(str(s.degrés()- angleVoulu))
-    #     turn = False
-    print("stop : " + str(s.degrés()) + " voici l'angle de fin " + "voici angle voulu : " + str(angleVoulu))
-    print(str(s.degrés()- angleVoulu))
-    d.stopMotors()
-
-
-
-def fwofe(deg, speedLvl):
- angleVoulu = 2
- baseSpeed = 2
- if angleVoulu > s.degrés() and deg < 0 and turn :
-        if angleVoulu < 360 - speedLvl * 10: 
-            while(angleVoulu > s.degrés()):
-                d._kLeftMotor.run(baseSpeed)
-                d._kRightMotor.run(-baseSpeed)
-                print(str(s.degrés()) + " : 4-0")
-            while(angleVoulu < s.degrés() - 10*speedLvl):
-                d._kLeftMotor.run(baseSpeed)
-                d._kRightMotor.run(-baseSpeed)
-                print(str(s.degrés()) + " : 4-1")
-            while angleVoulu < s.degrés() - 1*speedLvl:
-                d._kLeftMotor.run(baseSpeed/8*speedLvl)
-                d._kRightMotor.run(-baseSpeed/8*speedLvl)
-                print("derniers 1: " + str(s.degrés()))
-            print(str(s.degrés()- angleVoulu))
-        if angleVoulu > 360 - speedLvl * 10:
-            while(s.degrés() >= speedLvl* 10 + angleVoulu - 360):
-                d._kLeftMotor.run(baseSpeed)
-                d._kRightMotor.run(-baseSpeed)
-                print(str(s.degrés()) + " : 4-2")
-            while(s.degrés() <= speedLvl* 10 + angleVoulu - 360):
-                d._kLeftMotor.run(baseSpeed/8*speedLvl)
-                d._kRightMotor.run(-baseSpeed/8*speedLvl)
-                print(str(s.degrés()) + " : 4-3")
-            while angleVoulu < s.degrés() + 1*speedLvl:
-                d._kLeftMotor.run(baseSpeed/8*speedLvl)
-                d._kRightMotor.run(-baseSpeed/8*speedLvl)
-                print("derniers 1: " + str(s.degrés()))
-            print(str(s.degrés()- angleVoulu))
-        turn = False
- 
-
-
-#def updateDist():
-    
-
-#x : float = obstacle_sensor.distance()
-
-#while (True):
-    #print(float(x))
-    #print(d._kGyro.angle())
-    #d._kLeftMotor.run(360)
-    #d._kRightMotor.run(360)
-    #if d._kLeftMotor.angle() >= cmToAngleRot(127):
-        #d.stop()
+#     print("stop : " + str(s.degrés()) + " voici l'angle de fin " + "voici angle voulu : " + str(angleVoulu))
+#     print(str(s.degrés()- angleVoulu))
+#     d.stopMotors()
+#     return angleVoulu
 
 def ligneDroite(speedLvl, distance):
     baseAngle = s.degrés()
@@ -247,7 +183,7 @@ def ligneDroite(speedLvl, distance):
         #if d._kLeftMotor.angle() >= cmToAngleRot(30):
             #d.stop()
 
-def ligneDroiteSans(speedLvl, distance):
+def ligneDroiteSans(speedLvl, distance, indiceDeCorrection):
     baseSpeed = -speedLvl * 90
     while (True):
         d._kLeftMotor.run(baseSpeed)
@@ -255,40 +191,102 @@ def ligneDroiteSans(speedLvl, distance):
         print(s.degrés())
         
 
-def testerGyro(x, y , z):
-    #baseAngle = s.degrés()
-    while (True):
-        print(s.degrés())
-    #     print(baseAngle)
-        #print(x)
-        # if s.degrés() > baseAngle: 
-        #     d._kLeftMotor.run(- 10 )
-        #     d._kRightMotor.run(+ 10)
-        # elif s.degrés() < baseAngle:
-        #     d._kLeftMotor.run(+ 10)
-        #     d._kRightMotor.run(- 10)
-        # x = x + 1
-    # while (y < 50000):
-    #     print(s.degrés())
-        #print(baseAngle)
-        #print(y)
-        # if y%10000 < 5000: 
-        #     d._kLeftMotor.run(- 60 )
-        #     d._kRightMotor.run(+ 60)
-        # elif y%10000 > 5000:
-        #     d._kLeftMotor.run(+ 60)
-        #     d._kRightMotor.run(- 60)
-        # y = y + 1
-    
-
-# while True:
-#     degGyro = s.degrés()
-#     print(degGyro)
-
-
-#testerGyro(0,0,0)
 #ligneDroite(3,0)
-#ligneDroiteSans(3,0)
-tourneXDegres(190,2)
-tourneXDegres(190,1)
 
+def tourneXDegres(deg, speedLvl, indiceDeCorrection):
+    baseSpeed = speedLvl * 45
+    angleVoulu = float(((indiceDeCorrection + deg)%360))
+    print("Voulu " + str(angleVoulu))
+    turn = True 
+
+    if angleVoulu < s.degrés() and deg > 0 and turn :
+        if angleVoulu > speedLvl * 5: 
+            while(angleVoulu < s.degrés()):
+                d._kLeftMotor.run(-baseSpeed)
+                d._kRightMotor.run(baseSpeed)
+                print(str(s.degrés()) + " : 1-0")
+            while(angleVoulu > s.degrés() + 5 * speedLvl):
+                d._kLeftMotor.run(-baseSpeed)
+                d._kRightMotor.run(baseSpeed)
+                print(str(s.degrés()) + " : 1-1")
+            while angleVoulu > s.degrés() + 1*speedLvl:
+                d._kLeftMotor.run(-baseSpeed/(8*speedLvl))
+                d._kRightMotor.run(baseSpeed/(8*speedLvl))
+                print("derniers 1-1: " + str(s.degrés()))
+            print(str(s.degrés()- angleVoulu))
+        if angleVoulu <= speedLvl * 5:
+            while(s.degrés() <= 360 - speedLvl* 5 + angleVoulu):
+                d._kLeftMotor.run(-baseSpeed)
+                d._kRightMotor.run(baseSpeed)
+                print(str(s.degrés()) + " : 1-2")
+            while(s.degrés() >= 360 - speedLvl * 5 + angleVoulu):
+                d._kLeftMotor.run(-baseSpeed/(8*speedLvl))
+                d._kRightMotor.run(baseSpeed/(8*speedLvl))
+                print("derniers 1-2: " + str(s.degrés()))
+            print(str(s.degrés()- angleVoulu))
+        turn = False
+    if angleVoulu < s.degrés() and deg < 0 and turn:
+        while(angleVoulu < s.degrés() - 5*speedLvl):
+            d._kLeftMotor.run(baseSpeed)
+            d._kRightMotor.run(-baseSpeed)
+            print(str(s.degrés()) + " : 2")
+        while angleVoulu < s.degrés() - 1*speedLvl:
+            d._kLeftMotor.run(baseSpeed/(8))
+            d._kRightMotor.run(-baseSpeed/(8))
+            print("derniers 2: " + str(s.degrés()))
+        print(str(s.degrés()- angleVoulu))
+        turn = False
+    if angleVoulu > s.degrés() and deg > 0 and turn:
+        print("degrés voulu : " + str(angleVoulu))
+        while(angleVoulu > s.degrés() + 5 * speedLvl):
+            d._kLeftMotor.run(-baseSpeed)
+            d._kRightMotor.run(baseSpeed)
+            print(str(s.degrés()) + " : 3")
+        while angleVoulu > s.degrés() + 1 * speedLvl:
+            d._kLeftMotor.run(-baseSpeed/8)
+            d._kRightMotor.run(baseSpeed/8)
+            print("derniers 3: " + str(s.degrés()))
+        print(str(s.degrés()- angleVoulu))
+        turn = False
+    if angleVoulu > s.degrés() and deg < 0 and turn :
+        if angleVoulu < 360 - speedLvl * 5: 
+            while(angleVoulu > s.degrés()):
+                d._kLeftMotor.run(baseSpeed)
+                d._kRightMotor.run(-baseSpeed)
+                print(str(round(s.degrés(),3)) + " : 4-0")
+            while(angleVoulu < s.degrés() - 5*speedLvl):
+                d._kLeftMotor.run(baseSpeed)
+                d._kRightMotor.run(-baseSpeed)
+                print(str(round(s.degrés(),3)) + " : 4-1")
+            while angleVoulu < s.degrés() - 1*speedLvl:
+                d._kLeftMotor.run(baseSpeed/(8))
+                d._kRightMotor.run(-baseSpeed/(8))
+                print("derniers 4-1: " + str(round(s.degrés(),3)))
+            print(str(s.degrés()- angleVoulu))
+        if angleVoulu > 360 - speedLvl * 5:
+            while(s.degrés() >= speedLvl* 5 + angleVoulu - 360):
+                d._kLeftMotor.run(baseSpeed)
+                d._kRightMotor.run(-baseSpeed)
+                print(str(round(s.degrés(),3)) + " : 4-2")
+            while(s.degrés() < speedLvl * 5 + angleVoulu - 360):
+                d._kLeftMotor.run(baseSpeed/(8*speedLvl))
+                d._kRightMotor.run(-baseSpeed/(8*speedLvl))
+                print("derniers 4-2: " + str(round(s.degrés(),3)))
+            print(str(s.degrés()- angleVoulu))
+        turn = False
+    print("stop : " + str(s.degrés()) + " voici l'angle de fin " + "voici angle voulu : " + str(angleVoulu))
+    print(str(s.degrés()- angleVoulu))
+    print(str(s.degrés()- angleVoulu))
+    print(str(s.degrés()- angleVoulu))
+    print("stop : " + str(s.degrés()) + " voici l'angle de fin " + "voici angle voulu : " + str(angleVoulu))
+    d.stopMotors()
+    return angleVoulu
+
+
+#indiceDeCorrection = tourneXDegres(-90,2,0)
+#indiceDeCorrection = tourneXDegres(-90,2,indiceDeCorrection)
+d.avanceUntilObstacle(s)
+indiceDeCorrection = tourneXDegres(-90,2,indiceDeCorrection)
+indiceDeCorrection = tourneXDegres(-90,2,indiceDeCorrection)
+d.avanceUntilObstacle(s)
+#tourneXDegres(90,4,tourneXDegres(-90,3,tourneXDegres(90,2,tourneXDegres(-90,1,0))))
