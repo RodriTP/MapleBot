@@ -201,7 +201,6 @@ def tourneXDegres(deg, speedLvl, indiceDeCorrection):
     angleVoulu = float(((indiceDeCorrection + deg)%360))
     print("Voulu " + str(angleVoulu))
     turn = True 
-
     if angleVoulu < s.degrés() and deg > 0 and turn :
         if angleVoulu > speedLvl * 5: 
             while(angleVoulu < s.degrés()):
