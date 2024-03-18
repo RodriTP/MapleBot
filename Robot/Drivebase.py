@@ -1,6 +1,6 @@
 #!/usr/bin/env pybricks-micropython
 from sensors import Sensors
-from Util.Point2D import RobotPose
+#from Util.Point2D import RobotPose
 import math
 
 from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
@@ -16,7 +16,7 @@ class Drivebase :
     _kRightMotor = Motor(Port.A)
     #_kGyro = GyroSensor(Port.S2, Direction.COUNTERCLOCKWISE)
     _kWheelCirconference = float(math.pi*1.5*2)
-    VALUE_FROM_OBSTACLE = 50.0
+    VALUE_FROM_OBSTACLE = 20.0
     _hasFinishedAction = False
 
     #Odometrie
@@ -25,7 +25,7 @@ class Drivebase :
     def _init_(self):
         self.setEncoders(0)
         self.setGyro(0)
-        _pos = RobotPose(0,0,0)
+        #_pos = RobotPose(0,0,0)
 
     def _str_(self):
         self._kLeftMotor.angle()
@@ -38,8 +38,8 @@ class Drivebase :
         self._kLeftMotor.reset_angle(float(angle))
         self._kRightMotor.reset_angle(float(angle))
 
-    def setGyro(self, angle):
-        self._kGyro.reset_angle(float(angle))
+    # def setGyro(self, angle):
+    #     self._kGyro.reset_angle(float(angle))
     
     def stopMotors(self):
         self._kLeftMotor.run(0)
@@ -82,20 +82,24 @@ class Drivebase :
 
     def avanceUntilObstacle(self, sensor):
         self._hasFinishedAction = False
-        self.setSpeed(200)
-        while True:
-            if(sensor.getFrontValue()<self.VALUE_FROM_OBSTACLE):
-                self.stopMotors()
+        self.setSpeed(-200)
+        while self._hasFinishedAction == False:
+            #print(self._hasFinishedAction)
+            if(sensor.getFrontValue() < self.VALUE_FROM_OBSTACLE):
                 self._hasFinishedAction = True
+                self.stopMotors()
+
 
     def avanceDistance(self, distance):
         self._hasFinishedAction = False
         self.setEncoders(0)
         self.setSpeed(200)
-        while True:
+        while self._hasFinishedAction == False:
+            print(self._kLeftMotor.angle())
             if self._kLeftMotor.angle() >= (float(distance)*360.0)/float(9.745):#9.745 en cm
-                self.stopMotors()
                 self._hasFinishedAction = True
+                print("J'AI AVANCÉ")
+                self.stopMotors()
 
     def moveAuto(self, sensor):
         hasObstacleInFront = False

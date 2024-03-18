@@ -1,5 +1,5 @@
 #!/usr/bin/env pybricks-micropython
-import utime
+#import utime
 from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,InfraredSensor, UltrasonicSensor, GyroSensor)
 from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.tools import wait, StopWatch, DataLog
@@ -72,10 +72,9 @@ class Sensors :
         self.degrés()
     
     def degrés(self):
-    
         line = []
-        gay = True
-        while gay == True: 
+        bool = True
+        while bool == True: 
             for c in ser.read(1):
                 if (chr(c) != '\n') and (chr(c) != '\r'):
                     line.append(chr(c))
@@ -83,7 +82,7 @@ class Sensors :
                     strline=''.join(str(v) for v in line) 
                     #print(strline)
                     line = []
-                    gay = False
+                    bool = False
                     if self._gyroOffset == None:
                         self._gyroOffset = float(strline)
                         return self._gyroOffset

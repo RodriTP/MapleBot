@@ -1,15 +1,19 @@
 #!/usr/bin/env pybricks-micropython
+import pybricks
 from pybricks.hubs import EV3Brick
 from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
                                  InfraredSensor, UltrasonicSensor, GyroSensor)
-from pybricks.parameters import Port, Stop, Direction, Button, Color
-from pybricks.tools import wait, StopWatch, DataLog
+# from pybricks.parameters import Port, Stop, Direction, Button, Color
+# from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.robotics import DriveBase
-from pybricks.media.ev3dev import SoundFile, ImageFile
+# from pybricks.media.ev3dev import SoundFile, ImageFile
+from pybricks.tools import StopWatch, DataLog
 import math
-from drivebase import Drivebase
+from Drivebase import Drivebase
 from sensors import Sensors
+import time
 
+from threading import Thread
 # This program requires LEGO EV3 MicroPython v2.0 or higher.
 # Click "Open user guide" on the EV3 extension tab for more information.
 
@@ -183,11 +187,10 @@ def ligneDroite(speedLvl, distance):
         #if d._kLeftMotor.angle() >= cmToAngleRot(30):
             #d.stop()
 
-def ligneDroiteSans(speedLvl, distance, indiceDeCorrection):
+def ligneDroiteSans(speedLvl):
     baseSpeed = -speedLvl * 90
     while (True):
-        d._kLeftMotor.run(baseSpeed)
-        d._kRightMotor.run(-baseSpeed)
+        d.setSpeed(baseSpeed)
         print(s.degrés())
         
 
@@ -279,14 +282,71 @@ def tourneXDegres(deg, speedLvl, indiceDeCorrection):
     print(str(s.degrés()- angleVoulu))
     print(str(s.degrés()- angleVoulu))
     print("stop : " + str(s.degrés()) + " voici l'angle de fin " + "voici angle voulu : " + str(angleVoulu))
+    #reCalibre(angleVoulu, baseSpeed)
     d.stopMotors()
     return angleVoulu
 
+def reCalibre(angleVoulu, speedLvl):
+    baseSpeed = speedLvl * 45
+    #TOURNE VERS GAUCHE
 
-#indiceDeCorrection = tourneXDegres(-90,2,0)
+    if(math.sin(math.radians(s.degrés())) - math.sin(math.radians(angleVoulu)) < -0.003):
+        # print("1")
+        while(math.sin(math.radians(s.degrés())) < math.sin(math.radians(angleVoulu))):
+                #print("2")
+                d._kLeftMotor.run(baseSpeed/(10*speedLvl))
+                d._kRightMotor.run(-baseSpeed/(10*speedLvl))
+                print("RE-CALIBRATING LEFT  diff : " + str(math.sin(math.radians(s.degrés())) - math.sin(math.radians(angleVoulu)))+" deg: " +  str(s.degrés()))
+    #Tourne vers droit
+    elif (math.sin(math.radians(s.degrés())) - math.sin(math.radians(angleVoulu)) > 0.0025):
+        #print("3")
+        while(math.sin(math.radians(s.degrés())) > math.sin(math.radians(angleVoulu))):
+                #print("4")
+                d._kLeftMotor.run(-baseSpeed/(10*speedLvl))
+                d._kRightMotor.run(baseSpeed/(10*speedLvl))
+                print("RE-CALIBRATING DROIT diff : " + str(math.sin(math.radians(s.degrés())) - math.sin(math.radians(angleVoulu)))+" deg: " +  str(s.degrés()))
+    
+
+
+        
+#DriveBase.distance
+# while True :
+#     d.avanceUntilObstacle(s)
+#     indiceDeCorrection = tourneXDegres(180,2,indiceDeCorrection)
+#     d.avanceUntilObstacle(s)
+#     indiceDeCorrection = tourneXDegres(-180,2,indiceDeCorrection)
 #indiceDeCorrection = tourneXDegres(-90,2,indiceDeCorrection)
-d.avanceUntilObstacle(s)
-indiceDeCorrection = tourneXDegres(-90,2,indiceDeCorrection)
-indiceDeCorrection = tourneXDegres(-90,2,indiceDeCorrection)
-d.avanceUntilObstacle(s)
+#indiceDeCorrection = tourneXDegres(-90,2,indiceDeCorrection)
+#d.avanceUntilObstacle(s)
 #tourneXDegres(90,4,tourneXDegres(-90,3,tourneXDegres(90,2,tourneXDegres(-90,1,0))))
+# while True: 
+#      print("CURRENT : "+str(math.sin(math.radians(s.degrés()))) +" VOULU : "+ str(math.sin(math.radians(77))) +" diff : " + str(math.sin(math.radians(s.degrés())) - math.sin(math.radians(77)))+" deg: " +  str(s.degrés()))
+#      #reCalibre(77, 2)
+#ligneDroiteSans(3)
+                
+
+
+                #TOUTES LES CHOSES CI-DESSOUS SONT POUR CE QUE JE FAISAIT EN DERNIER, EN UTILISANT LES FONCTIONS DE DRIVEBASE, LA CLASSE ET NON ELLE QU'ON A FAIT,
+                #
+
+#robot = DriveBase(d._kLeftMotor, d._kRightMotor, wheel_diameter=42.2, axle_track=145)
+robot = DriveBase(d._kLeftMotor, d._kRightMotor, wheel_diameter=42.2, axle_track=163)
+#while True:
+
+
+def printingAngle():
+    while True:
+        print(s.degrés())
+        time.sleep(1)
+
+#robot.turn(405)
+#robot.turn(90)
+t = Thread(target=printingAngle())
+t2 = Thread(target=robot.turn(90))
+robot.turn(90)
+t2.start()
+t.start() 
+t.join()
+t2.join()
+
+
