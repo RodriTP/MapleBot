@@ -18,27 +18,24 @@ s = Sensors()
 
 d = Drivebase()
       
-b = Bluetooth()
+#b = Bluetooth()
 # Write your program here.
 #ev3.speaker.beep()
 while True:
-    b.sendPositionAndSensor(s, d)
-    print("send")
-#d.setSpeed(200)
-#20.6  2 rotations
-#9.745 rotations = 102.616 cm   1 rotation
-#40.4  10 rotations
-#d.turn(90, 100)
-#d.turn(-180, 100)
+   # b.sendPositionAndSensor(s, d)
+    #print("send")
+    d.computePos()
+    print(d._pos)
+
 
 #cette fonction reçoit dist : le rapport de déplacement sur un temps déterminé, et reçoit angle : la valeur que le gyro retourne.
-def newPos(dist : float, angle : float):
-    x = x + math.cos(Sensors.degrés() % 360) * dist, 
-    y = y + math.sin(Sensors.degrés() % 360) * dist
+    def newPos(dist : float, angle : float):
+        x = x + math.cos(Sensors.degrés() % 360) * dist, 
+        y = y + math.sin(Sensors.degrés() % 360) * dist
     
 #Cette fonction reçoit la distance en centimètres et retourne le nombre de degrés que les moteurs doivent tourner
-def cmToAngleRot(dist : float): 
-    return ((dist * 0.0949) * 360)
+    def cmToAngleRot(dist : float): 
+        return ((dist * 0.0949) * 360)
 
 #def updateDist():
     
@@ -52,7 +49,7 @@ def cmToAngleRot(dist : float):
     #d._kRightMotor.run(360)
     #if d._kLeftMotor.angle() >= cmToAngleRot(127):
         #d.stop()
-
+"""
 def ligneDroite(speedLvl, distance):
     baseAngle = Sensors.degrés()
     baseSpeed = -speedLvl * 90
@@ -117,3 +114,4 @@ def testerGyro(x, y , z):
 testerGyro(0,0,0)
 #ligneDroite(3,0)
 #ligneDroiteSans(3,0)
+"""

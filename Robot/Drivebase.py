@@ -2,8 +2,7 @@
 from sensors import Sensors
 import sys
 sys.path.append('/home/robot/MapleBot/Util')
-from Point2D import RobotPose
-#from Util.Point2D import RobotPose
+from RobotPose import RobotPose
 import math
 
 from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
@@ -21,13 +20,15 @@ class Drivebase :
     _kWheelCirconference = float(math.pi*1.5*2)
     VALUE_FROM_OBSTACLE = 50.0
     _hasFinishedAction = False
+    _distance = 0.0
 
     #Odometrie
+    _s = Sensors()
     _pos = None
     
     def __init__(self):
-        self.setEncoders(0)
-        _pos = RobotPose(0,0,0)
+        self.setEncoders(0.0)
+        self._pos = RobotPose(0,0,0)
 
     def _str_(self):
         self._kLeftMotor.angle()
@@ -36,7 +37,7 @@ class Drivebase :
     #def periodic():
     
 
-    def setEncoders(self, angle):
+    def setEncoders(self, angle : float):
         self._kLeftMotor.reset_angle(float(angle))
         self._kRightMotor.reset_angle(float(angle))
     
@@ -52,7 +53,8 @@ class Drivebase :
         return self._kLeftMotor.speed()
     
     def getDistance(self):
-        return float(self._kLeftMotor.angle()*self._kWheelCirconference)
+        d = float((self._kLeftMotor.angle()+self._kRightMotor.angle())/2 * self._kWheelCirconference)
+        return d if d > 0.0 else d*-1.0
     
     #droite = angle positif, gauche = angle négatif
     def turn(self, angle, speed):
@@ -127,7 +129,7 @@ class Drivebase :
                 hasObstacleInFront = not self._hasFinishedAction
                 print("obstacle avoided")
     
-    def equalsWithTolerance(self, value, tolerance):
+    def equalsWithTolerance(self, value : float, tolerance : float):
         if(float(value) <= float(value) + float(tolerance) 
            and float(value) >= float(value)+float(tolerance)):
             return True
@@ -137,10 +139,15 @@ class Drivebase :
 
     #cette fonction reçoit dist : le rapport de déplacement sur un temps déterminé, et reçoit angle : la valeur que le gyro retourne.
     def computePos(self):
+        deg = self._s.degrés()
+        x = self._pos.getX() + (math.cos(deg) *self.getDistance())
+        y = self._pos.getY() + (math.sin(deg) *self.getDistance())
         self._pos.set(
-            self._pos.getX() + math.cos(Sensors.degrés()) * self.getDistance(), 
-            self._pos.getY() + math.sin(Sensors.degrés()) * self.getDistance(),
-            Sensors.degrés()) 
+            x,
+            y,
+            deg
+        ) 
+        self.setEncoders(0.0)
     
     #Cette fonction reçoit la distance en centimètres et retourne le nombre de degrés que les moteurs doivent tourner
     def cmToAngleRot(dist : float): 
