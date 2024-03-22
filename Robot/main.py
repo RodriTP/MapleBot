@@ -51,20 +51,23 @@ def printingAngle():
 def straight(dist : int):
     robot.straight(dist)
 
-
+#tourneXDegres prend en paramètres`les degrés à effectuer(- pour tourner à gauche + pour la droite),
+# la vitesse quelle doit effectuer ceci (la vitesse c'est 1/8 de tour par niv),
+# et finalement l'indiceDeCorrection, ceci est une variable en dehors de la fonction qui enregistre l'angle que le bot voulais atteindre.
+# Pour utiliser cette variable, le bot dois avoir utilisé cette fonction plus d'une fois. Sinon, utilisez la valeur 0.
 def tourneXDegres(deg, speedLvl, indiceDeCorrection):
     baseSpeed = speedLvl * 45
     #angleVoulu = float(((s.degrés() + deg)%360))
     angleVoulu = float(((indiceDeCorrection + deg)%360))
     print("Voulu " + str(angleVoulu))
     turn = True 
-    if angleVoulu < s.degrés() and deg > 0 and turn :
+    if s.degrés() > angleVoulu and deg > 0 and turn :
         if angleVoulu > speedLvl * 5: 
-            while(angleVoulu < s.degrés()):
+            while(s.degrés() > angleVoulu):
                 d._kLeftMotor.run(-baseSpeed)
                 d._kRightMotor.run(baseSpeed)
                 print(str(s.degrés()) + " : 1-0")
-            while(angleVoulu > s.degrés() + 5 * speedLvl):
+            while(s.degrés() + 5 * speedLvl < angleVoulu):
                 d._kLeftMotor.run(-baseSpeed)
                 d._kRightMotor.run(baseSpeed)
                 print(str(s.degrés()) + " : 1-1")
@@ -84,6 +87,8 @@ def tourneXDegres(deg, speedLvl, indiceDeCorrection):
                 print("derniers 1-2: " + str(s.degrés()))
             print(str(s.degrés()- angleVoulu))
         turn = False
+
+
     if angleVoulu < s.degrés() and deg < 0 and turn:
         while(angleVoulu < s.degrés() - 5*speedLvl):
             d._kLeftMotor.run(baseSpeed)
@@ -152,7 +157,7 @@ def tourneXDegres(deg, speedLvl, indiceDeCorrection):
 #     d.avanceUntilObstacle(s)
 #indiceDeCorrection = tourneXDegres(180,2,indiceDeCorrection)
 #     d.avanceUntilObstacle(s)
-tourneXDegres(90,2,0)
+#tourneXDegres(90,2,0)
 
 #tourneXDegres(90,4,tourneXDegres(-90,3,tourneXDegres(90,2,tourneXDegres(-90,1,0))))
 
@@ -209,8 +214,6 @@ tourneXDegres(90,2,0)
 #         #if d._kLeftMotor.angle() >= cmToAngleRot(30):
 #             #d.stop()
 
-
-
 # def ligneDroiteSans(speedLvl):
 #     baseSpeed = -speedLvl * 90
 #     while (True):
@@ -238,3 +241,49 @@ tourneXDegres(90,2,0)
 #                 d._kRightMotor.run(baseSpeed/(10*speedLvl))
 #                 print("RE-CALIBRATING DROIT diff : " + str(math.sin(math.radians(s.degrés())) - math.sin(math.radians(angleVoulu)))+" deg: " +  str(s.degrés()))
     
+
+
+def turnRad(deg, spd):
+    quadActuel = déterminerQuad(0)    
+    quadVoulu = déterminerQuad(deg)
+    while(quadActuel != quadVoulu):
+        gaucheOuDroiteSpd(deg, spd)
+        quadActuel = déterminerQuad(0)
+    while(distToDeg(deg) > 5):
+        gaucheOuDroiteSpd(deg, spd)
+    while(distToDeg(deg) <= 5):
+        gaucheOuDroiteSlw(deg)
+    print(str(distToDeg(deg)))
+
+def distToDeg(deg):
+    return abs(deg - s.degrés())  
+  
+def déterminerQuad(deg):
+    if (deg == 0): deg = s.degrés()
+    if(math.sin(math.radians(s.degrés())) > 0): si = 1
+    else:si = 2 
+    if(math.cos(math.radians(s.degrés())) > 0): co = 1
+    else: co = 2 
+    match [si,co]:
+        case [1,1]: quad = 1
+        case [1,2]: quad = 2
+        case [2,2]: quad = 3
+        case [2,1]: quad = 4
+    return quad
+
+def gaucheOuDroiteSpd(deg, spd):
+    baseSpeed = 45 * spd
+    if(deg > 0):  
+        d._kLeftMotor.run(-baseSpeed)
+        d._kRightMotor.run(baseSpeed)
+    if(deg < 0):
+        d._kLeftMotor.run(baseSpeed)
+        d._kRightMotor.run(-baseSpeed)
+
+def gaucheOuDroiteSlw(deg):
+    if(deg > 0):  
+        d._kLeftMotor.run(-45/8)
+        d._kRightMotor.run(45/8)
+    if(deg < 0):
+        d._kLeftMotor.run(45/8)
+        d._kRightMotor.run(-45/8)
