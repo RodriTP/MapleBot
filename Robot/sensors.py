@@ -1,5 +1,5 @@
 #!/usr/bin/env pybricks-micropython
-import utime
+#import utime
 from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,InfraredSensor, UltrasonicSensor, GyroSensor)
 from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.tools import wait, StopWatch, DataLog
@@ -7,6 +7,8 @@ from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 #import adafruit_bno055, board
 from pybricks.hubs import EV3Brick
+from pybricks.iodevices import I2CDevice
+#from bno055 import *
 
 #!/usr/bin/env pybricks-micropython
 from pybricks.parameters import Port, Color, Button, Direction, Stop
@@ -66,18 +68,21 @@ class Sensors :
     _isObstacleLeft = False
     _gyroOffset = None
     #sys, gyro,accel, mag
+    def __init__(self) :
+        self.degrés()
+    
     def degrés(self):
         line = []
-        gay = True
-        while gay == True: 
+        bool = True
+        while bool == True: 
             for c in ser.read(1):
                 if (chr(c) != '\n') and (chr(c) != '\r'):
                     line.append(chr(c))
                 if chr(c) == '\n':
                     strline=''.join(str(v) for v in line) 
-                    #print(float(strline))
+                    #print(strline)
                     line = []
-                    gay = False
+                    bool = False
                     if self._gyroOffset == None:
                         self._gyroOffset = float(strline)
                         return self._gyroOffset
