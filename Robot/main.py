@@ -15,7 +15,7 @@ from threading import Thread
 # This program requires LEGO EV3 MicroPython v2.0 or higher.
 # Click "Open user guide" on the EV3 extension tab for more information.
 
-from bluetooth import Bluetooth
+#from bluetooth import Bluetooth
 
 ev3 = EV3Brick()
 s = Sensors()
@@ -28,19 +28,11 @@ x = 0
 y = 0
 pos = [x,y]
 #robot = DriveBase(d._kLeftMotor, d._kRightMotor, wheel_diameter=42.2, axle_track=145)
-robot = DriveBase(d._kLeftMotor, d._kRightMotor, wheel_diameter=42.2, axle_track=163)
-
-while True:
-   # b.sendPositionAndSensor(s, d)
-    #print("send")
-    d.computePos()
-    print(d._pos)
+#robot = DriveBase(d._kLeftMotor, d._kRightMotor, wheel_diameter=42.2, axle_track=163)
 
 #20.6  2 rotations
 #9.745 rotations = 102.616 cm   1 rotation
 #40.4  10 rotations
-#d.turn(90, 100)
-#d.turn(-180, 100)
 
 #cette fonction reçoit dist : le rapport de déplacement sur un temps déterminé, et reçoit angle : la valeur que le gyro retourne.
 def newPos(dist, angle, x, y):
@@ -49,8 +41,8 @@ def newPos(dist, angle, x, y):
     return [X,Y]
     
 #Cette fonction reçoit la distance en centimètres et retourne le nombre de degrés que les moteurs doivent tourner
-    def cmToAngleRot(dist : float): 
-        return ((dist * 0.0949) * 360)
+def cmToAngleRot(dist : float): 
+    return ((dist * 0.0949) * 360)
 
 def printingAngle():
     while True:
@@ -58,9 +50,8 @@ def printingAngle():
         time.sleep(1)
 
 #Avance la dist voulue en mm
-def straight(dist : int):
-    robot.straight(dist)
-
+#def straight(dist : int):
+ #   robot.straight(dist)
 
 def tourneXDegres(deg, speedLvl, indiceDeCorrection):
     baseSpeed = speedLvl * 45
@@ -143,11 +134,6 @@ def tourneXDegres(deg, speedLvl, indiceDeCorrection):
                 print("derniers 4-2: " + str(round(s.degrés(),3)))
             print(str(s.degrés()- angleVoulu))
         turn = False
-    print("stop : " + str(s.degrés()) + " voici l'angle de fin " + "voici angle voulu : " + str(angleVoulu))
-    print(str(s.degrés()- angleVoulu))
-    print(str(s.degrés()- angleVoulu))
-    print(str(s.degrés()- angleVoulu))
-    print("stop : " + str(s.degrés()) + " voici l'angle de fin " + "voici angle voulu : " + str(angleVoulu))
     #reCalibre(angleVoulu, baseSpeed)
     d.stopMotors()
     return angleVoulu
@@ -156,23 +142,33 @@ def tourneXDegres(deg, speedLvl, indiceDeCorrection):
 #robot.turn(90)
 #robot.turn(-90)
 
-
+""" Section pour run du code"""
         
 # while True :
 #     d.avanceUntilObstacle(s)
 #indiceDeCorrection = tourneXDegres(180,2,indiceDeCorrection)
 #     d.avanceUntilObstacle(s)
-tourneXDegres(90,2,0)
-
+#tourneXDegres(90,2,0)
 #tourneXDegres(90,4,tourneXDegres(-90,3,tourneXDegres(90,2,tourneXDegres(-90,1,0))))
 
+d.avanceDistance(50)
+d.computePos()
+print('pos 1 :'+ str(d._pos))
+tourneXDegres(90, 5,0)
+d.computePos()
+print('pos 2 :'+ str(d._pos))
+d.avanceDistance(50)
+d.computePos()
+print('pos 3 :'+ str(d._pos))
+
+#while True:
+    #b.sendPositionAndSensor(s, d)
+    #print("send")
+    
 
 
 
-
-
-
-
+""" Fin Section pour run code"""
 
 
 

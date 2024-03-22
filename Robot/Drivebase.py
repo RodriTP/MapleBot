@@ -17,29 +17,29 @@ class Drivebase :
     _kLeftMotor = Motor(Port.D)
     _kRightMotor = Motor(Port.A)
     #_kGyro = GyroSensor(Port.S2, Direction.COUNTERCLOCKWISE)
-    _kWheelCirconference = float(math.pi*1.5*2)
+    _kWheelCirconference = float(math.pi*43) #en mm
     VALUE_FROM_OBSTACLE = 20.0
     _hasFinishedAction = False
-    _distance = 0.0
+    rightOldEncoderVal = float(0)
+    leftOldEncoderVal = float(0)
 
     #Odometrie
     _s = Sensors()
     _pos = None
     
     def __init__(self):
-        self.setEncoders(0.0)
+        self.setEncoders(0)
+        self.rightEncoderVal = self._kRightMotor.angle()
+        self.leftEncoderVal =  self._kLeftMotor.angle()
         self._pos = RobotPose(0,0,0)
 
     def _str_(self):
         self._kLeftMotor.angle()
         self._kRightMotor.angle()
 
-    #def periodic():
-    
-
-    def setEncoders(self, angle : float):
-        self._kLeftMotor.reset_angle(float(angle))
-        self._kRightMotor.reset_angle(float(angle))
+    def setEncoders(self, angle):
+        self._kLeftMotor.reset_angle(angle)
+        self._kRightMotor.reset_angle(angle)
     
     def stopMotors(self):
         self._kLeftMotor.run(0)
@@ -52,8 +52,19 @@ class Drivebase :
     def getSpeed(self):
         return self._kLeftMotor.speed()
     
-    def getDistance(self):
-        d = float((self._kLeftMotor.angle()+self._kRightMotor.angle())/2 * self._kWheelCirconference)
+    def getDistance(self): #en mm
+        """if(resetEncoders):
+            rightNewVal = self._kLeftMotor.angle()
+            leftNewVal = self._kRightMotor.angle()
+
+            differenceOfVal = float(((rightNewVal - self.rightOldEncoderVal) + (leftNewVal - self.leftOldEncoderVal))/2.0)
+            
+            d = float( differenceOfVal * self._kWheelCirconference / float(360))
+
+            self.rightOldEncoderVal = rightNewVal
+            self.leftOldEncoderVal = leftNewVal
+        else:"""
+        d = float((self._kLeftMotor.angle()+self._kRightMotor.angle())/2 * self._kWheelCirconference / float(360))
         return d if d > 0.0 else d*-1.0
     
     #droite = angle positif, gauche = angle négatif
@@ -91,16 +102,16 @@ class Drivebase :
                 self.stopMotors()
 
 
-    def avanceDistance(self, distance):
+    def avanceDistance(self, distance : float): #distance en mm
         self._hasFinishedAction = False
         self.setEncoders(0)
         self.setSpeed(200)
+        
         while self._hasFinishedAction == False:
-            print(self._kLeftMotor.angle())
-            if self._kLeftMotor.angle() >= (float(distance)*360.0)/float(9.745):#9.745 en cm
-                self._hasFinishedAction = True
-                print("J'AI AVANCÉ")
-                self.stopMotors()
+            self._hasFinishedAction = (self.getDistance() >= distance)
+        
+        print("J'AI AVANCÉ : "+str(self.getDistance()))
+        self.stopMotors()
 
     def moveAuto(self, sensor):
         hasObstacleInFront = False
@@ -144,14 +155,15 @@ class Drivebase :
     #cette fonction reçoit dist : le rapport de déplacement sur un temps déterminé, et reçoit angle : la valeur que le gyro retourne.
     def computePos(self):
         deg = self._s.degrés()
-        x = self._pos.getX() + (math.cos(deg) *self.getDistance())
-        y = self._pos.getY() + (math.sin(deg) *self.getDistance())
+        x = self._pos.getX() + (math.cos(math.radians(deg)) *self.getDistance())
+        y = self._pos.getY() + (math.sin(math.radians(deg)) *self.getDistance())
+        print(y)
         self._pos.set(
             x,
             y,
             deg
-        ) 
-        self.setEncoders(0.0)
+        )
+        self.setEncoders(0)
     
     #Cette fonction reçoit la distance en centimètres et retourne le nombre de degrés que les moteurs doivent tourner
     def cmToAngleRot(dist : float): 
