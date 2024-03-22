@@ -1,4 +1,3 @@
-import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import linregress
 
@@ -1335,13 +1334,16 @@ def creerGrille(data): #métode pour creer un grillage et séparer les données
             grille[i][j].limiteSuppY = pointeurLimSuppY
             grille[i][j].limiteInfY = pointeurLimInfY
             #print("Point (", i, ", ", j, ") : LimiteSuppX = ", grille[i][j].limiteSuppX, "; LimiteInfX = ", grille[i][j].limiteInfX, "; LimiteSuppY = ", grille[i][j].limiteSuppY, "; LimiteInfY = ",grille[i][j].limiteInfY)
+        print("Point (", 0, ", ", 0, ") : LimiteSuppX = ", grille[0][0].limiteSuppX, "; LimiteInfX = ", grille[0][0].limiteInfX, "; LimiteSuppY = ", grille[0][0].limiteSuppY, "; LimiteInfY = ",grille[0][0].limiteInfY)
 
-            for point in range(len(data)): # on parcours les points des données originales
-                if (data[point][0] >= grille[i][j].limiteInfX and data[point][0] <= grille[i][j].limiteSuppX) and (data[point][1] >= grille[i][j].limiteInfY and data[point][1] <= grille[i][j].limiteSuppY):
-                  grille[i][j].dataGrille.append(data[point]) 
 
-            grille[i][j].quantite = len(grille[i][j].dataGrille)
-            print(grille[i][j].quantite)
+print("done")
+    # for point in range(len(data)): # on parcours les points des données originales
+    #     if (data[point][0] >= grille[i][j].limiteInfX and data[point][0] <= grille[i][j].limiteSuppX) and (data[point][1] >= grille[i][j].limiteInfY and data[point][1] <= grille[i][j].limiteSuppY):
+    #          grille[i][j].dataGrille.append(data[point]) 
+
+    #     grille[i][j].quantite = len(grille[i][j].dataGrille)
+    #     #print(grille[i][j].quantite)
 
              
             
