@@ -7,8 +7,6 @@ from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 #import adafruit_bno055, board
 from pybricks.hubs import EV3Brick
-from pybricks.iodevices import I2CDevice
-from bno055 import *
 
 #!/usr/bin/env pybricks-micropython
 from pybricks.parameters import Port, Color, Button, Direction, Stop

@@ -30,6 +30,8 @@ print("send")
 #40.4  10 rotations
 #d.turn(90, 100)
 #d.turn(-180, 100)
+while True:
+    b.sendSensorData()
 
 #cette fonction reçoit dist : le rapport de déplacement sur un temps déterminé, et reçoit angle : la valeur que le gyro retourne.
 def newPos(dist : float, angle : float):
@@ -114,6 +116,6 @@ def testerGyro(x, y , z):
 #     print(degGyro)
 
 
-testerGyro(0,0,0)
+#testerGyro(0,0,0)
 #ligneDroite(3,0)
 #ligneDroiteSans(3,0)

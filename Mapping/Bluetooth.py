@@ -44,7 +44,7 @@ class Bluetooth:
 
     #L'échange de donnés qui doit se faire tout le temps
     def dataExchange(self):
-        self.mbox.wait()
+        self.mbox.wait_new()
         self.dataRecieved.append(self.mbox.read())
         if(len(self.dataToSend)==0):
             self.mbox.send("null")
