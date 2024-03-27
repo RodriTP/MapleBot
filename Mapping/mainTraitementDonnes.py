@@ -36,22 +36,23 @@ class mainTraitementDonnees :
                 else:  #Sinon la limite de la prochaine case est à une distance donnée de celle d'avant
                     pointeurLimInfY -= Data.espacement   
 
-                grille[0][j].limiteSuppX = pointeurLimSuppX
-                grille[0][j].limiteInfX = pointeurLimInfX
-                grille[0][j].limiteSuppY = pointeurLimSuppY
-                grille[0][j].limiteInfY = pointeurLimInfY
-
+                grille[i][j].limiteSuppX = pointeurLimSuppX
+                grille[i][j].limiteInfX = pointeurLimInfX
+                grille[i][j].limiteSuppY = pointeurLimSuppY
+                grille[i][j].limiteInfY = pointeurLimInfY
+           #print("Point (", i, ", ", j, ") : LimiteSuppX = ", grille[i][j].limiteSuppX, "; LimiteInfX = ", grille[i][j].limiteInfX, "; LimiteSuppY = ", grille[i][j].limiteSuppY, "; LimiteInfY = ",grille[i][j].limiteInfY)
         
-            print("Point (", 0, ", ", 10, ") : LimiteSuppX = ", grille[0][10].limiteSuppX, "; LimiteInfX = ", grille[0][10].limiteInfX, "; LimiteSuppY = ", grille[0][10].limiteSuppY, "; LimiteInfY = ",grille[0][10].limiteInfY)
+            
         
         # --- INSERTION DES DONNÉES DANS LA GRILLE EN FONCTION DES LIMITES QUI ONT ÉTÉ DEFINIS ---
                      
         for point in range(len(data)): # on parcours les points des données originales
             for i in range(len(grille)): # on parcours les colonnes |
                 for j in range (len(grille[0])): # on parcours les lignes -
-                    print("Point (", 0, ", ", 0, ") : LimiteSuppX = ", grille[0][0].limiteSuppX, "; LimiteInfX = ", grille[0][0].limiteInfX, "; LimiteSuppY = ", grille[0][0].limiteSuppY, "; LimiteInfY = ",grille[0][0].limiteInfY)
+                    #print("Point (", i, ", ", j, ") : LimiteSuppX = ", grille[i][j].limiteSuppX, "; LimiteInfX = ", grille[i][j].limiteInfX, "; LimiteSuppY = ", grille[i][j].limiteSuppY, "; LimiteInfY = ",grille[i][j].limiteInfY)
                     if (data[point][0] > grille[i][j].limiteInfX and data[point][0] < grille[i][j].limiteSuppX) and (data[point][1] > grille[i][j].limiteInfY and data[point][1] < grille[i][j].limiteSuppY):
-                        grille[i][j].dataGrille.append(grille[i][j], data[point]) 
+                        grille[i][j].dataGrille.append(data[point]) 
+                        print("in!")
         
         for i in range(len(grille)): # on parcours les colonnes |
             for j in range (len(grille[0])): # on parcours les lignes -
@@ -62,8 +63,16 @@ class mainTraitementDonnees :
 
     
     #création de la grille
-    grille = [[grilleSalle for i in range(int((Data.trouverMaxY(Data.data)-Data.trouverMinY(Data.data))/Data.espacement)+1)] for j in range(int((Data.trouverMaxX(Data.data)-Data.trouverMinX(Data.data))/Data.espacement)+1)]
+    grille = [[grilleSalle() for i in range(int((Data.trouverMaxY(Data.data)-Data.trouverMinY(Data.data))/Data.espacement)+1)] for j in range(int((Data.trouverMaxX(Data.data)-Data.trouverMinX(Data.data))/Data.espacement)+1)]
+    # for i in range(len(grille)): # on parcours les colonnes |
+    #     for j in range (len(grille[0])): # on parcours les lignes -
+    #         print("Point (", i, ", ", j, ") : LimiteSuppX = ", grille[i][j].limiteSuppX, "; LimiteInfX = ", grille[i][j].limiteInfX, "; LimiteSuppY = ", grille[i][j].limiteSuppY, "; LimiteInfY = ",grille[i][j].limiteInfY)
+    
     grille = creationGrille(grille, Data.data)
+    
+    # for i in range(len(grille)): # on parcours les colonnes |
+    #     for j in range (len(grille[0])): # on parcours les lignes -
+    #          print("Point (", i, ", ", j, ") : LimiteSuppX = ", grille[i][j].limiteSuppX, "; LimiteInfX = ", grille[i][j].limiteInfX, "; LimiteSuppY = ", grille[i][j].limiteSuppY, "; LimiteInfY = ",grille[i][j].limiteInfY)
 
 
     x = []

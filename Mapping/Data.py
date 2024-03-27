@@ -1,8 +1,9 @@
 class Data:
     data = [] # une liste contenant des points
 
-    #Sert à représenter les données qui seront reçus par le robot (À ENLEVER APRÈS)
-    # on ajoute dans la liste data les coordonées du point dans le format suivant [x,y]
+    # Sert à représenter les données qui seront reçus par le robot (À ENLEVER APRÈS)
+    # On ajoute dans la liste data les coordonées du point dans le format suivant [x,y] 
+    # Tout les points doivent être dans le premier quadrant
     data.append([2.100125603600003,14.230716153411098])
     data.append([2.646198640079976,14.206973847477187])
     data.append([3.0973024528243016,14.230716153411098])
