@@ -100,6 +100,8 @@ def tourneXDegres(deg, speedLvl, indiceDeCorrection):
             print("derniers 2: " + str(s.degrés()))
         print(str(s.degrés()- angleVoulu))
         turn = False
+
+
     if angleVoulu > s.degrés() and deg > 0 and turn:
         print("degrés voulu : " + str(angleVoulu))
         while(angleVoulu > s.degrés() + 5 * speedLvl):
@@ -112,6 +114,8 @@ def tourneXDegres(deg, speedLvl, indiceDeCorrection):
             print("derniers 3: " + str(s.degrés()))
         print(str(s.degrés()- angleVoulu))
         turn = False
+
+
     if angleVoulu > s.degrés() and deg < 0 and turn :
         if angleVoulu < 360 - speedLvl * 5: 
             while(angleVoulu > s.degrés()):
@@ -155,15 +159,12 @@ def tourneXDegres(deg, speedLvl, indiceDeCorrection):
         
 # while True :
 #     d.avanceUntilObstacle(s)
-#indiceDeCorrection = tourneXDegres(180,2,indiceDeCorrection)
+# indiceDeCorrection = tourneXDegres(90,2,0)
+# indiceDeCorrection = tourneXDegres(-90,2,indiceDeCorrection)
 #     d.avanceUntilObstacle(s)
 #tourneXDegres(90,2,0)
 
 #tourneXDegres(90,4,tourneXDegres(-90,3,tourneXDegres(90,2,tourneXDegres(-90,1,0))))
-
-
-
-
 
 
 
@@ -244,46 +245,115 @@ def tourneXDegres(deg, speedLvl, indiceDeCorrection):
 
 
 def turnRad(deg, spd):
+    currDeg = s.degrés()
     quadActuel = déterminerQuad(0)    
     quadVoulu = déterminerQuad(deg)
-    while(quadActuel != quadVoulu):
+    print(quadActuel)
+    print(quadVoulu)
+    used = False
+    works = True
+    #prob = quee il stop le quad après le but alors y arrête pas
+    while(quadActuel != quadVoulu and works):
+        print(str(tooBig(distToDeg(deg,currDeg))) + " quadFonct")
+        #print("QuadActuel : " + str(quadActuel) + "---QuadVoulu : " + str(quadVoulu))
         gaucheOuDroiteSpd(deg, spd)
         quadActuel = déterminerQuad(0)
-    while(distToDeg(deg) > 5):
-        gaucheOuDroiteSpd(deg, spd)
-    while(distToDeg(deg) <= 5):
-        gaucheOuDroiteSlw(deg)
-    print(str(distToDeg(deg)))
+        if(abs(tooBig(distToDeg(deg,currDeg))) > 10*spd):
+            works = False
+    if(abs(tooBig(distToDeg(deg,currDeg))) >= 0.5):
+        while(abs(tooBig(distToDeg(deg,currDeg))) > 10*spd):
+            print(str(tooBig(abs(distToDeg(deg,currDeg)))) + " : more than 10")
+            gaucheOuDroiteSpd(deg, spd)
+        if(tooBig(distToDeg(deg,currDeg)) >= 0.5):  
+            while(tooBig(distToDeg(deg,currDeg)) >= 0.5):
+                print(str(tooBig(distToDeg(deg,currDeg))) + " : less than 10-1")
+                gaucheOuDroiteSlw(deg)        
+            used = True
+        if(used  != True):
+            while(tooBig(distToDeg(deg,currDeg)) <= -0.5):
+                print(str(tooBig(distToDeg(deg,currDeg))) + " : less than 10-2 ")
+                gaucheOuDroiteSlw(deg)
+            
+    print(str(distToDeg(deg,currDeg)) + " supposed to be done")
+    #recal(deg)
 
-def distToDeg(deg):
-    return abs(deg - s.degrés())  
+
+def distToDeg(deg, currDeg):
+    #print(str(s.degrés()) + " " + str(deg))
+    answer = s.degrés() - deg - currDeg
+    if(answer < -360):
+        answer = answer + 360
+    if(answer > 360):
+        answer = answer + -360
+    return answer #
+
+def tooBig(distDiff):
+    # if(distDiff > 180):
+    #     return distDiff - 180
+    # if(distDiff < -180): 
+    #     return distDiff + 180
+    return distDiff
   
 def déterminerQuad(deg):
     if (deg == 0): deg = s.degrés()
-    if(math.sin(math.radians(s.degrés())) > 0): si = 1
-    else:si = 2 
-    if(math.cos(math.radians(s.degrés())) > 0): co = 1
+    if(math.sin(math.radians(deg)) > 0): si = 1
+    else: si = 2 
+    if(math.cos(math.radians(deg)) > 0): co = 1
     else: co = 2 
-    match [si,co]:
-        case [1,1]: quad = 1
-        case [1,2]: quad = 2
-        case [2,2]: quad = 3
-        case [2,1]: quad = 4
+    if (si == 1): 
+        if(co==1): quad = 1 
+        elif(co==2): quad = 2
+    elif(si==2): 
+        if(co==2): quad = 3 
+        elif(co==1): quad = 4
     return quad
 
 def gaucheOuDroiteSpd(deg, spd):
     baseSpeed = 45 * spd
+    #droite
     if(deg > 0):  
+        print("right")
         d._kLeftMotor.run(-baseSpeed)
         d._kRightMotor.run(baseSpeed)
+    #gauche
     if(deg < 0):
+        print("left")
         d._kLeftMotor.run(baseSpeed)
         d._kRightMotor.run(-baseSpeed)
 
 def gaucheOuDroiteSlw(deg):
+    #droite
     if(deg > 0):  
+        #print("right")
         d._kLeftMotor.run(-45/8)
         d._kRightMotor.run(45/8)
+    #gauche
     if(deg < 0):
+        #print("left")
         d._kLeftMotor.run(45/8)
         d._kRightMotor.run(-45/8)
+
+
+
+def recal(deg):
+    #while(abs(distToDeg(deg)) > 0.5):
+        while(s.degrés() - deg > 0.5 and deg > 0):#gauche
+            print("RE-CALIBRATING GAUCHE diff : " + str(s.degrés() - deg)+" deg: " +  str(s.degrés()))
+            d._kLeftMotor.run(45/10)
+            d._kRightMotor.run(-45/10)
+        while(s.degrés() - deg < -0.5 and deg < 0):#droite
+            print("RE-CALIBRATING DROIT diff : " + str(s.degrés() - deg)+" deg: " +  str(s.degrés()))
+            d._kLeftMotor.run(-45/10)
+            d._kRightMotor.run(45/10)
+            
+
+#turnRad(-90,2)
+d.avanceUntilObstacle(s)
+turnRad(180, 4)
+d.avanceUntilObstacle(s)
+turnRad(180, 4)
+# turnRad(100, 2)
+# turnRad(-80, 2)
+# turnRad(-45, 2)
+# turnRad(-64, 2)
+#robot.turn(113)
