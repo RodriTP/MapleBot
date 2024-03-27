@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-from pybricks.messaging import BluetoothMailboxClient, TextMailbox
+from pcPybricks.messaging import BluetoothMailboxClient, TextMailbox
+
 
 # This demo makes your PC talk to an EV3 over Bluetooth.
 #
@@ -18,31 +19,29 @@ from pybricks.messaging import BluetoothMailboxClient, TextMailbox
 
 # This is the address of the server EV3 we are connecting to.
 
-class Bluetooth:
+class connexionBluetooth:
     #Données qui seront reçues et envoyés
     dataToSend = []
     dataRecieved = []
 
     #L'adresse bluetooth du EV3
     SERVER = "00:17:ec:f4:9d:c8"
+    #Initilisation de la connection Bluetooth
+    client = BluetoothMailboxClient()
+    mbox = TextMailbox("greeting", client)
 
     def __init__(self):
-
-        #Initilisation de la connection Bluetooth
-        client = BluetoothMailboxClient()
-        mbox = TextMailbox("greeting", client)
-
         print("establishing connection...")
-        client.connect(self.SERVER)
+        self.client.connect(self.SERVER)
         print("connected!")
 
         # In this program, the client sends the first message and then waits for the
         # server to reply.
         #Envoie de message
-        mbox.send("hello!")
-        mbox.wait()
+        self.mbox.send("hello!")
+        self.mbox.wait()
         #exemple de truc à recevoir
-        print(mbox.read())
+        print(self.mbox.read())
 
     #L'échange de donnés qui doit se faire tout le temps
     def dataExchange(self):
@@ -66,4 +65,7 @@ class Bluetooth:
         self.dataRecieved.clear()
 
     def separateData(self):
-        return self.dataRecieved[0].split(",")
+        return self.dataRecieved[0].split(";")
+    #prend ce que reçois l'ordi (x:200.2902) pour le séparer pour juste avoir 200.2902
+    def getNumData(data : str):
+        return float(data.split(":")[1])

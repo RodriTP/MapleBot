@@ -164,10 +164,12 @@ print('pos 3 :'+ str(d._pos))
 """
 
 b = Bluetooth()
+s.degrés()
 
 while True:
-    b.sendPositionAndSensor(s, d)
     d.computePos()
+    print(d._pos.__str__())
+    b.sendPositionAndSensor(s, d)
     print("send")
     
 

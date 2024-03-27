@@ -18,11 +18,12 @@ class Bluetooth :
     mbox.send('hello to you!')
 
     def sendPositionAndSensor(self, s:Sensors, d:Drivebase):
-        data = d._pos()
-        data += ",UL" + str(s.getLeftDistance())
-        data += ",UR" + str(s.getRightDistance())
+        data = d._pos.__str__()
+        data += ";UL:" + str(s.getLeftDistance())
+        data += ";UR:" + str(s.getRightDistance())
         self.mbox.send(data)
         self.mbox.wait()
+        print(data)
 
     def sendSensorData(self):
         self.mbox.send('U1:' + str(self.s.getLeftDistance()))

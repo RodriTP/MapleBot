@@ -5,8 +5,6 @@ class grilleSalle: #Classe du grillage pour que chaque case ait les variables su
     dataGrille = [] #grillage
     quantite = 0  #la quantité de données dans chaque case
 
-
-
     def creerGrille(self, data : Data): #métode pour creer un grillage et séparer les données
         #On commence la séparation en haut à gauche des données
         limiteSuppX = 0 #la valeur maximale en X acceptée dans la case
@@ -52,3 +50,4 @@ class grilleSalle: #Classe du grillage pour que chaque case ait les variables su
 
                 grille[i][j].quantite = len(grille[i][j].dataGrille)
                 print(grille[i][j].quantite)
+    

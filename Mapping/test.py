@@ -1,9 +1,9 @@
-from ConnexionBluetooth import Bluetooth
+from ConnexionBluetooth import connexionBluetooth
 
-b = Bluetooth()
+b = connexionBluetooth()
 
-#while True:
-    #b.dataExchange()
-    #print(b.getData())
-  #  b.resetData()
-   # print("recieved")
+while True:
+    b.dataExchange()
+    print(b.getData())
+    #b.resetData()
+    #print("recieved")

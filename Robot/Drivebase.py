@@ -157,7 +157,6 @@ class Drivebase :
         deg = self._s.degrés()
         x = self._pos.getX() + (math.cos(math.radians(deg)) *self.getDistance())
         y = self._pos.getY() + (math.sin(math.radians(deg)) *self.getDistance())
-        print(y)
         self._pos.set(
             x,
             y,
