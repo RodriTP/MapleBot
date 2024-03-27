@@ -42,22 +42,30 @@ class mainTraitementDonnees :
                 grille[i][j].limiteInfY = pointeurLimInfY
            #print("Point (", i, ", ", j, ") : LimiteSuppX = ", grille[i][j].limiteSuppX, "; LimiteInfX = ", grille[i][j].limiteInfX, "; LimiteSuppY = ", grille[i][j].limiteSuppY, "; LimiteInfY = ",grille[i][j].limiteInfY)
         
+        return grille
+    
+
             
-        
+    def insertionDonnees(grille, data):
         # --- INSERTION DES DONNÉES DANS LA GRILLE EN FONCTION DES LIMITES QUI ONT ÉTÉ DEFINIS ---
                      
         for point in range(len(data)): # on parcours les points des données originales
             for i in range(len(grille)): # on parcours les colonnes |
                 for j in range (len(grille[0])): # on parcours les lignes -
                     #print("Point (", i, ", ", j, ") : LimiteSuppX = ", grille[i][j].limiteSuppX, "; LimiteInfX = ", grille[i][j].limiteInfX, "; LimiteSuppY = ", grille[i][j].limiteSuppY, "; LimiteInfY = ",grille[i][j].limiteInfY)
-                    if (data[point][0] > grille[i][j].limiteInfX and data[point][0] < grille[i][j].limiteSuppX) and (data[point][1] > grille[i][j].limiteInfY and data[point][1] < grille[i][j].limiteSuppY):
+                    if (data[point][0] >= grille[i][j].limiteInfX and data[point][0] <= grille[i][j].limiteSuppX) and (data[point][1] >= grille[i][j].limiteInfY and data[point][1] <= grille[i][j].limiteSuppY):
                         grille[i][j].dataGrille.append(data[point]) 
-                        print("in!")
+                        #print(point, ", ", end="")
         
+        max = 0
         for i in range(len(grille)): # on parcours les colonnes |
             for j in range (len(grille[0])): # on parcours les lignes -
                 grille[i][j].quantite = len(grille[i][j].dataGrille)
-                #print(grille[i][j].quantite)
+                print(grille[i][j].quantite)
+                if (max<grille[i][j].quantite):
+                    max = grille[i][j].quantite
+
+        print("espacement:",Data.espacement)
 
         return grille 
 
@@ -69,10 +77,13 @@ class mainTraitementDonnees :
     #         print("Point (", i, ", ", j, ") : LimiteSuppX = ", grille[i][j].limiteSuppX, "; LimiteInfX = ", grille[i][j].limiteInfX, "; LimiteSuppY = ", grille[i][j].limiteSuppY, "; LimiteInfY = ",grille[i][j].limiteInfY)
     
     grille = creationGrille(grille, Data.data)
+    grille = insertionDonnees(grille, Data.data)
     
     # for i in range(len(grille)): # on parcours les colonnes |
-    #     for j in range (len(grille[0])): # on parcours les lignes -
-    #          print("Point (", i, ", ", j, ") : LimiteSuppX = ", grille[i][j].limiteSuppX, "; LimiteInfX = ", grille[i][j].limiteInfX, "; LimiteSuppY = ", grille[i][j].limiteSuppY, "; LimiteInfY = ",grille[i][j].limiteInfY)
+    #      for j in range (len(grille[0])): # on parcours les lignes -
+    #         #print("Point (", i, ", ", j, ") : LimiteSuppX = ", grille[i][j].limiteSuppX, "; LimiteInfX = ", grille[i][j].limiteInfX, "; LimiteSuppY = ", grille[i][j].limiteSuppY, "; LimiteInfY = ",grille[i][j].limiteInfY)
+    #         print("Point (", i, ", ", j, ") : quantité = ", grille[i][j].quantite)
+
 
 
     x = []

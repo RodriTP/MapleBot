@@ -4,7 +4,7 @@ class grilleSalle: #Classe du grillage pour que chaque case ait les variables su
     def __init__(self):
         self.mur = False #sert à déteminer s'il y a présence d'un mur
         self.dataGrille = [] #grillage
-        self.quantite = 0  #la quantité de données dans chaque case
+        self.quantite = len(self.dataGrille)  #la quantité de données dans chaque case
 
         #On commence la séparation en haut à gauche des données
         self.limiteSuppX = 0 #la valeur maximale en X acceptée dans la case
