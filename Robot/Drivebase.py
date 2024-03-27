@@ -16,9 +16,9 @@ class Drivebase :
     _kRightMotor = Motor(Port.A)
     #_kGyro = GyroSensor(Port.S2, Direction.COUNTERCLOCKWISE)
     _kWheelCirconference = float(math.pi*1.5*2)
-    VALUE_FROM_OBSTACLE = 20.0
+    VALUE_FROM_OBSTACLE = 50.0
     _hasFinishedAction = False
-
+    s = Sensors()
     #Odometrie
     _pos = None
     
@@ -81,8 +81,10 @@ class Drivebase :
         #while self.getAngle() != targetAngle:
 
     def avanceUntilObstacle(self, sensor):
+        s = Sensors()
         self._hasFinishedAction = False
         self.setSpeed(-400)
+        print(s.degrés())
         while self._hasFinishedAction == False:
             #print(self._hasFinishedAction)
             if(sensor.getFrontValue() < self.VALUE_FROM_OBSTACLE):

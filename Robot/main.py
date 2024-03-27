@@ -254,24 +254,28 @@ def turnRad(deg, spd):
     works = True
     #prob = quee il stop le quad après le but alors y arrête pas
     while(quadActuel != quadVoulu and works):
-        print(str(tooBig(distToDeg(deg,currDeg))) + " quadFonct")
+        #print(str(tooBig(distToDeg(deg,currDeg))) + " quadFonct")
         #print("QuadActuel : " + str(quadActuel) + "---QuadVoulu : " + str(quadVoulu))
         gaucheOuDroiteSpd(deg, spd)
         quadActuel = déterminerQuad(0)
+        print(s.degrés())
         if(abs(tooBig(distToDeg(deg,currDeg))) > 10*spd):
             works = False
     if(abs(tooBig(distToDeg(deg,currDeg))) >= 0.5):
         while(abs(tooBig(distToDeg(deg,currDeg))) > 10*spd):
-            print(str(tooBig(abs(distToDeg(deg,currDeg)))) + " : more than 10")
+            print(s.degrés())
+            #print(str(tooBig(abs(distToDeg(deg,currDeg)))) + " : more than 10")
             gaucheOuDroiteSpd(deg, spd)
         if(tooBig(distToDeg(deg,currDeg)) >= 0.5):  
             while(tooBig(distToDeg(deg,currDeg)) >= 0.5):
-                print(str(tooBig(distToDeg(deg,currDeg))) + " : less than 10-1")
+                print(s.degrés())
+                #print(str(tooBig(distToDeg(deg,currDeg))) + " : less than 10-1")
                 gaucheOuDroiteSlw(deg)        
             used = True
         if(used  != True):
             while(tooBig(distToDeg(deg,currDeg)) <= -0.5):
-                print(str(tooBig(distToDeg(deg,currDeg))) + " : less than 10-2 ")
+                print(s.degrés())
+                #print(str(tooBig(distToDeg(deg,currDeg))) + " : less than 10-2 ")
                 gaucheOuDroiteSlw(deg)
             
     print(str(distToDeg(deg,currDeg)) + " supposed to be done")
@@ -347,11 +351,23 @@ def recal(deg):
             d._kRightMotor.run(45/10)
             
 
+
+def calibrer():
+    x = 0
+    while (x < 10000):
+        d._kLeftMotor.run(45)
+        d._kRightMotor.run(45)
+        x = x+ 1
+        #print(s.degrés())
+    turnRad(176, 2)
+
 #turnRad(-90,2)
-d.avanceUntilObstacle(s)
-turnRad(180, 4)
-d.avanceUntilObstacle(s)
-turnRad(180, 4)
+calibrer()
+while(True):
+    d.avanceUntilObstacle(s)
+    turnRad(-176, 2)
+    d.avanceUntilObstacle(s)
+    turnRad(176, 2)
 # turnRad(100, 2)
 # turnRad(-80, 2)
 # turnRad(-45, 2)
