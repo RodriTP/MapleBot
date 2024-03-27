@@ -26,21 +26,23 @@ class Bluetooth:
     #L'adresse bluetooth du EV3
     SERVER = "00:17:ec:f4:9d:c8"
 
-    #Initilisation de la connection Bluetooth
-    client = BluetoothMailboxClient()
-    mbox = TextMailbox("greeting", client)
+    def __init__(self):
 
-    print("establishing connection...")
-    client.connect(SERVER)
-    print("connected!")
+        #Initilisation de la connection Bluetooth
+        client = BluetoothMailboxClient()
+        mbox = TextMailbox("greeting", client)
 
-    # In this program, the client sends the first message and then waits for the
-    # server to reply.
-    #Envoie de message
-    mbox.send("hello!")
-    mbox.wait()
-    #exemple de truc à recevoir
-    print(mbox.read())
+        print("establishing connection...")
+        client.connect(self.SERVER)
+        print("connected!")
+
+        # In this program, the client sends the first message and then waits for the
+        # server to reply.
+        #Envoie de message
+        mbox.send("hello!")
+        mbox.wait()
+        #exemple de truc à recevoir
+        print(mbox.read())
 
     #L'échange de donnés qui doit se faire tout le temps
     def dataExchange(self):
@@ -49,7 +51,7 @@ class Bluetooth:
         if(len(self.dataToSend)==0):
             self.mbox.send('0')
         else:
-            self.mbox.send(dataToSend[0])
+            self.mbox.send(self.dataToSend[0])
         
     #Ajoute des données qui vont être transmises
     def addDataToSend(self, dataToSend):

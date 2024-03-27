@@ -1,14 +1,23 @@
 from ConnexionBluetooth import Bluetooth
-#from TraitementDonnees import grilleSalle
-#from Util.Point2D import RobotPose
+from GrilleSalle import grilleSalle
+from Data import Data
 import sys
-sys.path.append('Util')
-from Point2D import Point2D
+#sys.path.append('Util')
+#from Point2D import Point2D
+
 
 b = Bluetooth()
-#g = grilleSalle
+g = grilleSalle()
+sensorData = []
+d = Data()
+d.ajoutDonnee(0.0, 0.0)
+g.creerGrille(d)
+b.dataExchange()
 
-#print(Point2D(0,0))
 while True:
     b.dataExchange()
-    print(b.getData())
+    sensorData = b.separateData()
+    if(len(sensorData)!=1):
+        d.ajoutDonnee(sensorData[0], sensorData[1])
+
+    

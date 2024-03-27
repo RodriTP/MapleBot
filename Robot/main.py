@@ -10,12 +10,10 @@ import math
 from Drivebase import Drivebase
 from sensors import Sensors
 import time
-
-from threading import Thread
 # This program requires LEGO EV3 MicroPython v2.0 or higher.
 # Click "Open user guide" on the EV3 extension tab for more information.
 
-#from bluetooth import Bluetooth
+from bluetooth import Bluetooth
 
 ev3 = EV3Brick()
 s = Sensors()
@@ -33,6 +31,8 @@ pos = [x,y]
 #20.6  2 rotations
 #9.745 rotations = 102.616 cm   1 rotation
 #40.4  10 rotations
+#d.turn(90, 100)
+#d.turn(-180, 100)
 
 #cette fonction reçoit dist : le rapport de déplacement sur un temps déterminé, et reçoit angle : la valeur que le gyro retourne.
 def newPos(dist, angle, x, y):
@@ -151,6 +151,7 @@ def tourneXDegres(deg, speedLvl, indiceDeCorrection):
 #tourneXDegres(90,2,0)
 #tourneXDegres(90,4,tourneXDegres(-90,3,tourneXDegres(90,2,tourneXDegres(-90,1,0))))
 
+"""
 d.avanceDistance(50)
 d.computePos()
 print('pos 1 :'+ str(d._pos))
@@ -160,10 +161,14 @@ print('pos 2 :'+ str(d._pos))
 d.avanceDistance(50)
 d.computePos()
 print('pos 3 :'+ str(d._pos))
+"""
 
-#while True:
-    #b.sendPositionAndSensor(s, d)
-    #print("send")
+b = Bluetooth()
+
+while True:
+    b.sendPositionAndSensor(s, d)
+    d.computePos()
+    print("send")
     
 
 
