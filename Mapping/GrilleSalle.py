@@ -1,4 +1,4 @@
-from Data import Data
+from Data2 import Data
 
 class grilleSalle: #Classe du grillage pour que chaque case ait les variables suivantes
     def __init__(self):

@@ -1,8 +1,7 @@
 import matplotlib.pyplot as plt
 from scipy import stats
 from  GrilleSalle import grilleSalle
-from Data import Data
-
+from Data2 import Data
 
 ################## Début classe mainTraitementDonnees (sert de main) #######################
 #### creer une grille la remplis avec les données et affiche la grille

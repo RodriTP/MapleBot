@@ -1,4 +1,5 @@
-class Data:
+class Data:    
+
     data = [] # une liste contenant des points
 
     # Sert à représenter les données qui seront reçus par le robot (À ENLEVER APRÈS)
@@ -1249,6 +1250,7 @@ class Data:
     data.append([10.789809575411748,14.064520011873716])
     data.append([19.788143524364347,14.017035400005891])
 
+
     espacement = 0.5
 
     def trouverMaxX(data):  #Pour trouver la valeur maximale en X
@@ -1286,4 +1288,3 @@ class Data:
             
         
         return minY
-################## FIN Classe Traitement Donnes ######################
