@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 from scipy import stats
 from  GrilleSalle import grilleSalle
 from Data import Data
+
+
 ################## Début classe mainTraitementDonnees (sert de main) #######################
 #### creer une grille la remplis avec les données et affiche la grille
 class mainTraitementDonnees :
@@ -40,8 +42,7 @@ class mainTraitementDonnees :
                 grille[i][j].limiteInfX = pointeurLimInfX
                 grille[i][j].limiteSuppY = pointeurLimSuppY
                 grille[i][j].limiteInfY = pointeurLimInfY
-           #print("Point (", i, ", ", j, ") : LimiteSuppX = ", grille[i][j].limiteSuppX, "; LimiteInfX = ", grille[i][j].limiteInfX, "; LimiteSuppY = ", grille[i][j].limiteSuppY, "; LimiteInfY = ",grille[i][j].limiteInfY)
-        
+           
         return grille
     
 
@@ -52,37 +53,26 @@ class mainTraitementDonnees :
         for point in range(len(data)): # on parcours les points des données originales
             for i in range(len(grille)): # on parcours les colonnes |
                 for j in range (len(grille[0])): # on parcours les lignes -
-                    #print("Point (", i, ", ", j, ") : LimiteSuppX = ", grille[i][j].limiteSuppX, "; LimiteInfX = ", grille[i][j].limiteInfX, "; LimiteSuppY = ", grille[i][j].limiteSuppY, "; LimiteInfY = ",grille[i][j].limiteInfY)
+                    # on vérifie si le point entre dans la case
                     if (data[point][0] >= grille[i][j].limiteInfX and data[point][0] <= grille[i][j].limiteSuppX) and (data[point][1] >= grille[i][j].limiteInfY and data[point][1] <= grille[i][j].limiteSuppY):
-                        grille[i][j].dataGrille.append(data[point]) 
-                        #print(point, ", ", end="")
+                        grille[i][j].dataGrille.append(data[point]) #on ajoute le point à la case
         
-        max = 0
         for i in range(len(grille)): # on parcours les colonnes |
             for j in range (len(grille[0])): # on parcours les lignes -
                 grille[i][j].quantite = len(grille[i][j].dataGrille)
-                print(grille[i][j].quantite)
-                if (max<grille[i][j].quantite):
-                    max = grille[i][j].quantite
+                
 
         print("espacement:",Data.espacement)
 
         return grille 
 
     
-    #création de la grille
+    #création du array 2D grille
     grille = [[grilleSalle() for i in range(int((Data.trouverMaxY(Data.data)-Data.trouverMinY(Data.data))/Data.espacement)+1)] for j in range(int((Data.trouverMaxX(Data.data)-Data.trouverMinX(Data.data))/Data.espacement)+1)]
-    # for i in range(len(grille)): # on parcours les colonnes |
-    #     for j in range (len(grille[0])): # on parcours les lignes -
-    #         print("Point (", i, ", ", j, ") : LimiteSuppX = ", grille[i][j].limiteSuppX, "; LimiteInfX = ", grille[i][j].limiteInfX, "; LimiteSuppY = ", grille[i][j].limiteSuppY, "; LimiteInfY = ",grille[i][j].limiteInfY)
-    
+   
     grille = creationGrille(grille, Data.data)
     grille = insertionDonnees(grille, Data.data)
     
-    # for i in range(len(grille)): # on parcours les colonnes |
-    #      for j in range (len(grille[0])): # on parcours les lignes -
-    #         #print("Point (", i, ", ", j, ") : LimiteSuppX = ", grille[i][j].limiteSuppX, "; LimiteInfX = ", grille[i][j].limiteInfX, "; LimiteSuppY = ", grille[i][j].limiteSuppY, "; LimiteInfY = ",grille[i][j].limiteInfY)
-    #         print("Point (", i, ", ", j, ") : quantité = ", grille[i][j].quantite)
 
 
 
@@ -92,13 +82,21 @@ class mainTraitementDonnees :
     for point in range(len(Data.data)-1):
         x.append(Data.data[point][0])
         y.append(Data.data[point][1])
+    fig, (ax1, ax2) = plt.subplots(1, 2)
+    
+    #Dessiner les données
+    ax1.scatter(x,y) # Ajoute le nuage de point, c-à-d les données que le robot à collecter, au plot 
+    
+    #Dessiner les données avec les limites qui ont été calculée
+    ax2.scatter(x,y)
+    ax2.axvline(x = grille[0][0].limiteInfX, color = 'r')
+    ax2.axhline(y = grille[0][0].limiteSuppY, color = 'r')
 
-    plt.scatter(x,y) # Ajoute le nuage de point, c-à-d les données que le robot à collecter, au plot 
-
-    print("max X: ", Data.trouverMaxX(Data.data))
-    print("min X: ", Data.trouverMinX(Data.data))
-    print("max Y: ", Data.trouverMaxY(Data.data))
-    print("min Y: ", Data.trouverMinY(Data.data))
+    for i in range(len(grille)): # on parcours les colonnes |
+        for j in range (len(grille[0])): # on parcours les lignes -
+            ax2.axvline(x = grille[i][j].limiteSuppX, color = 'r')
+            ax2.axhline(y = grille[i][j].limiteInfY, color = 'r')
+            
 
     reg = stats.linregress(Data.data[:][0], Data.data[:][1]) # Régression linéaire
 
