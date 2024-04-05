@@ -316,12 +316,12 @@ def gaucheOuDroiteSpd(deg, spd):
     baseSpeed = 45 * spd
     #droite
     if(deg > 0):  
-        print("right")
+        #print("right")
         d._kLeftMotor.run(-baseSpeed)
         d._kRightMotor.run(baseSpeed)
     #gauche
     if(deg < 0):
-        print("left")
+        #print("left")
         d._kLeftMotor.run(baseSpeed)
         d._kRightMotor.run(-baseSpeed)
 

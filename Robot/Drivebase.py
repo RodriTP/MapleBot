@@ -84,7 +84,7 @@ class Drivebase :
         s = Sensors()
         self._hasFinishedAction = False
         self.setSpeed(-400)
-        print(s.degrés())
+        print(str(s.degrés()) + " : Avance")
         while self._hasFinishedAction == False:
             #print(self._hasFinishedAction)
             if(sensor.getFrontValue() < self.VALUE_FROM_OBSTACLE):
