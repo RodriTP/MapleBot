@@ -1,4 +1,4 @@
-class Data:
+class Data: # exemple de données 1
     data = [] # une liste contenant des points
 
     data.append([2.4113861250634727,19.584498808124994]) 
@@ -885,7 +885,7 @@ class Data:
     
     data.append([17.922334312048644,16.466050326197042]) 
 
-    espacement = 0.5
+    espacement = 2
 
     def trouverMaxX(data):  #Pour trouver la valeur maximale en X
         maxX = data[0][0]

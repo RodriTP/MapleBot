@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from scipy import stats
+import matplotlib.patches as patches
 from  GrilleSalle import grilleSalle
 from Data2 import Data
 
@@ -61,9 +61,30 @@ class mainTraitementDonnees :
                 grille[i][j].quantite = len(grille[i][j].dataGrille)
                 
 
-        print("espacement:",Data.espacement)
-
         return grille 
+    
+
+    def determinerMur(grille, data):
+        max = 0
+        for i in range(len(grille)): # on parcours les colonnes |
+            for j in range (len(grille[0])): # on parcours les lignes -
+                if max < grille[i][j].quantite :
+                    max = grille[i][j].quantite
+        
+        moyenne = len(Data.data) / (len(grille)*len(grille[0]))
+        mediane = max / 2
+
+        print ("moyenne : ", moyenne)
+        print ("max : ", max)
+        print("médiane : ", mediane)
+        
+        for i in range(len(grille)): # on parcours les colonnes |
+            for j in range (len(grille[0])): # on parcours les lignes -
+                if grille[i][j].quantite > mediane:
+                    grille[i][j].mur = True
+
+        return grille
+
 
     
     #création du array 2D grille
@@ -71,17 +92,18 @@ class mainTraitementDonnees :
    
     grille = creationGrille(grille, Data.data)
     grille = insertionDonnees(grille, Data.data)
-    
+    grille = determinerMur(grille, Data.data)
 
 
-
+    # Affichage
     x = []
     y = []
 
     for point in range(len(Data.data)-1):
         x.append(Data.data[point][0])
         y.append(Data.data[point][1])
-    fig, (ax1, ax2) = plt.subplots(1, 2)
+
+    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(15, 7))
     
     #Dessiner les données
     ax1.scatter(x,y) # Ajoute le nuage de point, c-à-d les données que le robot à collecter, au plot 
@@ -96,11 +118,14 @@ class mainTraitementDonnees :
             ax2.axvline(x = grille[i][j].limiteSuppX, color = 'r')
             ax2.axhline(y = grille[i][j].limiteInfY, color = 'r')
             
+            if grille[i][j].mur == True:
+                mur = patches.Rectangle((grille[i][j].limiteInfX, grille[i][j].limiteInfX), grille[i][j].limiteSuppX, grille[i][j].limiteSuppY, edgecolor='orange', facecolor='orange')
+                ax3.add_patch(mur)
+           
+            
 
-    reg = stats.linregress(Data.data[:][0], Data.data[:][1]) # Régression linéaire
 
-    #plt.xlim([0, 25])
-    #plt.ylim([10, 15])
-
+    plt.xlim(0, Data.trouverMaxX(Data.data) + 1)
+    plt.ylim(0, Data.trouverMaxY(Data.data) + 1)
     plt.show() # afficher le tout
 ######################################################################

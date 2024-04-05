@@ -1,4 +1,4 @@
-class Data:    
+class Data: #exemple de donées 2
 
     data = [] # une liste contenant des points
 
