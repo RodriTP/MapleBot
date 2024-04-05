@@ -184,31 +184,6 @@ while True:
     
 
 
-
-""" Fin Section pour run code"""
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # def ligneDroite(speedLvl, distance):
 #     baseAngle = s.degrés()
 #     baseSpeed = -speedLvl * 90
