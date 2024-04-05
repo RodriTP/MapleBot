@@ -93,8 +93,10 @@ class Drivebase :
         #while self.getAngle() != targetAngle:
 
     def avanceUntilObstacle(self, sensor):
+        s = Sensors()
         self._hasFinishedAction = False
-        self.setSpeed(-200)
+        self.setSpeed(-400)
+        print(str(s.degrés()) + " : Avance")
         while self._hasFinishedAction == False:
             #print(self._hasFinishedAction)
             if(sensor.getFrontValue() < self.VALUE_FROM_OBSTACLE):
