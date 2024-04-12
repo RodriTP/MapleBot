@@ -4,7 +4,7 @@
 import sys
 import time
 sys.path.append('/home/robot/MapleBot')
-from Robot.drivebase import Drivebase
+from Drivebase import Drivebase
 from sensors import Sensors
 #from RobotPose import RobotPose
 import math
@@ -19,7 +19,6 @@ from Point2D import Point2D
 
 
 class AutonomousMoving :
-
     d = None
     s = None
     p = None
@@ -32,10 +31,10 @@ class AutonomousMoving :
     rightView = False
     leftView = False
 
-    def __init__(self, D : Drivebase, S : Sensors, P : Point2D):
+    def __init__(self, D : Drivebase, S : Sensors):
         self.d = D 
         self.s = S
-        self.p = P
+        self.p = D._pos
     
     #Cette fonction calibre le robot de position face au mur
     def calibrate(self):
