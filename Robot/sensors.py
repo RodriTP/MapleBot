@@ -75,19 +75,25 @@ class Sensors :
         line = []
         bool = True
         while bool == True: 
-            for c in ser.read(1):
-                if (chr(c) != '\n') and (chr(c) != '\r'):
-                    line.append(chr(c))
-                if chr(c) == '\n':
-                    strline=''.join(str(v) for v in line) 
-                    #print(strline)
-                    line = []
-                    bool = False
-                    if self._gyroOffset == None:
-                        self._gyroOffset = float(strline)
-                        return self._gyroOffset
-                    else :
-                        return (float(strline)-self._gyroOffset)%float(360)
+            try :
+                for c in ser.read(1):
+                    if (chr(c) != '\n') and (chr(c) != '\r'):
+                        line.append(chr(c))
+                    if chr(c) == '\n':
+                        strline=''.join(str(v) for v in line) 
+                        #print(strline)
+                        line = []
+                        bool = False
+                        if self._gyroOffset == None:
+                            self._gyroOffset = float(strline)
+                            return self._gyroOffset
+                        else :
+                            return (float(strline)-self._gyroOffset)%float(360)
+            except :
+                print("Erreur, à lu : "+str(strline))
+                return float(0)
+                
+
     
     _DISTANCE_FROM_OBSTACLE = float(200.0)
 
