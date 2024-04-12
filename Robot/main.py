@@ -7,7 +7,7 @@ from pybricks.robotics import DriveBase
 from pybricks.messaging import BluetoothMailboxServer, TextMailbox
 from pybricks.tools import StopWatch, DataLog
 import math
-from drivebase import Drivebase
+from Drivebase import Drivebase
 from sensors import Sensors
 from Point2D import Point2D
 from AutonomousMoving import AutonomousMoving
@@ -178,13 +178,15 @@ print('pos 3 :'+ str(d._pos))
 """
 b = Bluetooth()
 
-def sendData(s,d):
-    global b
+def sendData():
+    """
+    Update la position et envoie continuellement la position et valeur des sensors distance à l'ordinateur
+    """
     while True :
         b.sendPositionAndSensor(s,d)
 
 
-t1 = _thread.start_new_thread(sendData, (s,d))
+t1 = _thread.start_new_thread(sendData, ())
 
 s.degrés()
 

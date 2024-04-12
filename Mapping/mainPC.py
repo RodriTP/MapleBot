@@ -6,6 +6,7 @@ from testTraitementDonnes import mainTraitementDonnees
 import testTraitementDonnes
 import sys
 import matplotlib.pyplot as plt
+import threading
 #sys.path.append('Util')
 #from Point2D import Point2D
 _x = [1]
@@ -32,6 +33,12 @@ def fonction1():
         _y.append(connexionBluetooth.getNumData(sensorData[1]))
         print("_x = " + str(_x[len(_x)-1]) + "_y = " + str(_y[len(_y)-1]))
 
+t1 = threading.Thread(target=fonction1)
+t1.start()
+
+while True:
+    print(len(_x))
+
 
 """
 def ajouterPoint(x:float, y:float):
@@ -40,30 +47,21 @@ def ajouterPoint(x:float, y:float):
         _x.append(x)
         _y.append(y)
 """
-#fonction 2
-def fonction2():
+
+"""
     #print("_x = " + str(_x[len(_x)-1]) + "_y = " + str(_y[len(_y)-1]))
-    def update(frame):
-        global _x
-        global _y
-        #print("debut du update")
-        ax.clear()  # clearing the axes
-        ax.scatter(_x, _y)  # creating new scatter chart with updated data
-        fig.canvas.draw()  # forcing the artist to redraw itself
+def update(frame):
+    global _x
+    global _y
+    #print("debut du update")
+    ax.clear()  # clearing the axes
+    ax.scatter(_x, _y)  # creating new scatter chart with updated data
+    fig.canvas.draw()  # forcing the artist to redraw itself
 
-    anim = FuncAnimation(fig, update)
-    plt.show()
+anim = FuncAnimation(fig, update)
+plt.show()
 
-
-if __name__ == "__main__":
-    p1 = Process(target=fonction1)
-    p1.start()
-    #p2 = Process(target=fonction2)
-    #p2.start()
-    p1.join()
-    #p2.join()
-
-
+"""
 
 """
 repetition =0
