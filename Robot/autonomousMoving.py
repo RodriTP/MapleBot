@@ -1,5 +1,10 @@
 #!/usr/bin/env pybricks-micropython
 
+
+import sys
+import time
+sys.path.append('/home/robot/MapleBot')
+from Robot.drivebase import Drivebase
 from sensors import Sensors
 #from RobotPose import RobotPose
 import math
@@ -7,7 +12,7 @@ from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
                                  InfraredSensor, UltrasonicSensor, GyroSensor)
 from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.tools import wait, StopWatch, DataLog
-from drivebase import Drivebase
+#import drivebase
 from Point2D import Point2D
 #from pybricks.media.ev3dev import SoundFile, ImageFile
 
@@ -75,7 +80,7 @@ class AutonomousMoving :
     def placesTravelled(self):
         self.d.updatePos()
         self.pos.append([self.p.getX, self.p.getY])
-        print(self.p.__str__)
+        #print(self.p.__str__())
     
 
     def main(self):
@@ -97,7 +102,7 @@ class AutonomousMoving :
             if(c == 0):
                 self.d.avanceDistance(math.sqrt(math.pow(self.p.getX() - a,2) + math.pow(self.p.getY() - b,2)))
             elif(c == 1):
-                self.d.turnRad(90,2)
+                self.d.turnRad(88,2)
             i = i + 1
             self.steps.remove(self.steps[-1])
 
@@ -105,23 +110,34 @@ class AutonomousMoving :
     def avanceUntilObstacle(self):
         self._hasFinishedAction = False
         self.d.setSpeed(-400)
-        print(str(self.s.degrés()) + " : Avance")
+        #print(str(self.s.degrés()) + " : Avance")
+        #time.sleep(0.1)
         while self._hasFinishedAction == False:
+            #print("1")
             self.placesTravelled()
-            if(self.s.getLeftDistance() < 500):
+            if(self.s.getLeftDistance() < 100):
                 if(self.leftView == False): self.caseTwo(-1, 90)
                 self.leftView = True
+                #print("2")
             else : 
                 if(self.leftView == True): self.caseThree(-1, 90)
                 self.leftView = False
+                #print("3")
             if(self.s.getRightDistance() < 500):
                 if(self.rightView == False): self.caseTwo(1, 90)
                 self.rightView = True
+                #print("4")
             else : 
                 if(self.rightView == True): self.caseThree(1, 90)
                 self.rightView = False
+                #print("5")
             if(self.s.getFrontValue() < self.d.VALUE_FROM_OBSTACLE):
+                print("6")
                 self._hasFinishedAction = True
-                self.d.stopMotors()
                 self.d.updatePos()
+                #print(str(self.p.getX()) + "     :     " + str(self.p.getY()))
+                self.d.stopMotors()
+                time.sleep(0.1)
+                #self.d.updatePos()
+                print(str(self.p.getX()) + "     :     " + str(self.p.getY()))
                 self.steps.append([self.p.getX, self.p.getY, 0])

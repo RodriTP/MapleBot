@@ -7,24 +7,27 @@ from pybricks.robotics import DriveBase
 from pybricks.messaging import BluetoothMailboxServer, TextMailbox
 from pybricks.tools import StopWatch, DataLog
 import math
-from Drivebase import Drivebase
+from drivebase import Drivebase
 from sensors import Sensors
+from Point2D import Point2D
+from AutonomousMoving import AutonomousMoving
 import time
 # This program requires LEGO EV3 MicroPython v2.0 or higher.
 # Click "Open user guide" on the EV3 extension tab for more information.
 
-from bluetooth import Bluetooth
-
-ev3 = EV3Brick()
-s = Sensors()
-
-
-d = Drivebase()
-s = Sensors()
+#from bluetooth import Bluetooth
 indiceDeCorrection = 0
 x = 0
 y = 0
 pos = [x,y]
+ev3 = EV3Brick()
+s = Sensors()
+d = Drivebase()
+s = Sensors()
+p = Point2D(x,y)
+a = AutonomousMoving(d,s,p)
+
+
 #robot = DriveBase(d._kLeftMotor, d._kRightMotor, wheel_diameter=42.2, axle_track=145)
 #robot = DriveBase(d._kLeftMotor, d._kRightMotor, wheel_diameter=42.2, axle_track=163)
 
@@ -173,14 +176,16 @@ d.computePos()
 print('pos 3 :'+ str(d._pos))
 """
 
-b = Bluetooth()
+#b = Bluetooth()
 s.degrés()
 
-while True:
-    d.computePos()
-    print(d._pos.__str__())
-    b.sendPositionAndSensor(s, d)
-    print("send")
+# while True:
+#     d.updatePos()
+#     #PosActuelle
+#     print(d._pos.__str__())
+#     #
+#     #b.sendPositionAndSensor(s, d)
+#     print("send")
     
 
 
@@ -214,7 +219,7 @@ while True:
 #         print(s.degrés())
         
 
-        # def reCalibre(angleVoulu, speedLvl):
+# def reCalibre(angleVoulu, speedLvl):
 #     baseSpeed = speedLvl * 45
 #     #TOURNE VERS GAUCHE
 
@@ -240,8 +245,8 @@ def turnRad(deg, spd):
     currDeg = s.degrés()
     quadActuel = déterminerQuad(0)    
     quadVoulu = déterminerQuad(deg)
-    print(quadActuel)
-    print(quadVoulu)
+    #print(quadActuel)
+    #print(quadVoulu)
     used = False
     works = True
     #prob = quee il stop le quad après le but alors y arrête pas
@@ -250,26 +255,28 @@ def turnRad(deg, spd):
         #print("QuadActuel : " + str(quadActuel) + "---QuadVoulu : " + str(quadVoulu))
         gaucheOuDroiteSpd(deg, spd)
         quadActuel = déterminerQuad(0)
-        print(s.degrés())
-        if(abs(tooBig(distToDeg(deg,currDeg))) > 10*spd):
+        #print(s.degrés())
+        if(abs(tooBig(distToDeg(deg,currDeg))) > 5*spd):
+        #if(abs(tooBig(distToDeg(deg,currDeg))) > 10*spd):
             works = False
     if(abs(tooBig(distToDeg(deg,currDeg))) >= 0.5):
-        while(abs(tooBig(distToDeg(deg,currDeg))) > 10*spd):
-            print(s.degrés())
+        while(abs(tooBig(distToDeg(deg,currDeg))) > 5*spd):
+        #while(abs(tooBig(distToDeg(deg,currDeg))) > 10*spd):
+            #print(s.degrés())
             #print(str(tooBig(abs(distToDeg(deg,currDeg)))) + " : more than 10")
             gaucheOuDroiteSpd(deg, spd)
         if(tooBig(distToDeg(deg,currDeg)) >= 0.5):  
             while(tooBig(distToDeg(deg,currDeg)) >= 0.5):
-                print(s.degrés())
+                #print(s.degrés())
                 #print(str(tooBig(distToDeg(deg,currDeg))) + " : less than 10-1")
                 gaucheOuDroiteSlw(deg)        
             used = True
         if(used  != True):
             while(tooBig(distToDeg(deg,currDeg)) <= -0.5):
-                print(s.degrés())
+                #print(s.degrés())
                 #print(str(tooBig(distToDeg(deg,currDeg))) + " : less than 10-2 ")
                 gaucheOuDroiteSlw(deg)
-            
+    d.stopMotors()       
     print(str(distToDeg(deg,currDeg)) + " supposed to be done")
     #recal(deg)
 
@@ -353,15 +360,19 @@ def calibrer():
         #print(s.degrés())
     turnRad(176, 2)
 
-#turnRad(-90,2)
-calibrer()
-while(True):
-    d.avanceUntilObstacle(s)
-    turnRad(-176, 2)
-    d.avanceUntilObstacle(s)
-    turnRad(176, 2)
-# turnRad(100, 2)
-# turnRad(-80, 2)
-# turnRad(-45, 2)
-# turnRad(-64, 2)
-#robot.turn(113)
+#turnRad(90,2)
+#calibrer()
+
+# d.updatePos()
+# print(str(d._pos))
+# d.avanceUntilObstacle(s)
+# print(str(d._pos))
+# d.updatePos()
+# print(str(d._pos))
+# turnRad(-176,2)
+# d.avanceUntilObstacle(s)
+# d.updatePos()
+# print(str(d._pos))
+
+
+a.avanceUntilObstacle()
