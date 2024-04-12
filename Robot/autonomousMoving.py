@@ -35,12 +35,11 @@ class AutonomousMoving :
     p = None
     _RANGE = math.sqrt(math.pow(180,2)+ math.pow(180,2))/2
     #position
-    pos = [0,0]
-    steps = [0,0,0]
+    pos = []
+    steps = []
     #x,y,orientationActuel, orientation Du quest
-    quests = [0,0,0,0]
-    event = [False, 0]
-    points = [0,0]
+    quests = []
+    points = []
     rightView = False
     leftView = False
     nbAppelé = 0
@@ -69,6 +68,7 @@ class AutonomousMoving :
     #Wall has appeared in sights left/right
     #-note le quest et continue ton trajet
     def caseTwo(self, direction):
+        print("Wall has appeared in sights " + str(direction))
         if(not self.comparerPosAuVisites(direction, 1)):
             if(direction == 1): 
                 self.d.updatePos() 
@@ -76,11 +76,12 @@ class AutonomousMoving :
             else: 
                 self.d.updatePos()
                 self.quests.append([self.p.getX, self.p.getY, self.s.degrés(), direction, len(self.steps)])
-        print("Wall has appeared in sights " + str(direction))
+        
 
     #Wall has DISSAPPEARED in sights left/right
     #-note le quest et continue ton trajet
     def caseThree(self, direction):
+        print("Wall has DISSAPPEARED in sights " + str(direction))
         if(not self.comparerPosAuVisites(direction, 1)):
             if(direction == 1):     
                 self.d.updatePos()
@@ -88,7 +89,7 @@ class AutonomousMoving :
             else: 
                 self.d.updatePos()
                 self.quests.append([self.p.getX, self.p.getY, self.s.degrés(), direction, len(self.steps)])
-        print("Wall has DISSAPPEARED in sights " + str(direction))
+        
     
     #You've hit a wall youve been to before
     #-visit the most recently active created quest
@@ -152,8 +153,10 @@ class AutonomousMoving :
 
     def estEntreVals(self, pointUn, pointDeux, range):
         response = False
-        if(pointUn[0] > pointDeux[0] - self._RANGE and pointUn[0] < pointDeux[0] + range):
-            if(pointUn[1] > pointDeux[1] - self._RANGE and pointUn[1] < pointDeux[1] + range):
+        (a,b) = pointUn
+        (c,d) = pointDeux
+        if(a > c - self._RANGE and a < c + range):
+            if(b > d - self._RANGE and b < d + range):
                 response = True
         return response
         
@@ -174,22 +177,22 @@ class AutonomousMoving :
         while self._hasFinishedAction == False:
             #print("1")
             self.placesTravelled()
-            if(self.s.getLeftDistance() < 100):
-                if(self.leftView == False): self.caseTwo(-1, 90)
+            if(self.s.getLeftDistance() < 1000):
+                if(self.leftView == False): self.caseTwo(-1)
                 self.leftView = True
                 self.points.append(self.getPointVue(-1))
                 #print("2")
             else : 
-                if(self.leftView == True): self.caseThree(-1, 90)
+                if(self.leftView == True): self.caseThree(-1)
                 self.leftView = False
                 #print("3")
-            if(self.s.getRightDistance() < 100):
-                if(self.rightView == False): self.caseTwo(1, 90)
+            if(self.s.getRightDistance() < 1000):
+                if(self.rightView == False): self.caseTwo(1)
                 self.rightView = True
                 self.points.append(self.getPointVue(1))
                 #print("4")
             else : 
-                if(self.rightView == True): self.caseThree(1, 90)
+                if(self.rightView == True): self.caseThree(1)
                 self.rightView = False
                 #print("5")
             if(self.s.getFrontValue() < self.d.VALUE_FROM_OBSTACLE):

@@ -44,7 +44,7 @@ class Drivebase :
 
     def __str__(self):
         """affiche les valeur des encodeurs des moteurs"""
-        return f'leftMotorAngle : {self._kLeftMotor.angle()}; righMotorAngle : {self._kRightMotor.angle()}'
+        return "leftMotorAngle : " + str(self._kLeftMotor.angle()) + "; righMotorAngle : " + str(self._kRightMotor.angle())
 
     def setEncoders(self, angle):
         """
@@ -109,16 +109,15 @@ class Drivebase :
 
         #while self.getAngle() != targetAngle:
 
-    def avanceUntilObstacle(self, sensor):
+    def avanceUntilObstacle(self):
         s = Sensors()
         self._hasFinishedAction = False
         self.setSpeed(-400)
         print(str(s.degrés()) + " : Avance")
         while self._hasFinishedAction == False:
-            self._a.placesTravelled()
-            if(sensor.getFrontValue() < self.VALUE_FROM_OBSTACLE):
+            if(s.getFrontValue() < self.VALUE_FROM_OBSTACLE):
                 self._hasFinishedAction = True
-                self.stopMotors()
+                self.setSpeed(0)
 
 
     def avanceDistance(self, distance : float): #distance en mm
