@@ -3,8 +3,8 @@
 
 import sys
 import time
-sys.path.append('/home/robot/MapleBot')
-from Robot.drivebase import Drivebase
+sys.path.append('/home/robot/MapleBot/Robot')
+from Drivebase import Drivebase
 from sensors import Sensors
 #from RobotPose import RobotPose
 import math
@@ -32,10 +32,10 @@ class AutonomousMoving :
     rightView = False
     leftView = False
 
-    def __init__(self, D : Drivebase, S : Sensors, P : Point2D):
+    def __init__(self, D : Drivebase, S : Sensors):
         self.d = D 
         self.s = S
-        self.p = P
+        self.p = self.d._pos
     
     #Cette fonction calibre le robot de position face au mur
     def calibrate(self):
@@ -80,7 +80,8 @@ class AutonomousMoving :
     def placesTravelled(self):
         self.d.updatePos()
         self.pos.append([self.p.getX, self.p.getY])
-        #print(self.p.__str__())
+        print("[ " + str(round(self.p.getX())) + ", " + str(round(self.p.getY())) + " ] : (x, y)")
+
     
 
     def main(self):
@@ -110,7 +111,6 @@ class AutonomousMoving :
     def avanceUntilObstacle(self):
         self._hasFinishedAction = False
         self.d.setSpeed(-400)
-        #print(str(self.s.degrés()) + " : Avance")
         #time.sleep(0.1)
         while self._hasFinishedAction == False:
             #print("1")
@@ -138,6 +138,6 @@ class AutonomousMoving :
                 #print(str(self.p.getX()) + "     :     " + str(self.p.getY()))
                 self.d.stopMotors()
                 time.sleep(0.1)
-                #self.d.updatePos()
+                self.d.updatePos()
                 print(str(self.p.getX()) + "     :     " + str(self.p.getY()))
                 self.steps.append([self.p.getX, self.p.getY, 0])
