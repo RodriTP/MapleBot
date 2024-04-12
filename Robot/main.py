@@ -187,12 +187,10 @@ def sendData(s,d):
 t1 = _thread.start_new_thread(sendData, (s,d))
 
 s.degrés()
-print("starting next")
+
 while True:
-    d.computePos()
+    d.updatePos()
     print(d._pos.__str__())
-    #b.sendPositionAndSensor(s, d)
-    print("send")
     
 
 
