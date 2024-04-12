@@ -1,5 +1,6 @@
 #!/usr/bin/env pybricks-micropython
 from sensors import Sensors
+#from AutonomousMoving import AutonomousMoving
 import sys
 sys.path.append('/home/robot/MapleBot/Util')
 from RobotPose import RobotPose
@@ -25,6 +26,7 @@ class Drivebase :
 
     #Odometrie
     _s = Sensors()
+    #_a = AutonomousMoving()
     _pos = None
     
     def __init__(self):
@@ -42,8 +44,8 @@ class Drivebase :
         self._kRightMotor.reset_angle(angle)
     
     def stopMotors(self):
-        self._kLeftMotor.run(0)
-        self._kRightMotor.run(0)
+        self._kLeftMotor.hold()
+        self._kRightMotor.hold()
     
     def setSpeed(self, speed):
         self._kLeftMotor.run(speed)
@@ -105,7 +107,7 @@ class Drivebase :
         self.setSpeed(-400)
         print(str(s.degrés()) + " : Avance")
         while self._hasFinishedAction == False:
-            #print(self._hasFinishedAction)
+            self._a.placesTravelled()
             if(sensor.getFrontValue() < self.VALUE_FROM_OBSTACLE):
                 self._hasFinishedAction = True
                 self.stopMotors()
@@ -162,7 +164,7 @@ class Drivebase :
     
 
     #cette fonction reçoit dist : le rapport de déplacement sur un temps déterminé, et reçoit angle : la valeur que le gyro retourne.
-    def computePos(self):
+    def updatePos(self):
         deg = self._s.degrés()
         dis = self.getDistance()
         x = self._pos.getX() + (math.cos(math.radians(deg)) *dis)
@@ -176,3 +178,6 @@ class Drivebase :
     #Cette fonction reçoit la distance en centimètres et retourne le nombre de degrés que les moteurs doivent tourner
     def cmToAngleRot(dist : float): 
         return ((dist * 0.0949) * 360)
+    
+    def turnRad(self, deg, spd):
+        return True

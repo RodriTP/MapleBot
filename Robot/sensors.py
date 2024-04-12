@@ -94,10 +94,11 @@ class Sensors :
     def update(self):
         if(self.getLeftDistance() < self._DISTANCE_FROM_OBSTACLE):
             self._isObstacleLeft  = True
+        else:
+            self._isObstacleLeft = False
         if(self.getRightDistance() < self._DISTANCE_FROM_OBSTACLE):
             self._isObstacleRight = True
         else:
-            self._isObstacleLeft = False
             self._isObstacleRight = False
 
     def getLeftDistance(self):
