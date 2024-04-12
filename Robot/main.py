@@ -180,14 +180,16 @@ print('pos 3 :'+ str(d._pos))
 
 b = Bluetooth()
 
-def sendData(s,d):
-    global b
+def sendData():
+    """
+    Update la position et envoie continuellement la position et valeur des sensors distance à l'ordinateur
+    """
     while True :
         d.updatePos()
         b.sendPositionAndSensor(s,d)
 
 
-t1 = _thread.start_new_thread(sendData, (s,d))
+t1 = _thread.start_new_thread(sendData, ())
 
 # s.degrés()
     
