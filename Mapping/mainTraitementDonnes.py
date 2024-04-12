@@ -71,17 +71,31 @@ class mainTraitementDonnees :
                 if max < grille[i][j].quantite :
                     max = grille[i][j].quantite
         
-        moyenne = len(Data.data) / (len(grille)*len(grille[0]))
-        mediane = max / 2
+        # moyenne = len(Data.data) / (len(grille)*len(grille[0]))
+        # mediane = max / 2
 
-        print ("moyenne : ", moyenne)
+        # print ("moyenne : ", moyenne)
         print ("max : ", max)
-        print("médiane : ", mediane)
+        # print("médiane : ", mediane)
+
+        limiteNiveau1 = max/5
+        limiteNiveau2 = 2 * (max/5)
+        limiteNiveau3 = 3 * (max/5)
+        limiteNiveau4 = 4 * (max/5)
+        limiteNiveau5 = max
         
         for i in range(len(grille)): # on parcours les colonnes |
             for j in range (len(grille[0])): # on parcours les lignes -
-                if grille[i][j].quantite > mediane:
-                    grille[i][j].mur = True
+                if grille[i][j].quantite <= limiteNiveau5  and grille[i][j].quantite > limiteNiveau4:
+                    grille[i][j].mur = 5
+                elif grille[i][j].quantite <= limiteNiveau4 and grille[i][j].quantite > limiteNiveau3:
+                    grille[i][j].mur = 4
+                elif grille[i][j].quantite <= limiteNiveau3 and grille[i][j].quantite > limiteNiveau2:
+                    grille[i][j].mur = 3
+                elif grille[i][j].quantite <= limiteNiveau2 and grille[i][j].quantite > limiteNiveau1:
+                    grille[i][j].mur = 2
+                else :
+                    grille[i][j].mur = 1
 
         return grille
 
@@ -118,9 +132,18 @@ class mainTraitementDonnees :
             ax2.axvline(x = grille[i][j].limiteSuppX, color = 'r')
             ax2.axhline(y = grille[i][j].limiteInfY, color = 'r')
             
-            if grille[i][j].mur == True:
-                mur = patches.Rectangle((grille[i][j].limiteInfX, grille[i][j].limiteInfX), grille[i][j].limiteSuppX, grille[i][j].limiteSuppY, edgecolor='orange', facecolor='orange')
-                ax3.add_patch(mur)
+            if grille[i][j].mur == 1 :
+                mur = patches.Rectangle((grille[i][j].limiteInfX, grille[i][j].limiteInfX), grille[i][j].limiteSuppX, grille[i][j].limiteSuppY, edgecolor='#C2F6F6', facecolor='#C2F6F6')
+            elif grille[i][j].mur == 2 :
+                mur = patches.Rectangle((grille[i][j].limiteInfX, grille[i][j].limiteInfX), grille[i][j].limiteSuppX, grille[i][j].limiteSuppY, edgecolor='#98EECC', facecolor='#98EECC')
+            elif grille[i][j].mur == 3 :
+                mur = patches.Rectangle((grille[i][j].limiteInfX, grille[i][j].limiteInfX), grille[i][j].limiteSuppX, grille[i][j].limiteSuppY, edgecolor='#E6EE80', facecolor='#E6EE80')
+            elif grille[i][j].mur == 4 :
+                mur = patches.Rectangle((grille[i][j].limiteInfX, grille[i][j].limiteInfX), grille[i][j].limiteSuppX, grille[i][j].limiteSuppY, edgecolor='#F2A666', facecolor='#F2A666')
+            elif grille[i][j].mur == 5 :
+                mur = patches.Rectangle((grille[i][j].limiteInfX, grille[i][j].limiteInfX), grille[i][j].limiteSuppX, grille[i][j].limiteSuppY, edgecolor='#FE2121', facecolor='#FE2121')
+            # mur = patches.Rectangle((grille[i][j].limiteInfX, grille[i][j].limiteInfX), grille[i][j].limiteSuppX, grille[i][j].limiteSuppY, edgecolor='#C2F6F6', facecolor='#C2F6F6')
+            ax3.add_patch(mur)
            
             
 
