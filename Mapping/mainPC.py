@@ -1,7 +1,7 @@
 from ConnexionBluetooth import connexionBluetooth
 #from GrilleSalle import grilleSalle
 from matplotlib.animation import FuncAnimation
-from testTraitementDonnes import mainTraitementDonnees
+#from testTraitementDonnes import mainTraitementDonnees
 #import testTraitementDonnes
 #import sys
 import matplotlib.pyplot as plt
@@ -15,11 +15,10 @@ _y = [0]
 
 sensorData = []
 
-map = mainTraitementDonnees()
-
 #fonction 1
+b = connexionBluetooth()
 def fonction1():
-    b = connexionBluetooth()
+    global b
     global _x
     global _y
     while True:
@@ -29,9 +28,13 @@ def fonction1():
         #print(connexionBluetooth.getNumData(sensorData[0]), connexionBluetooth.getNumData(sensorData[1]))
         b.resetData()
 
-        #ajout des points au graph
+        #ajout des points au tableau s'il sont différents du précédent:
+        #if(connexionBluetooth.getNumData(sensorData[0]) != _x[len(_x)-1] and connexionBluetooth.getNumData(sensorData[1])!=_y[len(_y)-1]):
         _x.append(connexionBluetooth.getNumData(sensorData[0]))
         _y.append(connexionBluetooth.getNumData(sensorData[1]))
+        
+        
+        
         #print("_x = " + str(_x[len(_x)-1]) + "_y = " + str(_y[len(_y)-1]))
 
 
@@ -39,9 +42,12 @@ t1 = threading.Thread(target=fonction1)
 t1.start()
 
 def animate(i):
-    ax.scatter(_x, _y)
+    ax.clear()
+    ax.scatter(_x, _y, color='blue')
+    ax.scatter(_x[0], _y[0], color='red')
+    #print("_x = " + str(_x[len(_x)-1]) + "_y = " + str(_y[len(_y)-1]))
 
-ani = FuncAnimation(fig, animate, frames=20, interval=500, repeat=False)
+ani = FuncAnimation(fig, animate, interval=33.3333)
 
 plt.show()
 
