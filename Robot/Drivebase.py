@@ -26,7 +26,7 @@ class Drivebase :
     leftEncoderMemory = 0
     #constants
     _kWheelCirconference = float(math.pi*43) #en mm
-    VALUE_FROM_OBSTACLE = 20.0
+    VALUE_FROM_OBSTACLE = 40.0
     #Odometrie
     _s = Sensors()
     _pos = None
