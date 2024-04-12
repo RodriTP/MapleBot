@@ -15,7 +15,6 @@ class main :
     grille = traitementDonnees.insertionDonnees(grille, Data.data)
     grille = traitementDonnees.determinerMur(grille, Data.data)
 
-
     # Affichage
     x = []
     y = []
@@ -36,22 +35,22 @@ class main :
     ax2.axhline(y = grille[0][0].limiteSuppY, color = 'r')
 
 
-    #Affichage de la carte
+    #Affichage du grillage et de la carte
     for i in range(len(grille)): # on parcours les colonnes |
         for j in range (len(grille[0])): # on parcours les lignes -
             ax2.axvline(x = grille[i][j].limiteSuppX, color = 'r')
             ax2.axhline(y = grille[i][j].limiteInfY, color = 'r')
             
-            if grille[i][j].mur == 1 :
-                mur = patches.Rectangle((grille[i][j].limiteInfX, grille[i][j].limiteInfY), grille[i][j].limiteSuppX - grille[i][j].limiteInfX, grille[i][j].limiteSuppY- grille[i][j].limiteInfY, edgecolor='#C2F6F6', facecolor='#C2F6F6')
-            elif grille[i][j].mur == 2 :
-                mur = patches.Rectangle((grille[i][j].limiteInfX, grille[i][j].limiteInfY), grille[i][j].limiteSuppX - grille[i][j].limiteInfX, grille[i][j].limiteSuppY- grille[i][j].limiteInfY, edgecolor='#FE2121', facecolor='#FE2121')
-            # elif grille[i][j].mur == 3 :
-            #     mur = patches.Rectangle((grille[i][j].limiteInfX, grille[i][j].limiteInfY), grille[i][j].limiteSuppX - grille[i][j].limiteInfX, grille[i][j].limiteSuppY- grille[i][j].limiteInfY, edgecolor='#E6EE80', facecolor='#E6EE80')
-            # elif grille[i][j].mur == 4 :
-            #     mur = patches.Rectangle((grille[i][j].limiteInfX, grille[i][j].limiteInfY), grille[i][j].limiteSuppX - grille[i][j].limiteInfX, grille[i][j].limiteSuppY- grille[i][j].limiteInfY, edgecolor='#BBED8A', facecolor='#BBED8A')
+            # if grille[i][j].mur == True :
+            #     mur = patches.Rectangle((grille[i][j].limiteInfX, grille[i][j].limiteInfY), grille[i][j].limiteSuppX - grille[i][j].limiteInfX, grille[i][j].limiteSuppY- grille[i][j].limiteInfY, edgecolor='#FE2121', facecolor='#FE2121')
+            # else:
+            #     mur = patches.Rectangle((grille[i][j].limiteInfX, grille[i][j].limiteInfY), grille[i][j].limiteSuppX - grille[i][j].limiteInfX, grille[i][j].limiteSuppY- grille[i][j].limiteInfY, edgecolor='#C2F6F6', facecolor='#C2F6F6')
+            # # elif grille[i][j].mur == 3 :
+            # #     mur = patches.Rectangle((grille[i][j].limiteInfX, grille[i][j].limiteInfY), grille[i][j].limiteSuppX - grille[i][j].limiteInfX, grille[i][j].limiteSuppY- grille[i][j].limiteInfY, edgecolor='#E6EE80', facecolor='#E6EE80')
+            # # elif grille[i][j].mur == 4 :
+            # #     mur = patches.Rectangle((grille[i][j].limiteInfX, grille[i][j].limiteInfY), grille[i][j].limiteSuppX - grille[i][j].limiteInfX, grille[i][j].limiteSuppY- grille[i][j].limiteInfY, edgecolor='#BBED8A', facecolor='#BBED8A')
             
-            ax3.add_patch(mur)
+            # ax3.add_patch(mur)
            
             
 
