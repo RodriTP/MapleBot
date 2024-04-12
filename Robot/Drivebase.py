@@ -54,6 +54,8 @@ class Drivebase :
     def getSpeed(self):
         return self._kLeftMotor.speed()
     
+    rightEncoderMemory = 0
+    leftEncoderMemory = 0
     def getDistance(self): #en mm
         """if(resetEncoders):
             rightNewVal = self._kLeftMotor.angle()
@@ -66,7 +68,12 @@ class Drivebase :
             self.rightOldEncoderVal = rightNewVal
             self.leftOldEncoderVal = leftNewVal
         else:"""
-        d = float((self._kLeftMotor.angle()+self._kRightMotor.angle())/2 * self._kWheelCirconference / float(360))
+        
+        diffRightEncodervalue = self._kRightMotor.angle() - self.rightEncoderMemory
+        diffLeftEncodervalue = self._kLeftMotor.angle() - self.leftEncoderMemory
+        d = float((diffRightEncodervalue+diffLeftEncodervalue)/2 * self._kWheelCirconference / float(360))
+        self.rightEncoderMemory = self._kRightMotor.angle()
+        self.leftEncoderMemory = self._kLeftMotor.angle()
         return d if d > 0.0 else d*-1.0
     
     #droite = angle positif, gauche = angle négatif
