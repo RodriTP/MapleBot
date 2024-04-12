@@ -5,7 +5,6 @@ import sys
 sys.path.append('/home/robot/MapleBot/Util')
 from RobotPose import RobotPose
 import math
-
 from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
                                  InfraredSensor, UltrasonicSensor, GyroSensor)
 from pybricks.parameters import Port, Stop, Direction, Button, Color
@@ -185,8 +184,7 @@ class Drivebase :
             x,
             y,
             deg
-        )
-    
+        )    
     #Cette fonction reçoit la distance en centimètres et retourne le nombre de degrés que les moteurs doivent tourner
     def cmToAngleRot(dist : float): 
         """

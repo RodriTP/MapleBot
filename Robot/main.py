@@ -10,7 +10,7 @@ import math
 from Drivebase import Drivebase
 from sensors import Sensors
 from Point2D import Point2D
-from AutonomousMoving import AutonomousMoving
+from autonomousMoving import AutonomousMoving
 import time
 import _thread
 from bluetooth import Bluetooth
@@ -25,8 +25,11 @@ ev3 = EV3Brick()
 s = Sensors()
 d = Drivebase()
 s = Sensors()
+<<<<<<< HEAD
 p = Point2D(x,y)
-a = AutonomousMoving(d,s,p)
+=======
+>>>>>>> 776c19903cc6af84cfe2b2d23dad9fa99b1d7368
+a = AutonomousMoving(d,s)
 
 
 #robot = DriveBase(d._kLeftMotor, d._kRightMotor, wheel_diameter=42.2, axle_track=145)
@@ -176,6 +179,7 @@ d.avanceDistance(50)
 d.computePos()
 print('pos 3 :'+ str(d._pos))
 """
+
 b = Bluetooth()
 
 def sendData():
@@ -392,19 +396,15 @@ def calibrer():
         #print(s.degrés())
     turnRad(176, 2)
 
-#turnRad(90,2)
-#calibrer()
-
-# d.updatePos()
-# print(str(d._pos))
-# d.avanceUntilObstacle(s)
-# print(str(d._pos))
-# d.updatePos()
-# print(str(d._pos))
-# turnRad(-176,2)
-# d.avanceUntilObstacle(s)
-# d.updatePos()
-# print(str(d._pos))
-
-
-a.avanceUntilObstacle()
+#turnRad(-90,2)
+calibrer()
+while(True):
+    d.avanceUntilObstacle(s)
+    turnRad(-176, 2)
+    d.avanceUntilObstacle(s)
+    turnRad(176, 2)
+# turnRad(100, 2)
+# turnRad(-80, 2)
+# turnRad(-45, 2)
+# turnRad(-64, 2)
+#robot.turn(113)
