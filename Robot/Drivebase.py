@@ -73,7 +73,7 @@ class Drivebase :
         d = float((diffRightEncodervalue+diffLeftEncodervalue)/2 * self._kWheelCirconference / float(360))
         self.rightEncoderMemory = self._kRightMotor.angle()
         self.leftEncoderMemory = self._kLeftMotor.angle()
-        return d if d > 0.0 else d*-1.0
+        return d #if d > 0.0 else d*-1.0
     
     #droite = angle positif, gauche = angle négatif
     def turn(self, angle, speed):
@@ -165,17 +165,14 @@ class Drivebase :
     #cette fonction reçoit dist : le rapport de déplacement sur un temps déterminé, et reçoit angle : la valeur que le gyro retourne.
     def updatePos(self):
         deg = self._s.degrés()
-        x = self._pos.getX() + (math.cos(math.radians(deg)) *self.getDistance())
-        y = self._pos.getY() + (math.sin(math.radians(deg)) *self.getDistance())
+        dis = self.getDistance()
+        x = self._pos.getX() + (math.cos(math.radians(deg)) *dis)
+        y = self._pos.getY() + (math.sin(math.radians(deg)) *dis)*-1
         self._pos.set(
             x,
             y,
             deg
-        )
-        self.x = x
-        self.y = y
-        #self.setEncoders(0)
-    
+        )    
     #Cette fonction reçoit la distance en centimètres et retourne le nombre de degrés que les moteurs doivent tourner
     def cmToAngleRot(dist : float): 
         return ((dist * 0.0949) * 360)

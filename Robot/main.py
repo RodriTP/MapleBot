@@ -12,10 +12,11 @@ from sensors import Sensors
 from Point2D import Point2D
 from autonomousMoving import AutonomousMoving
 import time
+import _thread
+from bluetooth import Bluetooth
 # This program requires LEGO EV3 MicroPython v2.0 or higher.
 # Click "Open user guide" on the EV3 extension tab for more information.
 
-#from bluetooth import Bluetooth
 indiceDeCorrection = 0
 x = 0
 y = 0
@@ -24,7 +25,10 @@ ev3 = EV3Brick()
 s = Sensors()
 d = Drivebase()
 s = Sensors()
+<<<<<<< HEAD
 p = Point2D(x,y)
+=======
+>>>>>>> 776c19903cc6af84cfe2b2d23dad9fa99b1d7368
 a = AutonomousMoving(d,s)
 
 
@@ -176,17 +180,47 @@ d.computePos()
 print('pos 3 :'+ str(d._pos))
 """
 
-#b = Bluetooth()
+b = Bluetooth()
+
+def sendData(s,d):
+    global b
+    while True :
+        b.sendPositionAndSensor(s,d)
+
+
+t1 = _thread.start_new_thread(sendData, (s,d))
+
 s.degrés()
 
-# while True:
-#     d.updatePos()
-#     #PosActuelle
-#     print(d._pos.__str__())
-#     #
-#     #b.sendPositionAndSensor(s, d)
-#     print("send")
+while True:
+    d.updatePos()
+    print(d._pos.__str__())
     
+
+
+
+""" Fin Section pour run code"""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # def ligneDroite(speedLvl, distance):
@@ -360,19 +394,15 @@ def calibrer():
         #print(s.degrés())
     turnRad(176, 2)
 
-#turnRad(90,2)
-#calibrer()
-
-# d.updatePos()
-# print(str(d._pos))
-# d.avanceUntilObstacle(s)
-# print(str(d._pos))
-# d.updatePos()
-# print(str(d._pos))
-# turnRad(-176,2)
-# d.avanceUntilObstacle(s)
-# d.updatePos()
-# print(str(d._pos))
-
-
-a.avanceUntilObstacle()
+#turnRad(-90,2)
+calibrer()
+while(True):
+    d.avanceUntilObstacle(s)
+    turnRad(-176, 2)
+    d.avanceUntilObstacle(s)
+    turnRad(176, 2)
+# turnRad(100, 2)
+# turnRad(-80, 2)
+# turnRad(-45, 2)
+# turnRad(-64, 2)
+#robot.turn(113)

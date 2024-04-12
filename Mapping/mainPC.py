@@ -1,25 +1,26 @@
 from ConnexionBluetooth import connexionBluetooth
-from multiprocessing import Process
-from GrilleSalle import grilleSalle
+#from GrilleSalle import grilleSalle
 from matplotlib.animation import FuncAnimation
-from testTraitementDonnes import mainTraitementDonnees
-import testTraitementDonnes
-import sys
+#from testTraitementDonnes import mainTraitementDonnees
+#import testTraitementDonnes
+#import sys
 import matplotlib.pyplot as plt
+import threading
 #sys.path.append('Util')
 #from Point2D import Point2D
-_x = [1]
-_y = [1]
-fig, ax = plt.subplots()
 
+fig, ax = plt.subplots()
+_x = [0]
+_y = [0]
 
 sensorData = []
 
-map = mainTraitementDonnees()
-
 #fonction 1
+b = connexionBluetooth()
 def fonction1():
-    b = connexionBluetooth()
+    global b
+    global _x
+    global _y
     while True:
         b.dataExchange()
         #print("fin echange donnes")
@@ -27,41 +28,28 @@ def fonction1():
         #print(connexionBluetooth.getNumData(sensorData[0]), connexionBluetooth.getNumData(sensorData[1]))
         b.resetData()
 
-        #ajout des points au graph
+        #ajout des points au tableau s'il sont différents du précédent:
+        #if(connexionBluetooth.getNumData(sensorData[0]) != _x[len(_x)-1] and connexionBluetooth.getNumData(sensorData[1])!=_y[len(_y)-1]):
         _x.append(connexionBluetooth.getNumData(sensorData[0]))
         _y.append(connexionBluetooth.getNumData(sensorData[1]))
-        print("_x = " + str(_x[len(_x)-1]) + "_y = " + str(_y[len(_y)-1]))
+        
+        
+        
+        #print("_x = " + str(_x[len(_x)-1]) + "_y = " + str(_y[len(_y)-1]))
 
 
-"""
-def ajouterPoint(x:float, y:float):
-        global _x
-        global _y
-        _x.append(x)
-        _y.append(y)
-"""
-#fonction 2
-def fonction2():
+t1 = threading.Thread(target=fonction1)
+t1.start()
+
+def animate(i):
+    ax.clear()
+    ax.scatter(_x, _y, color='blue')
+    ax.scatter(_x[0], _y[0], color='red')
     #print("_x = " + str(_x[len(_x)-1]) + "_y = " + str(_y[len(_y)-1]))
-    def update(frame):
-        global _x
-        global _y
-        #print("debut du update")
-        ax.clear()  # clearing the axes
-        ax.scatter(_x, _y)  # creating new scatter chart with updated data
-        fig.canvas.draw()  # forcing the artist to redraw itself
 
-    anim = FuncAnimation(fig, update)
-    plt.show()
+ani = FuncAnimation(fig, animate, interval=33.3333)
 
-
-if __name__ == "__main__":
-    p1 = Process(target=fonction1)
-    p1.start()
-    #p2 = Process(target=fonction2)
-    #p2.start()
-    p1.join()
-    #p2.join()
+plt.show()
 
 
 
@@ -78,3 +66,4 @@ while repetition<100:
 """
 #g = grilleSalle()
 #g.creerGrille(d)
+
