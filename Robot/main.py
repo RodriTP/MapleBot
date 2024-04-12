@@ -10,10 +10,11 @@ import math
 from Drivebase import Drivebase
 from sensors import Sensors
 import time
+import _thread
+from bluetooth import Bluetooth
 # This program requires LEGO EV3 MicroPython v2.0 or higher.
 # Click "Open user guide" on the EV3 extension tab for more information.
 
-from bluetooth import Bluetooth
 
 ev3 = EV3Brick()
 s = Sensors()
@@ -172,14 +173,22 @@ d.avanceDistance(50)
 d.computePos()
 print('pos 3 :'+ str(d._pos))
 """
-
 b = Bluetooth()
-s.degrés()
 
+def sendData(s,d):
+    global b
+    while True :
+        b.sendPositionAndSensor(s,d)
+
+
+t1 = _thread.start_new_thread(sendData, (s,d))
+
+s.degrés()
+print("starting next")
 while True:
     d.computePos()
     print(d._pos.__str__())
-    b.sendPositionAndSensor(s, d)
+    #b.sendPositionAndSensor(s, d)
     print("send")
     
 
