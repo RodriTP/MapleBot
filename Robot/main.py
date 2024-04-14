@@ -25,7 +25,8 @@ ev3 = EV3Brick()
 s = Sensors()
 d = Drivebase()
 s = Sensors()
-p = Point2D(x,y)
+
+#p = Point2D(x,y)
 a = AutonomousMoving(d,s)
 
 
@@ -184,16 +185,13 @@ def sendData():
     Update la position et envoie continuellement la position et valeur des sensors distance à l'ordinateur
     """
     while True :
+        d.updatePos()
         b.sendPositionAndSensor(s,d)
 
 
 t1 = _thread.start_new_thread(sendData, ())
 
-s.degrés()
-
-while True:
-    d.updatePos()
-    print(d._pos.__str__())
+# s.degrés()
     
 
 
@@ -271,137 +269,14 @@ while True:
 #                 d._kLeftMotor.run(-baseSpeed/(10*speedLvl))
 #                 d._kRightMotor.run(baseSpeed/(10*speedLvl))
 #                 print("RE-CALIBRATING DROIT diff : " + str(math.sin(math.radians(s.degrés())) - math.sin(math.radians(angleVoulu)))+" deg: " +  str(s.degrés()))
-    
 
+# def calibrer():
+#     x = 0
+#     while (x < 10000):
+#         d._kLeftMotor.run(45)
+#         d._kRightMotor.run(45)
+#         x = x+ 1
+#         #print(s.degrés())
+#     turnRad(176, 2)
 
-def turnRad(deg, spd):
-    currDeg = s.degrés()
-    quadActuel = déterminerQuad(0)    
-    quadVoulu = déterminerQuad(deg)
-    #print(quadActuel)
-    #print(quadVoulu)
-    used = False
-    works = True
-    #prob = quee il stop le quad après le but alors y arrête pas
-    while(quadActuel != quadVoulu and works):
-        #print(str(tooBig(distToDeg(deg,currDeg))) + " quadFonct")
-        #print("QuadActuel : " + str(quadActuel) + "---QuadVoulu : " + str(quadVoulu))
-        gaucheOuDroiteSpd(deg, spd)
-        quadActuel = déterminerQuad(0)
-        #print(s.degrés())
-        if(abs(tooBig(distToDeg(deg,currDeg))) > 5*spd):
-        #if(abs(tooBig(distToDeg(deg,currDeg))) > 10*spd):
-            works = False
-    if(abs(tooBig(distToDeg(deg,currDeg))) >= 0.5):
-        while(abs(tooBig(distToDeg(deg,currDeg))) > 5*spd):
-        #while(abs(tooBig(distToDeg(deg,currDeg))) > 10*spd):
-            #print(s.degrés())
-            #print(str(tooBig(abs(distToDeg(deg,currDeg)))) + " : more than 10")
-            gaucheOuDroiteSpd(deg, spd)
-        if(tooBig(distToDeg(deg,currDeg)) >= 0.5):  
-            while(tooBig(distToDeg(deg,currDeg)) >= 0.5):
-                #print(s.degrés())
-                #print(str(tooBig(distToDeg(deg,currDeg))) + " : less than 10-1")
-                gaucheOuDroiteSlw(deg)        
-            used = True
-        if(used  != True):
-            while(tooBig(distToDeg(deg,currDeg)) <= -0.5):
-                #print(s.degrés())
-                #print(str(tooBig(distToDeg(deg,currDeg))) + " : less than 10-2 ")
-                gaucheOuDroiteSlw(deg)
-    d.stopMotors()       
-    print(str(distToDeg(deg,currDeg)) + " supposed to be done")
-    #recal(deg)
-
-
-def distToDeg(deg, currDeg):
-    #print(str(s.degrés()) + " " + str(deg))
-    answer = s.degrés() - deg - currDeg
-    if(answer < -360):
-        answer = answer + 360
-    if(answer > 360):
-        answer = answer + -360
-    return answer #
-
-def tooBig(distDiff):
-    # if(distDiff > 180):
-    #     return distDiff - 180
-    # if(distDiff < -180): 
-    #     return distDiff + 180
-    return distDiff
-  
-def déterminerQuad(deg):
-    if (deg == 0): deg = s.degrés()
-    if(math.sin(math.radians(deg)) > 0): si = 1
-    else: si = 2 
-    if(math.cos(math.radians(deg)) > 0): co = 1
-    else: co = 2 
-    if (si == 1): 
-        if(co==1): quad = 1 
-        elif(co==2): quad = 2
-    elif(si==2): 
-        if(co==2): quad = 3 
-        elif(co==1): quad = 4
-    return quad
-
-def gaucheOuDroiteSpd(deg, spd):
-    baseSpeed = 45 * spd
-    #droite
-    if(deg > 0):  
-        #print("right")
-        d._kLeftMotor.run(-baseSpeed)
-        d._kRightMotor.run(baseSpeed)
-    #gauche
-    if(deg < 0):
-        #print("left")
-        d._kLeftMotor.run(baseSpeed)
-        d._kRightMotor.run(-baseSpeed)
-
-def gaucheOuDroiteSlw(deg):
-    #droite
-    if(deg > 0):  
-        #print("right")
-        d._kLeftMotor.run(-45/8)
-        d._kRightMotor.run(45/8)
-    #gauche
-    if(deg < 0):
-        #print("left")
-        d._kLeftMotor.run(45/8)
-        d._kRightMotor.run(-45/8)
-
-
-
-def recal(deg):
-    #while(abs(distToDeg(deg)) > 0.5):
-        while(s.degrés() - deg > 0.5 and deg > 0):#gauche
-            print("RE-CALIBRATING GAUCHE diff : " + str(s.degrés() - deg)+" deg: " +  str(s.degrés()))
-            d._kLeftMotor.run(45/10)
-            d._kRightMotor.run(-45/10)
-        while(s.degrés() - deg < -0.5 and deg < 0):#droite
-            print("RE-CALIBRATING DROIT diff : " + str(s.degrés() - deg)+" deg: " +  str(s.degrés()))
-            d._kLeftMotor.run(-45/10)
-            d._kRightMotor.run(45/10)
-            
-
-
-def calibrer():
-    x = 0
-    while (x < 10000):
-        d._kLeftMotor.run(45)
-        d._kRightMotor.run(45)
-        x = x+ 1
-        #print(s.degrés())
-    turnRad(176, 2)
-
-#turnRad(-90,2)
-calibrer()
-while(True):
-    d.avanceUntilObstacle(s)
-    turnRad(-176, 2)
-    d.avanceUntilObstacle(s)
-    turnRad(176, 2)
-# turnRad(100, 2)
-# turnRad(-80, 2)
-# turnRad(-45, 2)
-# turnRad(-64, 2)
-#robot.turn(113)
+d.turnRad(176, 2)

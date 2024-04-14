@@ -163,8 +163,7 @@ class AutonomousMoving :
     #si gauche coef = -1 si droit coef = +1
     def getPointVue(self, case):
         if(case == 1):
-            return [self.p.getX() + (math.cos(self.s.degrés() + 90) * self.s.getRightDistance()),
-            self.p.getY() + (math.sin(self.s.degrés() + 90) * self.s.getRightDistance())]
+            return [self.p.getX() + (math.cos(self.s.degrés() + 90) * self.s.getRightDistance()), self.p.getY() + (math.sin(self.s.degrés() + 90) * self.s.getRightDistance())]
         elif(case == -1):
             return [self.p.getX() + (math.cos(self.s.degrés() - 90) * self.s.getLeftDistance()),
             self.p.getY() + (math.sin(self.s.degrés() - 90) * self.s.getLeftDistance())]
