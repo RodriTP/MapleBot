@@ -25,10 +25,7 @@ ev3 = EV3Brick()
 s = Sensors()
 d = Drivebase()
 s = Sensors()
-<<<<<<< HEAD
 p = Point2D(x,y)
-=======
->>>>>>> 776c19903cc6af84cfe2b2d23dad9fa99b1d7368
 a = AutonomousMoving(d,s)
 
 
