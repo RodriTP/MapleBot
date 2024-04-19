@@ -1,6 +1,8 @@
 #!/usr/bin/env pybricks-micropython
 #import utime
-from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,InfraredSensor, UltrasonicSensor, GyroSensor)
+from pybricks.ev3devices import UltrasonicSensor
+from pybricks.nxtdevices import UltrasonicSensor as UltrasonicSensor_Nxt
+#from pybricks import nxtdevices.UltrasonicSensor
 from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.robotics import DriveBase
@@ -67,7 +69,7 @@ class Sensors :
     ainsi que les méthodes pour obtenir leur valeur
     """
     _leftUltrasonic = UltrasonicSensor(Port.S1)
-    _frontInfrared = InfraredSensor(Port.S3)
+    _frontUltrasonic = UltrasonicSensor_Nxt(Port.S3)
     _rightUltrasonic = UltrasonicSensor(Port.S4)
     _isObstacleRight = False
     _isObstacleLeft = False
@@ -107,7 +109,7 @@ class Sensors :
                 
 
     
-    _DISTANCE_FROM_OBSTACLE = float(200.0)
+    _DISTANCE_FROM_OBSTACLE = float(300.0)
 
     def update(self):
         """Update les booleans permettant savoir s'il y a un obstacle ou pas"""
@@ -136,7 +138,7 @@ class Sensors :
     
     def getFrontValue(self):
         """Return : valeur arbitraire (varie en fonction de T°, distance, et autre) à un obstacle"""
-        return float(self._frontInfrared.distance()) #retourne une val entre 0 et 100 (faut multiplier par un scalaire)
+        return float(self._frontUltrasonic.distance()) #retourne une val entre 0 et 100 (faut multiplier par un scalaire)
     
     def getIsObstacleLeft(self):
         """

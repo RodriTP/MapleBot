@@ -178,18 +178,7 @@ d.computePos()
 print('pos 3 :'+ str(d._pos))
 """
 
-# b = Bluetooth()
 
-# def sendData():
-#     """
-#     Update la position et envoie continuellement la position et valeur des sensors distance à l'ordinateur
-#     """
-#     while True :
-#         d.updatePos()
-#         b.sendPositionAndSensor(s,d)
-
-
-# t1 = _thread.start_new_thread(sendData, ())
 
 # s.degrés()
     
@@ -279,6 +268,30 @@ print('pos 3 :'+ str(d._pos))
 #         #print(s.degrés())
 #     turnRad(176, 2)
 
-#d.turnRad(176, 2)
-#d.avanceUntilObstacle()
+
+
+
+
+
+
+# b = Bluetooth()
+
+# def sendData():
+#     """
+#     Update la position et envoie continuellement la position et valeur des sensors distance à l'ordinateur
+#     """
+#     while True :
+#         d.updatePos()
+#         b.sendPositionAndSensor(s,d)
+
+
+# t1 = _thread.start_new_thread(sendData, ())
+
+
 a.main()
+
+
+# while True:
+#     print(s.getFrontValue())
+#     if(s.getFrontValue() < d.VALUE_FROM_OBSTACLE):
+#         print("AAAAA")

@@ -26,7 +26,7 @@ class Drivebase :
     leftEncoderMemory = 0
     #constants
     _kWheelCirconference = float(math.pi*43) #en mm
-    VALUE_FROM_OBSTACLE = 40.0
+    VALUE_FROM_OBSTACLE = 300.0
     #Odometrie
     _s = Sensors()
     _pos = None
@@ -291,9 +291,9 @@ class Drivebase :
         #while(abs(distToDeg(deg)) > 0.5):
             while(self._s.degrés() - deg > 0.5 and deg > 0):#gauche
                 print("RE-CALIBRATING GAUCHE diff : " + str(self._s.degrés() - deg)+" deg: " +  str(self._s.degrés()))
-                self.d._kLeftMotor.run(45/10)
-                self.d._kRightMotor.run(-45/10)
+                self._kLeftMotor.run(45/10)
+                self._kRightMotor.run(-45/10)
             while(self._s.degrés() - deg < -0.5 and deg < 0):#droite
                 print("RE-CALIBRATING DROIT diff : " + str(self._s.degrés() - deg)+" deg: " +  str(self._s.degrés()))
-                self.d._kLeftMotor.run(-45/10)
-                self.d._kRightMotor.run(45/10)
+                self._kLeftMotor.run(-45/10)
+                self._kRightMotor.run(45/10)
