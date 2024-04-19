@@ -64,6 +64,7 @@ class AutonomousMoving :
         self.d.turnRad(-88,2)
         self.s.update()
         self.steps.append([self.p.getX, self.p.getY, 1])
+        print("One")
 
     #Wall has appeared in sights left/right
     #-note le quest et continue ton trajet
@@ -76,6 +77,7 @@ class AutonomousMoving :
             else: 
                 self.d.updatePos()
                 self.quests.append([self.p.getX, self.p.getY, self.s.degrés(), direction, len(self.steps)])
+        print("Two")
         
 
     #Wall has DISSAPPEARED in sights left/right
@@ -89,6 +91,7 @@ class AutonomousMoving :
             else: 
                 self.d.updatePos()
                 self.quests.append([self.p.getX, self.p.getY, self.s.degrés(), direction, len(self.steps)])
+        print("Three")
         
     
     #You've hit a wall youve been to before
@@ -100,6 +103,7 @@ class AutonomousMoving :
         if(direction > 0): self.d.turnRad(88, 2)
         else: self.d.turnRad(-88, 2)
         self.quests.remove[self.quests[-1]]
+        print("Four")
 
     #définie si event est true ou false, so si tes pas capable de trouver de events
     def caseFourOFour(self):
@@ -112,7 +116,7 @@ class AutonomousMoving :
     def placesTravelled(self):
         self.d.updatePos()
         self.pos.append(self.getCurrentPos())
-        print("[ " + str(round(self.p.getX())) + ", " + str(round(self.p.getY())) + " ]")
+        #print("[ " + str(round(self.p.getX())) + ", " + str(round(self.p.getY())) + " ]")
 
     #cette fonct retourne vrai si le robot était passé par cette position autrefois, pour trigger case 4
     def comparerPosAuVisites(self, direction, case):
@@ -131,16 +135,19 @@ class AutonomousMoving :
         self.placesTravelled()
         while (True):#CONDITION QUI FAIT QUE LE ROBOT DÉCIDE D'AVOIR FINIDAWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
             self.avanceUntilObstacle()
-            if(self.comparerPosAuVisites(1, 0)):
-                self.caseFour()
-            else:
-                self.caseOne()
-            if(len(self.quests) == 0):
-                self.caseFourOFour()
+            # if(self.comparerPosAuVisites(1, 0)):
+            #     #self.caseFour()
+            #     print("UNDO")
+            # else:
+            self.caseOne()
+
+            # if(len(self.quests) == 0):
+            #     self.caseFourOFour()
     
     def undo(self, nombreAUndo):
         i = 0
         self.d.turnRad(176,2)
+        print("Undo")
         while(i < nombreAUndo):
             (a,b,c) = self.steps[-1]
             if(c == 0):
@@ -196,12 +203,12 @@ class AutonomousMoving :
                 self.rightView = False
                 #print("5")
             if(self.s.getFrontValue() < self.d.VALUE_FROM_OBSTACLE):
-                print("6")
+                print("OBSTACLE SEEN IN FRONT")
                 self._hasFinishedAction = True
                 self.d.updatePos()
-                print(str(self.p.getX()) + " : " + str(self.p.getY()))
+                #print(str(self.p.getX()) + " : " + str(self.p.getY()))
                 self.d.stopMotors()
-                time.sleep(0.1)
+                #time.sleep(0.1)
                 self.d.updatePos()
-                print(str(self.p.getX()) + " : " + str(self.p.getY()))
+                #print(str(self.p.getX()) + " : " + str(self.p.getY()))
                 self.steps.append([self.p.getX, self.p.getY, 0])
