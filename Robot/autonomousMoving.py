@@ -22,7 +22,7 @@ from Point2D import Point2D
     #-LA CONDITION POUR QUE LE ROBOT ARRÊTE
     #-LA PRÉCISION QUE LE ROBOT NE TOURNE PAS DANS LE MUR OU SON QUEST SE TROUVE, MAIS PLUS LOIN, OU MOIN, DÉPENDAMENT SUR QUELLE FONCT QU'ON CALL, (CASE 2/3) 
     #-FAIT LA FONCT AVANCE LONGEURE ROBOT TOURNE VERS QUEST ET LA METTRE DANS CASEfour
-    #-
+    #-QUAND QUE LE ROBOT NE TOURNE PAS À LA BONNE ANGLE c'EST QUE LE GYRO COMMENCE MAL(Ça ércit laffair que rod à mis)
     #-
     #-
     #-
@@ -33,13 +33,14 @@ class AutonomousMoving :
     d = None
     s = None
     p = None
-    _RANGE = math.sqrt(math.pow(180,2)+ math.pow(180,2))/2
+    _RANGE = math.sqrt(math.pow(90,2)+ math.pow(90,2))/2
     #position
     pos = []
     steps = []
     #x,y,orientationActuel, orientation Du quest
     quests = []
     points = []
+    tasks = []
     rightView = False
     leftView = False
     nbAppelé = 0
@@ -56,43 +57,38 @@ class AutonomousMoving :
             self.d._kRightMotor.run(45)
             x = x+ 1
             #print(s.degrés())
-        self.d.turnRad(180, 2)
+        self.d.turnRad(176, 2)
 
     #Un mur est devant
     #-tourne à gauche si possible, sinon droit, sinon recul? (scénario de tourne à droit?)
     def caseOne(self):
+        #print(len(self.tasks))
+        print(str(len(self.quests)) + " : Quests amount")
         self.d.turnRad(-88,2)
         self.s.update()
-        self.steps.append([self.p.getX, self.p.getY, 1])
-        print("One")
+        self.steps.append([self.p.getX(), self.p.getY(), 1])
+        #print("One")
 
     #Wall has appeared in sights left/right
     #-note le quest et continue ton trajet
     def caseTwo(self, direction):
-        print(self.s.getFrontValue())
+        #print(self.s.getFrontValue())
         print("Wall has appeared in sights " + str(direction))
         #if(not self.comparerPosAuVisites(direction, 1)):
-            #if(direction == 1): 
         self.d.updatePos() 
-        self.quests.append([self.p.getX, self.p.getY, self.s.degrés(), direction, len(self.steps)])
-            # else: 
-            #     self.d.updatePos()
-            #     self.quests.append([self.p.getX, self.p.getY, self.s.degrés(), direction, len(self.steps)])
-        print("Two")
+        self.tasks.append([self.p.getX(), self.p.getY(), self.s.degrés(), direction, len(self.steps), self.getPointVue(direction)])
+        #print("Two")
         
 
     #Wall has DISSAPPEARED in sights left/right
     #-note le quest et continue ton trajet
     def caseThree(self, direction):
         print("Wall has DISSAPPEARED in sights " + str(direction))
-        #if(not self.comparerPosAuVisites(direction, 1)):
-            #if(direction == 1):     
+        #if(not self.comparerPosAuVisites(direction, 1)):    
         self.d.updatePos()
-        self.quests.append([self.p.getX, self.p.getY, self.s.degrés(), direction, len(self.steps)])
-            # else: 
-            #     self.d.updatePos()
-            #     self.quests.append([self.p.getX, self.p.getY, self.s.degrés(), direction, len(self.steps)])
-        print("Three")
+        #print(str(self.p.getX()))
+        self.tasks.append([self.p.getX(), self.p.getY(), self.s.degrés(), direction, len(self.steps), self.getPointVue(direction)])
+        #print("Three")
         
     
     #You've hit a wall youve been to before
@@ -120,14 +116,18 @@ class AutonomousMoving :
         #print("[ " + str(round(self.p.getX())) + ", " + str(round(self.p.getY())) + " ]")
 
     #cette fonct retourne vrai si le robot était passé par cette position autrefois, pour trigger case 4
-    def comparerPosAuVisites(self, direction, case):
+    def comparerPosAuVisites(self, posX, posY, pointVue, case):
         i = 0
         response = False
+        a,b = pointVue
         while(i < len(self.points)):
-            if(self.estEntreVals(self.points[i], self.getCurrentPos(), self._RANGE) and case == 0):
+            c,d = self.points[i]
+            if(self.estEntreVals(c, d, posX, posY, self._RANGE) and case == 0):
                 response = True
-            if(self.estEntreVals(self.points[i], self.getPointVue(direction), self._RANGE) and case == 1):
+                print("[ " + str(round(c)) + ", " + str(round(d)) + " ] compared to : [ " + str(round(posX)) + ", " + str(round(posY)) + " ] within range : "  + str(round(self._RANGE,0)))
+            if(self.estEntreVals(c, d, a, b, self._RANGE) and case == 1):
                 response = True
+                #print("[ " + str(c) + ", " + str(d) + " ] compared to : [ " + str(a) + ", " + str(b) + " ] within range : " + str(self._RANGE)  )
             i = i + 1
         return response
 
@@ -136,13 +136,16 @@ class AutonomousMoving :
         self.placesTravelled()
         while (True):#CONDITION QUI FAIT QUE LE ROBOT DÉCIDE D'AVOIR FINIDAWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
             self.avanceUntilObstacle()
-            # if(self.comparerPosAuVisites(1, 0)):
-            #     #self.caseFour()
-            #     print("UNDO")
+            self.transposeTasks()
+            if(len(self.quests) == 0):
+                print("no quests right now")
+                #CASE FOUR O FOUR
+                #self.caseFour()
+            elif(self.comparerPosAuVisites(self.p.getX(), self.p.getY(), [0,0] , 0)):
+                print("UNDO")
+                self.quests.clear()
             # else:
             self.caseOne()
-
-            # if(len(self.quests) == 0):
             #     self.caseFourOFour()
     
     def undo(self, nombreAUndo):
@@ -159,12 +162,10 @@ class AutonomousMoving :
             self.steps.remove(self.steps[-1])
         self.d.turnRad(180, 2)
 
-    def estEntreVals(self, pointUn, pointDeux, range):
+    def estEntreVals(self, pointUnX, pointUnY, pointDeuxX, pointDeuxY, range):
         response = False
-        (a,b) = pointUn
-        (c,d) = pointDeux
-        if(a > c - self._RANGE and a < c + range):
-            if(b > d - self._RANGE and b < d + range):
+        if(pointUnX > pointDeuxX - self._RANGE and pointUnX < pointDeuxX + range):
+            if(pointUnY > pointDeuxY - self._RANGE and pointUnY < pointDeuxY + range):
                 response = True
         return response
         
@@ -174,41 +175,49 @@ class AutonomousMoving :
     #si gauche coef = -1 si droit coef = +1
     def getPointVue(self, case):
         if(case == 1):
-            return [self.p.getX() + (math.cos(self.s.degrés() + 90) * self.s.getRightDistance()), self.p.getY() + (math.sin(self.s.degrés() + 90) * self.s.getRightDistance())]
+            return [self.p.getX() + (math.cos(self.s.degrés() + 90) * self.s.getRightDistance()), 
+                    self.p.getY() + (math.sin(self.s.degrés() + 90) * self.s.getRightDistance())]
         elif(case == -1):
             return [self.p.getX() + (math.cos(self.s.degrés() - 90) * self.s.getLeftDistance()),
             self.p.getY() + (math.sin(self.s.degrés() - 90) * self.s.getLeftDistance())]
+        
+    def transposeTasks(self):
+        i = 0
+        if(len(self.tasks) > 0):
+            for [x,y,c,direction,e,pointVue] in self.tasks:
+                if(not self.comparerPosAuVisites(x, y, pointVue, 1)):
+                    print("QUEST MADE : " + str(len(self.tasks)))
+                    self.quests.append([x, y, c, direction, e])
+                i = i + 1 
+                #print("task number : " + str(i))  
+            self.tasks.clear()
+        
 
     def avanceUntilObstacle(self):
         self._hasFinishedAction = False
         self.d.setSpeed(-400)
         while self._hasFinishedAction == False:
-            print(self.s.getFrontValue())
+            #print(self.s.getFrontValue())
             self.placesTravelled()
             if(self.s.getLeftDistance() < 1000):
                 if(self.leftView == False): self.caseTwo(-1)
                 self.leftView = True
                 self.points.append(self.getPointVue(-1))
-                #print("2")
             else : 
                 if(self.leftView == True): self.caseThree(-1)
                 self.leftView = False
-                #print("3")
             if(self.s.getRightDistance() < 1000):
                 if(self.rightView == False): self.caseTwo(1)
                 self.rightView = True
                 self.points.append(self.getPointVue(1))
-                #print("4")
             else : 
                 if(self.rightView == True): self.caseThree(1)
                 self.rightView = False
-                #print("5")
             if(self.s.getFrontValue() < self.d.VALUE_FROM_OBSTACLE):
                 print("OBSTACLE SEEN IN FRONT")
                 self._hasFinishedAction = True
                 #print(str(self.p.getX()) + " : " + str(self.p.getY()))
                 self.d.stopMotors()
-                #time.sleep(0.1)
                 self.d.updatePos()
                 #print(str(self.p.getX()) + " : " + str(self.p.getY()))
                 self.steps.append([self.p.getX, self.p.getY, 0])

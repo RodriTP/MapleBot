@@ -109,7 +109,7 @@ class Sensors :
                 
 
     
-    _DISTANCE_FROM_OBSTACLE = float(300.0)
+    _DISTANCE_FROM_OBSTACLE = float(2000.0)
 
     def update(self):
         """Update les booleans permettant savoir s'il y a un obstacle ou pas"""

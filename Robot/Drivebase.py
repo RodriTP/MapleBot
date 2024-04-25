@@ -229,7 +229,7 @@ class Drivebase :
                     #print(str(tooBig(distToDeg(deg,currDeg))) + " : less than 10-2 ")
                     self.gaucheOuDroiteSlw(deg)
         self.stopMotors()       
-        print(str(self.distToDeg(deg,currDeg)) + " supposed to be done")
+        #print(str(self.distToDeg(deg,currDeg)) + " supposed to be done")
         #recal(deg)
 
     def distToDeg(self, deg, currDeg):
