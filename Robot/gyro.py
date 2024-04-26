@@ -54,11 +54,14 @@ class Gyro :
         return cls.instance
     
     def __init__(self) -> None:
-        periodicThread = _thread.start_new_thread(self.periodic, ())  
+        pass
 
     def periodic(self):
-        while True:
-            self.degrés()
+        """
+        Mettre ici les fonctions qui doivent être loop infiniment.
+        Cette fonction va être appelé dans une boucle infinie dans le main
+        """
+        self.degrés()
 
     def degrés(self):
         """

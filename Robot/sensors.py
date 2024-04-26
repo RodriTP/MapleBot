@@ -44,21 +44,28 @@ class Sensors :
     #sys, gyro,accel, mag
     def __init__(self) -> None:
         """Créer une instance de Sensors"""
-        periodicThread = _thread.start_new_thread(self.update, ())
+        pass
+
+    def periodic(self):
+        """
+        Mettre ici les fonctions qui doivent être loop infiniment.
+        Cette fonction va être appelé dans une boucle infinie dans le main
+        """
+        self.update()
+        self._gyro.periodic()
     
     _DISTANCE_FROM_OBSTACLE = float(2000.0)
 
     def update(self):
         """Update périodiquement les booleans permettant savoir s'il y a un obstacle ou pas"""
-        while True:
-            if(self.getLeftDistance() < self._DISTANCE_FROM_OBSTACLE):
-                self._isObstacleLeft  = True
-            else:
-                self._isObstacleLeft = False
-            if(self.getRightDistance() < self._DISTANCE_FROM_OBSTACLE):
-                self._isObstacleRight = True
-            else:
-                self._isObstacleRight = False
+        if(self.getLeftDistance() < self._DISTANCE_FROM_OBSTACLE):
+            self._isObstacleLeft  = True
+        else:
+            self._isObstacleLeft = False
+        if(self.getRightDistance() < self._DISTANCE_FROM_OBSTACLE):
+            self._isObstacleRight = True
+        else:
+            self._isObstacleRight = False
 
     def getLeftDistance(self):
         """
