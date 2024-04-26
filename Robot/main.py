@@ -288,7 +288,8 @@ def sendData():
 
 def periodicMain():
     """
-    Fonction qui permet de loop les fonctions periodic à l'infini
+    Fonction qui permet de loop les fonctions periodic à l'infini.\n
+    Seule fonction periodic qui contient un "while True"
     """
     while True:
         s.periodic()
