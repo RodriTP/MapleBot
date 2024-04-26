@@ -47,7 +47,12 @@ c='a'
 class Gyro :
     _angle = 0
     _gyroOffset = None
-               
+
+    def __new__(cls):
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(Gyro, cls).__new__(cls)
+        return cls.instance
+    
     def __init__(self) -> None:
         periodicThread = _thread.start_new_thread(self.degré, ())  
 
