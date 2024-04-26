@@ -32,7 +32,7 @@ class AutonomousMoving :
     s = None
     p = None
     _RANGE = math.sqrt(math.pow(90,2)+ math.pow(90,2))/2
-    #position
+    #position du robot
     pos = []
     steps = []
     #x,y,orientationActuel, orientation Du quest
@@ -42,6 +42,7 @@ class AutonomousMoving :
     rightView = False
     leftView = False
     nbAppelé = 0
+    end = 0
 
     def __init__(self, D : Drivebase, S : Sensors):
         self.d = D 
@@ -53,7 +54,7 @@ class AutonomousMoving :
         while (x < 10000):
             self.d._kLeftMotor.run(45)
             self.d._kRightMotor.run(45)
-            x = x+ 1
+            x = x + 1
             #print(s.degrés())
         self.d.turnRad(176, 2)
 
@@ -74,7 +75,7 @@ class AutonomousMoving :
         print("Wall has appeared in sights " + str(direction))
         #if(not self.comparerPosAuVisites(direction, 1)):
         self.d.updatePos() 
-        self.tasks.append([self.p.getX(), self.p.getY(), self.s.degrés(), direction, len(self.steps), self.getPointVue(direction)])
+        self.tasks.append([self.p.getX(), self.p.getY(), self.s.degrés(), direction, len(self.steps), self.getPointVue(direction), 2])
         #print("Two")
         
 
@@ -85,16 +86,24 @@ class AutonomousMoving :
         #if(not self.comparerPosAuVisites(direction, 1)):    
         self.d.updatePos()
         #print(str(self.p.getX()))
-        self.tasks.append([self.p.getX(), self.p.getY(), self.s.degrés(), direction, len(self.steps), self.getPointVue(direction)])
+        self.tasks.append([self.p.getX(), self.p.getY(), self.s.degrés(), direction, len(self.steps), self.getPointVue(direction),3])
+        #self.d.stopMotors()
         #print("Three")
         
     
     #You've hit a wall youve been to before
     #-visit the most recently active created quest
     def caseFour(self):
-        (x, y, deg, direction, stepNb) = self.quests[-1]
+        (x, y, deg, direction, stepNb, case) = self.quests[-1]
         nbAUndo = len(self.steps) - stepNb
         self.undo(nbAUndo)
+        if(case == 2):
+            self.d.turnRad(180,2)
+            self.d.avanceDistance(30)
+            self.d.turnRad(180,2)
+        if(case == 3):
+            self.d.avanceDistance(30)
+            self.d.turnRad(180,2)
         if(direction > 0): self.d.turnRad(88, 2)
         else: self.d.turnRad(-88, 2)
         self.quests.remove[self.quests[-1]]
@@ -136,14 +145,19 @@ class AutonomousMoving :
             self.avanceUntilObstacle()
             self.transposeTasks()
             if(len(self.quests) == 0):
-                print("no quests right now")
+                if(not self.endIsNear()):
+                    print("no quests right now")
+                    self.caseOne()
+                else:
                 #CASE FOUR O FOUR
-                #self.caseFour()
+                    print("4040404040404040400404040404")
+                    self.caseFourOFour()
+
             elif(self.comparerPosAuVisites(self.p.getX(), self.p.getY(), [0,0] , 0)):
                 print("UNDO")
-                self.quests.clear()
-            # else:
-            self.caseOne()
+                self.caseFour()
+            else:
+                self.caseOne()
             #     self.caseFourOFour()
     
     def undo(self, nombreAUndo):
@@ -153,7 +167,8 @@ class AutonomousMoving :
         while(i < nombreAUndo):
             (a,b,c) = self.steps[-1]
             if(c == 0):
-                self.d.avanceDistance(math.sqrt(math.pow(self.p.getX() - a,2) + math.pow(self.p.getY() - b,2)).__float__)
+                nombre = math.sqrt(math.pow(self.p.getX() - a,2) + math.pow(self.p.getY() - b,2))
+                self.d.avanceDistance(nombre.__float__)
             elif(c == 1):
                 self.d.turnRad(88,2)
             i = i + 1
@@ -170,22 +185,30 @@ class AutonomousMoving :
     def getCurrentPos(self):
         return [self.p.getX(), self.p.getY()]
     
-    #si gauche coef = -1 si droit coef = +1
+    #si gauche case = -1 si droit case = +1
     def getPointVue(self, case):
         if(case == 1):
             return [self.p.getX() + (math.cos(self.s.degrés() + 90) * self.s.getRightDistance()), 
                     self.p.getY() + (math.sin(self.s.degrés() + 90) * self.s.getRightDistance())]
         elif(case == -1):
             return [self.p.getX() + (math.cos(self.s.degrés() - 90) * self.s.getLeftDistance()),
-            self.p.getY() + (math.sin(self.s.degrés() - 90) * self.s.getLeftDistance())]
+                    self.p.getY() + (math.sin(self.s.degrés() - 90) * self.s.getLeftDistance())]
         
+    def endIsNear():
+        end = 1 + end
+        if(end > 10):
+            return True
+        else:
+            return False
+        
+          
     def transposeTasks(self):
         i = 0
         if(len(self.tasks) > 0):
-            for [x,y,c,direction,e,pointVue] in self.tasks:
+            for [x,y,c,direction,e,pointVue, case] in self.tasks:
                 if(not self.comparerPosAuVisites(x, y, pointVue, 1)):
                     print("QUEST MADE : " + str(len(self.tasks)))
-                    self.quests.append([x, y, c, direction, e])
+                    self.quests.append([x, y, c, direction, e, case])
                 i = i + 1 
                 #print("task number : " + str(i))  
             self.tasks.clear()
