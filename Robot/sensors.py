@@ -48,7 +48,7 @@ class Sensors :
 
     def periodic(self):
         """
-        Mettre ici les fonctions qui doivent être loop infiniment.
+        Mettre ici les fonctions de Sensors qui doivent être loop infiniment.
         Cette fonction va être appelé dans une boucle infinie dans le main
         """
         self.update()
