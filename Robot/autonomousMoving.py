@@ -1,6 +1,4 @@
 #!/usr/bin/env pybricks-micropython
-
-
 import sys
 import time
 sys.path.append('/home/robot/MapleBot/Robot')
