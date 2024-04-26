@@ -200,8 +200,8 @@ class AutonomousMoving :
             return True
         else:
             return False
-        
-          
+
+
     def transposeTasks(self):
         i = 0
         if(len(self.tasks) > 0):
@@ -241,4 +241,4 @@ class AutonomousMoving :
                 self.d.stopMotors()
                 self.d.updatePos()
                 #print(str(self.p.getX()) + " : " + str(self.p.getY()))
-                self.steps.append([self.p.getX, self.p.getY, 0])
+                self.steps.append([self.p.getX(), self.p.getY(), 0])

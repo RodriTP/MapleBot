@@ -61,7 +61,7 @@ class Gyro :
         Mettre ici les fonctions de gyro qui doivent être loop infiniment.\n
         Cette fonction va être appelé dans une boucle infinie dans le main (while True)
         """
-        self.degrés()
+        self.getDegrés()
 
     def getDegrés(self):
         """
