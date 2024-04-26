@@ -49,7 +49,7 @@ class connexionBluetooth:
         self.mbox.wait()
         self.dataRecieved.append(self.mbox.read())
         if(len(self.dataToSend)==0):
-            self.mbox.send('0')
+            self.mbox.send('NULL')
         else:
             self.mbox.send(self.dataToSend[0])
     #Ajoute des données qui vont être transmises

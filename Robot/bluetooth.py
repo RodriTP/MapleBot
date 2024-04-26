@@ -24,14 +24,6 @@ class Bluetooth :
         self.mbox.send(data)
         self.mbox.wait()
         print(data)
-
-    def sendSensorData(self):
-        self.mbox.send('U1:' + str(self.s.getLeftDistance()))
-        self.mbox.wait()
-        self.mbox.send('U2 :' + str(self.s.getRightDistance()))
-        self.mbox.wait()
-        self.mbox.send('IR:' + str(self.s.getFrontDistance()))
-        self.mbox.wait()
     
     def sendOtherData(self, text:str):
         self.mbox.send(text)
