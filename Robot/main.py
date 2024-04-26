@@ -280,14 +280,22 @@ def sendData():
     """
     Update la position et envoie continuellement la position et valeur des sensors distance à l'ordinateur
     """
-    while True :
-        d.updatePos()
+    #while True :
         #b.sendPositionAndSensor(s,d)
-        print(d._pos)
 
 
-t1 = _thread.start_new_thread(sendData, ())
+#t1 = _thread.start_new_thread(sendData, ())
 
+def periodicMain():
+    """
+    Fonction qui permet de loop les fonctions periodic à l'infini.\n
+    Seule fonction periodic qui contient un "while True"
+    """
+    while True:
+        s.periodic()
+        d.periodic()
+    
+periodicThread = _thread.start_new_thread(periodicMain, ())
 
 a.main()
 

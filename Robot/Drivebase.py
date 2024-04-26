@@ -45,6 +45,13 @@ class Drivebase :
     def __str__(self):
         """affiche les valeur des encodeurs des moteurs"""
         return "leftMotorAngle : " + str(self._kLeftMotor.angle()) + "; righMotorAngle : " + str(self._kRightMotor.angle())
+    
+    def periodic(self):
+        """
+        Mettre ici les fonctions de Drivebase qui doivent être loop infiniment.\n
+        Cette fonction va être appelé dans une boucle infinie dans le main (while True)
+        """
+        self.updatePos()
 
     def setEncoders(self, angle):
         """
