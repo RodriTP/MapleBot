@@ -152,7 +152,6 @@ class AutonomousMoving :
                 #CASE FOUR O FOUR
                     print("4040404040404040400404040404")
                     self.caseFourOFour()
-
             elif(self.comparerPosAuVisites(self.p.getX(), self.p.getY(), [0,0] , 0)):
                 print("UNDO")
                 self.caseFour()
@@ -164,11 +163,12 @@ class AutonomousMoving :
         i = 0
         self.d.turnRad(180,2)
         print("Undo")
+        print(nombreAUndo)
         while(i < nombreAUndo):
             (a,b,c) = self.steps[-1]
             if(c == 0):
                 nombre = math.sqrt(math.pow(self.p.getX() - a,2) + math.pow(self.p.getY() - b,2))
-                self.d.avanceDistance(nombre.__float__)
+                self.d.avanceDistance(nombre)
             elif(c == 1):
                 self.d.turnRad(88,2)
             i = i + 1
@@ -194,9 +194,9 @@ class AutonomousMoving :
             return [self.p.getX() + (math.cos(self.s.degrés() - 90) * self.s.getLeftDistance()),
                     self.p.getY() + (math.sin(self.s.degrés() - 90) * self.s.getLeftDistance())]
         
-    def endIsNear():
-        end = 1 + end
-        if(end > 10):
+    def endIsNear(self):
+        self.end = 1 + self.end
+        if(self.end > 10):
             return True
         else:
             return False
@@ -207,7 +207,7 @@ class AutonomousMoving :
         if(len(self.tasks) > 0):
             for [x,y,c,direction,e,pointVue, case] in self.tasks:
                 if(not self.comparerPosAuVisites(x, y, pointVue, 1)):
-                    print("QUEST MADE : " + str(len(self.tasks)))
+                    print("QUEST MADE : " + str(i))
                     self.quests.append([x, y, c, direction, e, case])
                 i = i + 1 
                 #print("task number : " + str(i))  
@@ -219,19 +219,23 @@ class AutonomousMoving :
         self.d.setSpeed(-400)
         while self._hasFinishedAction == False:
             #print(self.s.getFrontValue())
+            r = self.s.getRightDistance()
+            l = self.s.getLeftDistance()
             self.placesTravelled()
-            if(self.s.getLeftDistance() < 1000):
+            if( l < 1000):
                 if(self.leftView == False): self.caseTwo(-1)
                 self.leftView = True
                 self.points.append(self.getPointVue(-1))
-            else : 
+            else:
+            #elif(not l == 2550.0): 
                 if(self.leftView == True): self.caseThree(-1)
                 self.leftView = False
-            if(self.s.getRightDistance() < 1000):
+            if( r < 1000):
                 if(self.rightView == False): self.caseTwo(1)
                 self.rightView = True
                 self.points.append(self.getPointVue(1))
-            else : 
+            else:
+                #if(not r == 2550.0):
                 if(self.rightView == True): self.caseThree(1)
                 self.rightView = False
             if(self.s.getFrontValue() < self.d.VALUE_FROM_OBSTACLE):

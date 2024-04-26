@@ -11,8 +11,8 @@ import _thread
 # Initialize sensor port 2 as a uart device
 # https://pybricks.com/ev3-micropython/iodevices.html#uart-device
 #  class UARTDevice(port, baudrate, timeout=None(ms))
-ser = UARTDevice(Port.S2, baudrate=9600, timeout=None)
-line = []
+#ser = UARTDevice(Port.S2, baudrate=9600, timeout=None)
+#line = []
 # Write some data
 #ser.write(b'\r\nHello, world!\r\n')
 
@@ -24,7 +24,7 @@ line = []
 #     print("Bytes waiting to be read:", ser.waiting())
 
 # Read all data received while the sound was playing
-c='a'
+#c='a'
 # while True:
 #     # data = ser.read_all()
 
@@ -47,6 +47,10 @@ c='a'
 class Gyro :
     _angle = 0.0
     _gyroOffset = None
+
+    ser = UARTDevice(Port.S2, baudrate=9600, timeout=None)
+    line = []
+    c='a'
 
     def __new__(cls):
         if not hasattr(cls, 'instance'):
@@ -75,18 +79,19 @@ class Gyro :
         bool = True
         while bool == True: 
             try :
-                for c in ser.read(1):
-                    if (chr(c) != '\n') and (chr(c) != '\r'):
-                        line.append(chr(c))
-                    if chr(c) == '\n':
+                for self.c in self.ser.read(1):
+                    if (chr(self.c) != '\n') and (chr(self.c) != '\r'):
+                        line.append(chr(self.c))
+                    if chr(self.c) == '\n':
                         strline=''.join(str(v) for v in line) 
-                        #print(strline)
+                        #print("line : "+strline)
                         line = []
                         bool = False
                         if self._gyroOffset == None:
                             self._gyroOffset = float(strline)
                             return self._gyroOffset
                         else :
+                            #print("angle : "+str((float(strline)-self._gyroOffset)%float(360)))
                             self._angle = (float(strline)-self._gyroOffset)%float(360)
             except :
                 print("Erreur, à lu : "+str(strline))
