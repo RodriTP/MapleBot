@@ -285,38 +285,39 @@ t1 = _thread.start_new_thread(sendData, ())
 
 
 
-# b = Bluetooth()
+#b = Bluetooth()
 
-# def sendData():
-#     """
-#     Update la position et envoie continuellement la position et valeur des sensors distance à l'ordinateur
-#     """
-#     while True :
-#         d.updatePos()
-#         b.sendPositionAndSensor(s,d)
-
-
-# t1 = _thread.start_new_thread(sendData, ())
+def sendData():
+    """
+    Update la position et envoie continuellement la position et valeur des sensors distance à l'ordinateur
+    """
+    while True :
+        d.updatePos()
+        #b.sendPositionAndSensor(s,d)
+        print(d._pos)
 
 
-#a.main()
+#t1 = _thread.start_new_thread(sendData, ())
 
 
-while True:
-    #d.setSpeed(-400)
-    if(s.getLeftDistance() < 1000):    
-        if(a.leftView == False):
-            print("Wall has appeared in sights LEFT")        
-        a.leftView = True
-    else : 
-        if(a.leftView == True):  
-            print("Wall is GONEE in sights LEFT")           
-        a.leftView = False
-    if(s.getRightDistance() < 1000):
-        if(a.rightView == False):            
-            print("Wall has appeared in sights : " +  str(s.getRightDistance()))
-        a.rightView = True
-    else : 
-        if(a.rightView == True): 
-            print("Wall is GONEE in sights RIGHT : " +  str(s.getRightDistance()))
-        a.rightView = False
+a.main()
+
+
+# while True:
+#     d.setSpeed(-400)
+#     if(s.getLeftDistance() < 1000):    
+#         if(a.leftView == False):
+#             print("Wall has appeared in sights LEFT")        
+#         a.leftView = True
+#     else : 
+#         if(a.leftView == True):  
+#             print("Wall is GONEE in sights LEFT")           
+#         a.leftView = False
+#     if(s.getRightDistance() < 1000):
+#         if(a.rightView == False):            
+#             print("Wall has appeared in sights : " +  str(s.getRightDistance()))
+#         a.rightView = True
+#     else : 
+#         if(a.rightView == True): 
+#             print("Wall is GONEE in sights RIGHT : " +  str(s.getRightDistance()))
+#         a.rightView = False

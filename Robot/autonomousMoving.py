@@ -63,7 +63,7 @@ class AutonomousMoving :
         #print(len(self.tasks))
         print(str(len(self.quests)) + " : Quests amount")
         self.d.turnRad(-88,2)
-        self.s.update()
+        #self.s.update()
         self.steps.append([self.p.getX(), self.p.getY(), 1])
         #print("One")
 
