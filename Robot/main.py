@@ -175,22 +175,18 @@ d.avanceDistance(50)
 d.computePos()
 print('pos 3 :'+ str(d._pos))
 """
+s.degrés()
 
 b = Bluetooth()
 
-def sendData(s,d):
-    global b
+def sendData():
+    #global b
     while True :
+        d.updatePos()
         b.sendPositionAndSensor(s,d)
 
+t1 = _thread.start_new_thread(sendData, ())
 
-t1 = _thread.start_new_thread(sendData, (s,d))
-
-s.degrés()
-
-while True:
-    d.updatePos()
-    print(d._pos.__str__())
     
 
 

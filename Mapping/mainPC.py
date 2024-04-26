@@ -30,11 +30,12 @@ def fonction1():
 
         #ajout des points au tableau s'il sont différents du précédent:
         #if(connexionBluetooth.getNumData(sensorData[0]) != _x[len(_x)-1] and connexionBluetooth.getNumData(sensorData[1])!=_y[len(_y)-1]):
-        _x.append(connexionBluetooth.getNumData(sensorData[0]))
-        _y.append(connexionBluetooth.getNumData(sensorData[1]))
+        _x[0] = connexionBluetooth.getNumData(sensorData[0])
+        _y[0] = connexionBluetooth.getNumData(sensorData[1])
+
         
-        
-        
+        #x.append(connexionBluetooth.getNumData(sensorData[]))
+        #y.append(connexionBluetooth.getNumData(sensorData[]))
         #print("_x = " + str(_x[len(_x)-1]) + "_y = " + str(_y[len(_y)-1]))
 
 
