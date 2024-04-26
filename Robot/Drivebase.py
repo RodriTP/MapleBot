@@ -45,6 +45,9 @@ class Drivebase :
     def __str__(self):
         """affiche les valeur des encodeurs des moteurs"""
         return "leftMotorAngle : " + str(self._kLeftMotor.angle()) + "; righMotorAngle : " + str(self._kRightMotor.angle())
+    
+    def periodic(self):
+        self.updatePos()
 
     def setEncoders(self, angle):
         """
