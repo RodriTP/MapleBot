@@ -87,3 +87,7 @@ class Sensors :
         """
         return bool(self._isObstacleRight)
     #self.device.read(reg = 0x0F, length=1)
+
+    def degrés(self):
+        """Return: (float) la lecture du gyro en degré"""
+        return self._gyro._angle
