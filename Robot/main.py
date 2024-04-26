@@ -185,7 +185,7 @@ def sendData():
     #global b
     while True :
         d.updatePos()
-        b.sendPositionAndSensor(s,d)
+        b.sendPositionAndWalls(d, a)
 
 t1 = _thread.start_new_thread(sendData, ())
 

@@ -2,6 +2,7 @@
 from pybricks.messaging import BluetoothMailboxServer, Mailbox
 from sensors import Sensors
 from Drivebase import Drivebase
+from autonomousMoving import AutonomousMoving
 
 class Bluetooth :
     server = BluetoothMailboxServer()
@@ -10,6 +11,8 @@ class Bluetooth :
     print('waiting for connection...')
     server.wait_for_connection()
     print('connected!')
+    
+    lastWallSent = 0
 
     # In this program, the server waits for the client to send the first message
     # and then sends a reply.
@@ -24,6 +27,13 @@ class Bluetooth :
         self.mbox.send(data)
         self.mbox.wait()
         print(data)
+
+    def sendPositionAndWalls(self, d:Drivebase, a:AutonomousMoving):
+        data = d._pos.__str__()
+        for i in range(len(a.points) - self.lastWallSent):
+            data += str(a.points[self.lastWallSent + i])
+        print(data)
+        self.lastWallSent = len(a.points)
     
     def sendOtherData(self, text:str):
         self.mbox.send(text)
