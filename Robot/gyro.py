@@ -45,7 +45,7 @@ c='a'
 #     # print(c)
  
 class Gyro :
-    _angle = 0
+    _angle = 0.0
     _gyroOffset = None
 
     def __new__(cls):
@@ -54,7 +54,11 @@ class Gyro :
         return cls.instance
     
     def __init__(self) -> None:
-        periodicThread = _thread.start_new_thread(self.degré, ())  
+        periodicThread = _thread.start_new_thread(self.periodic, ())  
+
+    def periodic(self):
+        while True:
+            self.degrés()
 
     def degrés(self):
         """
@@ -63,6 +67,7 @@ class Gyro :
         
         Return : [0,360[ degré(s)
         """
+        print("in the loop (Gyro)")
         line = []
         bool = True
         while bool == True: 
@@ -79,7 +84,7 @@ class Gyro :
                             self._gyroOffset = float(strline)
                             return self._gyroOffset
                         else :
-                            return (float(strline)-self._gyroOffset)%float(360)
+                            self._angle = (float(strline)-self._gyroOffset)%float(360)
             except :
                 print("Erreur, à lu : "+str(strline))
                 return float(0)

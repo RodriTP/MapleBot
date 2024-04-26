@@ -297,7 +297,7 @@ def sendData():
         print(d._pos)
 
 
-#t1 = _thread.start_new_thread(sendData, ())
+t1 = _thread.start_new_thread(sendData, ())
 
 
 a.main()

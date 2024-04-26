@@ -49,15 +49,16 @@ class Sensors :
     _DISTANCE_FROM_OBSTACLE = float(2000.0)
 
     def update(self):
-        """Update les booleans permettant savoir s'il y a un obstacle ou pas"""
-        if(self.getLeftDistance() < self._DISTANCE_FROM_OBSTACLE):
-            self._isObstacleLeft  = True
-        else:
-            self._isObstacleLeft = False
-        if(self.getRightDistance() < self._DISTANCE_FROM_OBSTACLE):
-            self._isObstacleRight = True
-        else:
-            self._isObstacleRight = False
+        """Update périodiquement les booleans permettant savoir s'il y a un obstacle ou pas"""
+        while True:
+            if(self.getLeftDistance() < self._DISTANCE_FROM_OBSTACLE):
+                self._isObstacleLeft  = True
+            else:
+                self._isObstacleLeft = False
+            if(self.getRightDistance() < self._DISTANCE_FROM_OBSTACLE):
+                self._isObstacleRight = True
+            else:
+                self._isObstacleRight = False
 
     def getLeftDistance(self):
         """
