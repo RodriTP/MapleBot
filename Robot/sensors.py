@@ -35,6 +35,12 @@ class Sensors :
     _isObstacleLeft = False
     _gyro = Gyro()
     
+
+    def __new__(cls):
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(Sensors, cls).__new__(cls)
+        return cls.instance
+    
     #sys, gyro,accel, mag
     def __init__(self) -> None:
         """Créer une instance de Sensors"""
