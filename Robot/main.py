@@ -299,10 +299,24 @@ t1 = _thread.start_new_thread(sendData, ())
 # t1 = _thread.start_new_thread(sendData, ())
 
 
-a.main()
+#a.main()
 
 
-# while True:
-#     print(s.getFrontValue())
-#     if(s.getFrontValue() < d.VALUE_FROM_OBSTACLE):
-#         print("AAAAA")
+while True:
+    #d.setSpeed(-400)
+    if(s.getLeftDistance() < 1000):    
+        if(a.leftView == False):
+            print("Wall has appeared in sights LEFT")        
+        a.leftView = True
+    else : 
+        if(a.leftView == True):  
+            print("Wall is GONEE in sights LEFT")           
+        a.leftView = False
+    if(s.getRightDistance() < 1000):
+        if(a.rightView == False):            
+            print("Wall has appeared in sights : " +  str(s.getRightDistance()))
+        a.rightView = True
+    else : 
+        if(a.rightView == True): 
+            print("Wall is GONEE in sights RIGHT : " +  str(s.getRightDistance()))
+        a.rightView = False
