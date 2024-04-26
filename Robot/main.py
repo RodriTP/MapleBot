@@ -24,7 +24,6 @@ pos = [x,y]
 ev3 = EV3Brick()
 s = Sensors()
 d = Drivebase()
-s = Sensors()
 
 #p = Point2D(x,y)
 a = AutonomousMoving(d,s)
