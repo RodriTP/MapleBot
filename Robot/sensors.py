@@ -1,6 +1,8 @@
 #!/usr/bin/env pybricks-micropython
 #import utime
-from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,InfraredSensor, UltrasonicSensor, GyroSensor)
+from pybricks.ev3devices import UltrasonicSensor
+from pybricks.nxtdevices import UltrasonicSensor as UltrasonicSensor_Nxt
+#from pybricks import nxtdevices.UltrasonicSensor
 from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.robotics import DriveBase
@@ -61,17 +63,29 @@ c='a'
 
   
 class Sensors :
+    """
+    Classe qui contient touts les senseurs présent sur le robot
+    
+    ainsi que les méthodes pour obtenir leur valeur
+    """
     _leftUltrasonic = UltrasonicSensor(Port.S1)
-    _frontInfrared = InfraredSensor(Port.S3)
+    _frontUltrasonic = UltrasonicSensor_Nxt(Port.S3)
     _rightUltrasonic = UltrasonicSensor(Port.S4)
     _isObstacleRight = False
     _isObstacleLeft = False
     _gyroOffset = None
     #sys, gyro,accel, mag
     def __init__(self) :
+        """Créer une instance de Sensors"""
         self.degrés()
     
     def degrés(self):
+        """
+        Permet d'obtenir la rotation du gyro en degrés\n
+            Si le gyro crash, returne 0 et affiche un message d'erreur
+        
+        Return : [0,360[ degré(s)
+        """
         line = []
         bool = True
         while bool == True: 
@@ -95,9 +109,10 @@ class Sensors :
                 
 
     
-    _DISTANCE_FROM_OBSTACLE = float(200.0)
+    _DISTANCE_FROM_OBSTACLE = float(300.0)
 
     def update(self):
+        """Update les booleans permettant savoir s'il y a un obstacle ou pas"""
         if(self.getLeftDistance() < self._DISTANCE_FROM_OBSTACLE):
             self._isObstacleLeft  = True
         else:
@@ -108,17 +123,36 @@ class Sensors :
             self._isObstacleRight = False
 
     def getLeftDistance(self):
+        """
+        Return : 
+            distance entre la gauche du robot et l'objet le plus proche (en mm)
+        """
         return float(self._leftUltrasonic.distance()) #mm  
     
     def getRightDistance(self):
+        """
+        Return : 
+            distance entre la droite du robot et l'objet le plus proche (en mm)
+        """
         return float(self._rightUltrasonic.distance()) #mm
     
     def getFrontValue(self):
-        return float(self._frontInfrared.distance()) #retourne une val entre 0 et 100 (faut multiplier par un scalaire)
+        """Return : valeur arbitraire (varie en fonction de T°, distance, et autre) à un obstacle"""
+        return float(self._frontUltrasonic.distance()) #retourne une val entre 0 et 100 (faut multiplier par un scalaire)
     
     def getIsObstacleLeft(self):
+        """
+        Return
+            True: un objet est detecté
+            False: aucun objet n'est detecté
+        """
         return bool(self._isObstacleLeft)
     
     def getIsObstacleRight(self):
+        """
+        Return
+            True: un objet est detecté
+            False: aucun objet n'est detecté
+        """
         return bool(self._isObstacleRight)
     #self.device.read(reg = 0x0F, length=1)
