@@ -13,7 +13,7 @@ class main :
    
     grille = traitementDonnees.creationGrille(grille, Data.data, Data)
     grille = traitementDonnees.insertionDonnees(grille, Data.data)
-    grille = traitementDonnees.determinerMur(grille, Data.data)
+    #grille = traitementDonnees.determinerMur(grille, Data.data)
 
     # Affichage
     x = []

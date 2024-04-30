@@ -1,3 +1,5 @@
+from  CasesAutour import casesAutour
+
 class traitementDonnees :
 
     # --- DÉFINITION DES LIMITES X ET Y POUR CHAQUE CASE ---
@@ -62,6 +64,7 @@ class traitementDonnees :
         posXPointeur = 0 #détermine la coordonée en X de la case sur laquelle on travaille
         posYPointeur = 0 #détermine la coordonée en Y de la case sur laquelle on travaille
 
+        #On trouve d'abord la case qui a le plus de point et on commence de là
         for i in range(len(grille)): # on parcours les colonnes |
             for j in range (len(grille[0])): # on parcours les lignes -
                 if maximum < grille[i][j].quantite :
@@ -76,84 +79,89 @@ class traitementDonnees :
         # ________________________________
         # | x-1, y-1 | x, y-1  | x+1, y-1 |
         # |__________|_________|__________|
-        # | x-1, y   |  x, y   | x+1, j   |
+        # | x-1, y   |  x, y   | x+1, y   |
         # |__________|_________|__________|
-        # | x-1, y+1 | x, y+1  | x+1, j+1 |
+        # | x-1, y+1 | x, y+1  | x+1, y+1 |
         # |__________|_________|__________|
         # 
         # la case du milieu (x,y) sert de référence  
 
-        casesAutour = [grille[posXPointeur-1][posYPointeur-1], #case en haut à gauche
-                       grille[posXPointeur][posYPointeur-1], #case en haut
-                       grille[posXPointeur+1][posYPointeur-1], #case en haut à droite
-                       grille[posXPointeur-1][posYPointeur], #case à gauche
-                       grille[posXPointeur+1][posYPointeur], #case à droite
-                       grille[posXPointeur-1][posYPointeur+1], #case en bas à gauche
-                       grille[posXPointeur][posYPointeur+1], #case en bas
-                       grille[posXPointeur+1][posYPointeur+1] #case en bas à droite
-                       ]
+
+        #Liste avec toutes les cases autours de la case de référence
+        casesAutourListe = [casesAutour() for i in range(8)]
+
+        
+        #case en haut à gauche
+        casesAutourListe[0].posX = posXPointeur-1
+        casesAutourListe[0].posY = posYPointeur-1
+        casesAutourListe[0].quantite = grille[posXPointeur-1][posYPointeur-1].quantite
+
+        #case en haut
+        casesAutourListe[1].posX = posXPointeur
+        casesAutourListe[1].posY = posYPointeur-1
+        casesAutourListe[1].quantite = grille[posXPointeur][posYPointeur-1].quantite
+
+        #case en haut à droite
+        casesAutourListe[2].posX = posXPointeur+1
+        casesAutourListe[2].posY = posYPointeur-1
+        casesAutourListe[2].quantite = grille[posXPointeur+1][posYPointeur-1].quantite
+
+        #case à gauche
+        casesAutourListe[3].posX = posXPointeur-1
+        casesAutourListe[3].posY = posYPointeur
+        casesAutourListe[3].quantite = grille[posXPointeur-1][posYPointeur].quantite
+
+        #case à droite
+        casesAutourListe[4].posX = posXPointeur+1
+        casesAutourListe[4].posY = posYPointeur
+        casesAutourListe[4].quantite = grille[posXPointeur+1][posYPointeur].quantite
+
+        #case en bas à gauche
+        casesAutourListe[5].posX = posXPointeur-1
+        casesAutourListe[5].posY = posYPointeur+1
+        casesAutourListe[5].quantite = grille[posXPointeur-1][posYPointeur+1].quantite
+
+        #case en bas
+        casesAutourListe[6].posX = posXPointeur
+        casesAutourListe[6].posY = posYPointeur+1
+        casesAutourListe[6].quantite = grille[posXPointeur][posYPointeur+1].quantite
+
+        #case en bas à droite
+        casesAutourListe[7].posX = posXPointeur+1
+        casesAutourListe[7].posY = posYPointeur+1
+        casesAutourListe[7].quantite = grille[posXPointeur+1][posYPointeur+1].quantite
 
 
-        liste = [casesAutour[0].quantite, 
-                 casesAutour[1].quantite,
-                 casesAutour[2].quantite,
-                 casesAutour[3].quantite,
-                 casesAutour[4].quantite,
-                 casesAutour[5].quantite,
-                 casesAutour[6].quantite,
-                 casesAutour[7].quantite]
-                
         # code pris d'en ligne : https://www.geeksforgeeks.org/python-program-to-find-second-largest-number-in-a-list/
-        mx = max(liste[0], liste[1]) # case autour avec le max de donées 
-        secondmax = min(liste[0], liste[1]) # case autour avec le 2e max de donées 
+        mx = max(casesAutourListe[0].quantite, casesAutourListe[1].quantite) # case autour avec le max de donées 
+        secondmax = min(casesAutourListe[0].quantite, casesAutourListe[1].quantite) # case autour avec le 2e max de donées 
         mx_pos = 0  # Position du max
         secondmax_pos = 1 # Position du 2e max
-        n = len(liste)
+        n = len(casesAutourListe)
         for i in range(2,n): 
-            if liste[i] > mx: 
+            if casesAutourListe[i].quantite > mx: 
                 secondmax = mx
                 secondmax_pos = mx_pos
-                mx = liste[i] 
-            elif liste[i] > secondmax and \
-                mx != liste[i]: 
-                secondmax = liste[i]
+                mx = casesAutourListe[i].quantite
+            elif casesAutourListe[i].quantite > secondmax and mx != casesAutourListe[i].quantite: 
+                secondmax = casesAutourListe[i].quantite
                 secondmax_pos = i
-            elif mx == secondmax and \
-                secondmax != liste[i]:
-                secondmax = liste[i]
+            elif mx == secondmax and secondmax != casesAutourListe[i].quantite:
+                secondmax = casesAutourListe[i].quantite
                 secondmax_pos = i
-    
-        for i in range(len(liste)):
-            if liste[i] == mx:
+        #fin du code pris en ligne
+         
+        for i in range(len(casesAutourListe)): #trouve la position de la case avec le max dans le tableau grille 
+            if casesAutourListe[i].quantite == mx:
                 mx_pos = i
-        
-        casesAutour[mx_pos].mur = True
-        casesAutour[secondmax_pos].mur = True
 
-        if (mx_pos == 0):
-            posXPointeur = posXPointeur-1
-            posYPointeur = posYPointeur-1
-        elif (mx_pos == 1):
-            posXPointeur = posXPointeur
-            posYPointeur = posYPointeur-1
-        elif (mx_pos == 2):
-            posXPointeur = posXPointeur+1
-            posYPointeur = posYPointeur-1
-        elif (mx_pos == 3):
-            posXPointeur = posXPointeur-1
-            posYPointeur = posYPointeur
-        elif (mx_pos == 4):
-            posXPointeur = posXPointeur+1
-            posYPointeur = posYPointeur
-        elif (mx_pos == 5):
-            posXPointeur = posXPointeur-1
-            posYPointeur = posYPointeur+1
-        elif (mx_pos == 6):
-            posXPointeur = posXPointeur
-            posYPointeur = posYPointeur+1
-        elif (mx_pos == 7):
-            posXPointeur = posXPointeur+1
-            posYPointeur = posYPointeur+1
+       
+        grille[casesAutourListe[mx_pos].posX][casesAutourListe[mx_pos].posY].mur = True
+        grille[casesAutourListe[secondmax_pos].posX][casesAutourListe[secondmax_pos].posY].mur = True
+    
+        posXPointeur = casesAutourListe[mx_pos].posX
+        posYPointeur = casesAutourListe[mx_pos].posY
+
 
 
 
@@ -170,10 +178,8 @@ class traitementDonnees :
         print("Highest number pos  is : ",\
             str(mx_pos))
         
-        
-        
-        
-        
-
         return grille
+    
+    #def finMur(grille):
+
 
