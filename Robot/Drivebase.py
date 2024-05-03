@@ -135,6 +135,11 @@ class Drivebase :
 
 
     def avanceDistance(self, distance : float): #distance en mm
+        """
+        Permet d'avancer une distance exacte
+        Param
+            distance (float) : distance en mm qu'on veut avancer
+        """
         self._hasFinishedAction = False
         self.setEncoders(0)
         self.setSpeed(-200)
@@ -180,9 +185,16 @@ class Drivebase :
                 hasObstacleInFront = not self._hasFinishedAction
                 print("obstacle avoided")
     
-    def equalsWithTolerance(self, value : float, tolerance : float):
-        if(float(value) <= float(value) + float(tolerance) 
-           and float(value) >= float(value)+float(tolerance)):
+    def equalsWithTolerance(self, value1 : float, value2 : float, tolerance : float):
+        """
+        Compare deux valeurs en tenant compte de la tolérance spécifié\n
+        Param
+            value1 (float) : valeur qu'on veut comparer
+            value2 (float) : valeur avec la quelle on compare
+            tolerance (float) : tolérance de la valeur2
+        """
+        if(float(value1) <= float(value2) + float(tolerance) 
+           and float(value1) >= float(value2)+float(tolerance)):
             return True
         else:
             return False
@@ -191,7 +203,7 @@ class Drivebase :
     #cette fonction reçoit dist : le rapport de déplacement sur un temps déterminé, et reçoit angle : la valeur que le gyro retourne.
     def updatePos(self):
         """
-        Update la position du robot
+        Update la position du robot (x,y,yaw) (en mm et deg)
         """
         deg = self._s.degrés()
         dis = self.getDistance()
@@ -211,7 +223,7 @@ class Drivebase :
         """
         return ((dist * 0.0949) * 360)
     
-    def turnRad(self, deg, spd):
+    def turnRad(self, deg : float, spd):
         currDeg = self._s.degrés()
         quadActuel = self.déterminerQuad(0)    
         quadVoulu = self.déterminerQuad(deg)
