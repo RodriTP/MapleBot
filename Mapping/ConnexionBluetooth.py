@@ -2,6 +2,7 @@
 from pcPybricks.messaging import BluetoothMailboxClient, TextMailbox
 
 
+
 # This demo makes your PC talk to an EV3 over Bluetooth.
 #
 # This is identical to the EV3 client example in ../bluetooth_client
@@ -43,18 +44,21 @@ class connexionBluetooth:
         #exemple de truc à recevoir
         print(self.mbox.read())
 
+    i = 1
+
     #L'échange de donnés qui doit se faire tout le temps
     def dataExchange(self):
         self.mbox.wait()
-        print("gay")
         self.dataRecieved.append(self.mbox.read())
         #if(len(self.dataToSend)==0):
         #    self.mbox.send('NULL')
         #    print("send return")
         #else:
-        self.mbox.send("NULL")
+        reponse = "NULL"+ str(connexionBluetooth.i)
+        self.mbox.send(reponse)
         #    print("WHYYYYYYY")
-        print("send return")
+        print(reponse)
+        connexionBluetooth.i+=1
 
     #Ajoute des données qui vont être transmises
     def addDataToSend(self, dataToSend):

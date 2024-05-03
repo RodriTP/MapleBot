@@ -185,11 +185,14 @@ class AutonomousMoving :
     #si gauche case = -1 si droit case = +1
     def getPointVue(self, case):
         if(case == 1):
-            return [self.p.getX() + (math.cos(self.s.degrés() + 90) * self.s.getRightDistance()), 
-                    self.p.getY() + (math.sin(self.s.degrés() + 90) * self.s.getRightDistance())]
+            rightDistance = self.s.getRightDistance()
+            tab = [self.p.getX() + (math.cos(self.s.degrés() + 90) * rightDistance), 
+                    self.p.getY() + (math.sin(self.s.degrés() + 90) * rightDistance)]
+            return tab
         elif(case == -1):
-            return [self.p.getX() + (math.cos(self.s.degrés() - 90) * self.s.getLeftDistance()),
-                    self.p.getY() + (math.sin(self.s.degrés() - 90) * self.s.getLeftDistance())]
+            leftDistance = self.s.getLeftDistance()
+            return [self.p.getX() + (math.cos(self.s.degrés() - 90) * leftDistance),
+                    self.p.getY() + (math.sin(self.s.degrés() - 90) * leftDistance)]
         
     def endIsNear(self):
         self.end = 1 + self.end
