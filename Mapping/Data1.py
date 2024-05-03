@@ -885,7 +885,7 @@ class Data: # exemple de données 1
     
     data.append([17.922334312048644,16.466050326197042]) 
 
-    espacement = 2
+    espacement = 1.5
 
     def trouverMaxX(data):  #Pour trouver la valeur maximale en X
         maxX = data[0][0]
