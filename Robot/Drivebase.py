@@ -91,6 +91,13 @@ class Drivebase :
         self.leftEncoderMemory = self._kLeftMotor.angle()
         return d #if d > 0.0 else d*-1.0
     
+    
+    def getDistanceWithoutReset(self):
+        """
+        Return: (float) (mm) distance parcourue depuis la dernière fois que les encodeurs on été reset (.setEncoder(0))
+        """
+        return self._kLeftMotor.angle()+self._kRightMotor.angle()/2 * self._kWheelCirconference/ float(360)
+    
     #droite = angle positif, gauche = angle négatif
     def turn(self, angle, speed):
         self._hasFinishedAction = False
@@ -130,12 +137,16 @@ class Drivebase :
     def avanceDistance(self, distance : float): #distance en mm
         self._hasFinishedAction = False
         self.setEncoders(0)
-        self.setSpeed(200)
+        self.setSpeed(-200)
         
+        print(distance)
+
+        distance = -3.22 * distance
         while self._hasFinishedAction == False:
-            self._hasFinishedAction = (self.getDistance() >= distance)
+            print(self.getDistanceWithoutReset())
+            self._hasFinishedAction = (self.getDistanceWithoutReset() <= distance)
         
-        print("J'AI AVANCÉ : "+str(self.getDistance()))
+        print("J'AI AVANCÉ : "+str(self.getDistanceWithoutReset()))
         self.stopMotors()
 
     def moveAuto(self, sensor):
@@ -190,7 +201,7 @@ class Drivebase :
             x,
             y,
             deg
-        )    
+        )
     #Cette fonction reçoit la distance en centimètres et retourne le nombre de degrés que les moteurs doivent tourner
     def cmToAngleRot(dist : float): 
         """
@@ -221,7 +232,7 @@ class Drivebase :
         if(abs(self.tooBig(self.distToDeg(deg,currDeg))) >= 0.5):
             while(abs(self.tooBig(self.distToDeg(deg,currDeg))) > 5*spd):
             #while(abs(tooBig(distToDeg(deg,currDeg))) > 10*spd):
-                #print(s.degrés())
+                #print(self._s.degrés())
                 #print(str(tooBig(abs(distToDeg(deg,currDeg)))) + " : more than 10")
                 self.gaucheOuDroiteSpd(deg, spd)
             if(self.tooBig(self.distToDeg(deg,currDeg)) >= 0.5):  

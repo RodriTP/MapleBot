@@ -45,13 +45,15 @@ class connexionBluetooth:
 
     #L'échange de donnés qui doit se faire tout le temps
     def dataExchange(self):
-        #print("echange des donnes")
         self.mbox.wait()
         self.dataRecieved.append(self.mbox.read())
         if(len(self.dataToSend)==0):
-            self.mbox.send('0')
+            self.mbox.send('NULL')
+            print("send return")
         else:
             self.mbox.send(self.dataToSend[0])
+            print("WHYYYYYYY")
+
     #Ajoute des données qui vont être transmises
     def addDataToSend(self, dataToSend):
         self.dataToSend.append(dataToSend)

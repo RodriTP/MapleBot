@@ -13,7 +13,7 @@ from Point2D import Point2D
 from autonomousMoving import AutonomousMoving
 import time
 import _thread
-#from bluetooth import Bluetooth
+from bluetooth import Bluetooth
 # This program requires LEGO EV3 MicroPython v2.0 or higher.
 # Click "Open user guide" on the EV3 extension tab for more information.
 
@@ -177,8 +177,6 @@ d.computePos()
 print('pos 3 :'+ str(d._pos))
 """
 
-
-
 # s.degrés()
     
 
@@ -273,17 +271,7 @@ print('pos 3 :'+ str(d._pos))
 
 
 
-#b = Bluetooth()
-
-def sendData():
-    """
-    Update la position et envoie continuellement la position et valeur des sensors distance à l'ordinateur
-    """
-    #while True :
-        #b.sendPositionAndSensor(s,d)
-
-
-#t1 = _thread.start_new_thread(sendData, ())
+b = Bluetooth()
 
 def periodicMain():
     """
@@ -293,27 +281,36 @@ def periodicMain():
     while True:
         s.periodic()
         d.periodic()
+        
     
+def bluetoothMain():
+    global b
+    while True:
+        b.sendPositionAndWalls(d, a)
+
 periodicThread = _thread.start_new_thread(periodicMain, ())
+bluetoothTread = _thread.start_new_thread(bluetoothMain, ())
 
 a.main()
 
-
+#d.avanceDistance(300)
 # while True:
-#     d.setSpeed(-400)
-#     if(s.getLeftDistance() < 1000):    
+#     #d.setSpeed(-400)
+#     c = s.getLeftDistance()
+#     t = s.getRightDistance()
+#     if(c < 1000):    
 #         if(a.leftView == False):
 #             print("Wall has appeared in sights LEFT")        
 #         a.leftView = True
-#     else : 
+#     elif(not c == 2550.0):
 #         if(a.leftView == True):  
 #             print("Wall is GONEE in sights LEFT")           
 #         a.leftView = False
-#     if(s.getRightDistance() < 1000):
+#     if(t < 1000):
 #         if(a.rightView == False):            
-#             print("Wall has appeared in sights : " +  str(s.getRightDistance()))
+#             print("Wall has appeared in sights : " +  str(t))
 #         a.rightView = True
-#     else : 
+#     elif(not t == 2550.0): 
 #         if(a.rightView == True): 
-#             print("Wall is GONEE in sights RIGHT : " +  str(s.getRightDistance()))
+#             print("Wall is GONEE in sights RIGHT : " +  str(t))
 #         a.rightView = False
