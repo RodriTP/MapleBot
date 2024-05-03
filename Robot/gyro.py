@@ -45,6 +45,11 @@ import _thread
 #     # print(c)
  
 class Gyro :
+    """
+    Classe qui sert à lire les valeurs du gyro.\n
+    Gyro est un singleton pour éviter de faire planter le gyroscope physique\n
+    en créant multiples instances de celui-ci.
+    """
     _angle = 0.0
     _gyroOffset = None
 
@@ -92,7 +97,7 @@ class Gyro :
 #                            return self._gyroOffset
                         else :
                             #print("angle : "+str((float(strline)-self._gyroOffset)%float(360)))
-                            self._angle = (float(strline)-self._gyroOffset)%float(360)
+                            Gyro._angle = (float(strline)-self._gyroOffset)%float(360)
             except :
                 print("Erreur, à lu : "+str(strline))
                 return float(0)

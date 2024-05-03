@@ -24,9 +24,9 @@ import _thread
   
 class Sensors :
     """
-    Classe qui contient touts les senseurs présent sur le robot
-    
-    ainsi que les méthodes pour obtenir leur valeur
+    Classe qui permet d'obtenir les valeurs de tous les senseurs présent sur le robot.\n
+    Sensors est un singleton pour eviter de faire clash le code en créant multiples \n
+    instances d'un même senseur physique
     """
     _leftUltrasonic = UltrasonicSensor(Port.S1)
     _frontUltrasonic = UltrasonicSensor_Nxt(Port.S3)
@@ -51,12 +51,12 @@ class Sensors :
         Mettre ici les fonctions de Sensors qui doivent être loop infiniment.
         Cette fonction va être appelé dans une boucle infinie dans le main
         """
-        self.update()
+        self.updateObastaclePresence()
         self._gyro.periodic()
     
     _DISTANCE_FROM_OBSTACLE = float(2000.0)
 
-    def update(self):
+    def updateObastaclePresence(self):
         """Update périodiquement les booleans permettant savoir s'il y a un obstacle ou pas"""
         if(self.getLeftDistance() < self._DISTANCE_FROM_OBSTACLE):
             self._isObstacleLeft  = True
@@ -104,4 +104,4 @@ class Sensors :
 
     def degrés(self):
         """Return: (float) la lecture du gyro en degré"""
-        return self._gyro._angle
+        return Sensors._gyro._angle
