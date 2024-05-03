@@ -1,5 +1,6 @@
 #!/usr/bin/env pybricks-micropython
 from pybricks.messaging import BluetoothMailboxServer, Mailbox
+from pybricks import tools
 from sensors import Sensors
 from Drivebase import Drivebase
 from autonomousMoving import AutonomousMoving
@@ -37,13 +38,14 @@ class Bluetooth :
                 print("dans la boucle")
                 pointTemp = a.points[self.lastWallSent + i]
                 print(pointTemp)
-                temp = Point2D(pointTemp[0]/1000, pointTemp[1]/1000)
+                temp = Point2D(pointTemp[0], pointTemp[1])
                 data += ";"+ temp.__str__()
         self.lastWallSent = len(a.points)
         self.mbox.send(data)
-        #print("avant wait")
-        self.mbox.wait()
         print(data)
+        print("waiting...")
+        self.mbox.wait_new()
+        print(self.mbox.read())
         print("exited")
     
     def sendOtherData(self, text:str):

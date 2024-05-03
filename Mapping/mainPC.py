@@ -6,6 +6,7 @@ from matplotlib.animation import FuncAnimation
 #import sys
 import matplotlib.pyplot as plt
 import threading
+import multiprocessing
 import math
 #sys.path.append('Util')
 #from Point2D import Point2D
@@ -36,15 +37,16 @@ def fonction1():
         _x[0] = connexionBluetooth.getNumData(sensorData[0])
         _y[0] = connexionBluetooth.getNumData(sensorData[1])
 
+        """
         if(len(sensorData)>3):
             for i in range (len(sensorData)-3):
                 if i%2==0:
                     _x.append(connexionBluetooth.getNumData(sensorData[i+3]))
                 else :
                     _y.append(connexionBluetooth.getNumData(sensorData[i+3]))
-
-
         """
+
+        
         distanceGauche = connexionBluetooth.getNumData(sensorData[3])/1000 #transforme la distance vue par l'ultrason gauche en mm en m
         if(distanceGauche < 2.0):
             _x.append(calculerPointX(_x[0], distanceGauche, (connexionBluetooth.getNumData(sensorData[2])-90)%360)) #La position x du point ultrason gauche
@@ -56,7 +58,8 @@ def fonction1():
             _x.append(calculerPointX(_x[0], distanceDroite, (connexionBluetooth.getNumData(sensorData[2])+90)%360))
             _y.append(calculerPointY(_y[0], distanceDroite, (connexionBluetooth.getNumData(sensorData[2])+90)%360))
             #print("_x = " + str(_x[len(_x)-1]) + "_y = " + str(_y[len(_y)-1]))
-        """
+        
+        
 
 def calculerPointX(posX:float, distance:float, angle:float):
     return posX + distance*math.cos(math.radians(angle))
