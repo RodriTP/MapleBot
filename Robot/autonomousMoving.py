@@ -205,9 +205,9 @@ class AutonomousMoving :
         if(len(self.tasks) > 0):
             for [x,y,c,direction,e,pointVue, case] in self.tasks:
                 if(not self.comparerPosAuVisites(x, y, pointVue, 1)):
+                    p = p + 1
                     print("New quest added : " + str(p))
                     self.quests.append([x, y, c, direction, e, case])
-                    p = p + 1
                 i = i + 1 
                 #print("task number : " + str(i))  
             self.tasks.clear()
