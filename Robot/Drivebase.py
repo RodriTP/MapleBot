@@ -201,7 +201,7 @@ class Drivebase :
             x,
             y,
             deg
-        )    
+        )
     #Cette fonction reçoit la distance en centimètres et retourne le nombre de degrés que les moteurs doivent tourner
     def cmToAngleRot(dist : float): 
         """
