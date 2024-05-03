@@ -77,7 +77,7 @@ class Gyro :
         Permet d'obtenir la rotation du gyro en degrés\n
             Si le gyro crash, returne 0 et affiche un message d'erreur
         
-        Return : [0,360[ degré(s)
+        Return : [0,360[ degré(s) en sens horaire
         """
         #print("in the loop (Gyro)")
         line = []
