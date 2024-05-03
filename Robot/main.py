@@ -291,7 +291,15 @@ def bluetoothMain():
 periodicThread = _thread.start_new_thread(periodicMain, ())
 bluetoothTread = _thread.start_new_thread(bluetoothMain, ())
 
-a.main()
+while True:
+    d.avanceUntilObstacle()
+    d.turnRad(178, 2)
+    d.avanceUntilObstacle()
+    d.turnRad(-178, 2)
+
+
+
+#a.main()
 
 #d.avanceDistance(300)
 # while True:

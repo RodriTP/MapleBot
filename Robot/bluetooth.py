@@ -31,9 +31,10 @@ class Bluetooth :
 
     def sendPositionAndWalls(self, d:Drivebase, a:AutonomousMoving):
         data = d._pos.__str__()
-        if(len(a.points)-self.lastWallSent>0):
-            print("dans la boucle")
+        if(len(a.points)>self.lastWallSent):
+            print("dans le if nouveau mur")
             for i in range(len(a.points) - self.lastWallSent):
+                print("dans la boucle")
                 pointTemp = a.points[self.lastWallSent + i]
                 print(pointTemp)
                 temp = Point2D(pointTemp[0]/1000, pointTemp[1]/1000)
