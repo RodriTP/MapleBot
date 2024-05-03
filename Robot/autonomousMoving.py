@@ -16,11 +16,10 @@ from Point2D import Point2D
 
 
 #IL RESTE :
-    #-LA FONCT SLOPE
     #-LA CONDITION POUR QUE LE ROBOT ARRÊTE
     #-LA PRÉCISION QUE LE ROBOT NE TOURNE PAS DANS LE MUR OU SON QUEST SE TROUVE, MAIS PLUS LOIN, OU MOIN, DÉPENDAMENT SUR QUELLE FONCT QU'ON CALL, (CASE 2/3) 
     #-FAIT LA FONCT AVANCE LONGEURE ROBOT TOURNE VERS QUEST ET LA METTRE DANS CASEfour
-    #-QUAND QUE LE ROBOT NE TOURNE PAS À LA BONNE ANGLE c'EST QUE LE GYRO COMMENCE MAL(Ça ércit laffair que rod à mis)
+    #-quand le robot undo, fait que quand tu tourne vers le quest, c'est un step 2 de tourner du coté x, ensuite quql chs jai oublié
     #-
     #-
     #-
@@ -64,7 +63,6 @@ class AutonomousMoving :
         #print(len(self.tasks))
         print(str(len(self.quests)) + " : Quests amount")
         self.d.turnRad(-88,2)
-        #self.s.update()
         self.steps.append([self.p.getX(), self.p.getY(), 1])
         #print("One")
 
@@ -99,10 +97,10 @@ class AutonomousMoving :
         self.undo(nbAUndo)
         if(case == 2):
             self.d.turnRad(180,2)
-            self.d.avanceDistance(30)
+            self.d.avanceDistance(150)
             self.d.turnRad(180,2)
         if(case == 3):
-            self.d.avanceDistance(30)
+            self.d.avanceDistance(150)
             self.d.turnRad(180,2)
         if(direction > 0): self.d.turnRad(88, 2)
         else: self.d.turnRad(-88, 2)
@@ -131,7 +129,7 @@ class AutonomousMoving :
             c,d = self.points[i]
             if(self.estEntreVals(c, d, posX, posY, self._RANGE) and case == 0):
                 response = True
-                print("[ " + str(round(c)) + ", " + str(round(d)) + " ] compared to : [ " + str(round(posX)) + ", " + str(round(posY)) + " ] within range : "  + str(round(self._RANGE,0)))
+                #print("[ " + str(round(c)) + ", " + str(round(d)) + " ] compared to : [ " + str(round(posX)) + ", " + str(round(posY)) + " ] within range : "  + str(round(self._RANGE,0)))
             if(self.estEntreVals(c, d, a, b, self._RANGE) and case == 1):
                 response = True
                 #print("[ " + str(c) + ", " + str(d) + " ] compared to : [ " + str(a) + ", " + str(b) + " ] within range : " + str(self._RANGE)  )
@@ -167,8 +165,7 @@ class AutonomousMoving :
         while(i < nombreAUndo):
             (a,b,c) = self.steps[-1]
             if(c == 0):
-                nombre = math.sqrt(math.pow(self.p.getX() - a,2) + math.pow(self.p.getY() - b,2))
-                self.d.avanceDistance(nombre)
+                self.d.avanceDistance(math.sqrt(math.pow(self.p.getX() - a,2) + math.pow(self.p.getY() - b,2)))
             elif(c == 1):
                 self.d.turnRad(88,2)
             i = i + 1
@@ -204,11 +201,13 @@ class AutonomousMoving :
 
     def transposeTasks(self):
         i = 0
+        p = 0
         if(len(self.tasks) > 0):
             for [x,y,c,direction,e,pointVue, case] in self.tasks:
                 if(not self.comparerPosAuVisites(x, y, pointVue, 1)):
-                    print("QUEST MADE : " + str(i))
+                    print("New quest added : " + str(p))
                     self.quests.append([x, y, c, direction, e, case])
+                    p = p + 1
                 i = i + 1 
                 #print("task number : " + str(i))  
             self.tasks.clear()
