@@ -13,7 +13,7 @@ from Point2D import Point2D
 from autonomousMoving import AutonomousMoving
 import time
 import _thread
-#from bluetooth import Bluetooth
+from bluetooth import Bluetooth
 # This program requires LEGO EV3 MicroPython v2.0 or higher.
 # Click "Open user guide" on the EV3 extension tab for more information.
 
@@ -177,19 +177,6 @@ d.avanceDistance(50)
 d.computePos()
 print('pos 3 :'+ str(d._pos))
 """
-s.degrés()
-
-b = Bluetooth()
-
-def sendData():
-    #global b
-    while True :
-        d.updatePos()
-        b.sendPositionAndWalls(d, a)
-
-t1 = _thread.start_new_thread(sendData, ())
-
-
 
 # s.degrés()
     
@@ -285,17 +272,7 @@ t1 = _thread.start_new_thread(sendData, ())
 
 
 
-#b = Bluetooth()
-
-def sendData():
-    """
-    Update la position et envoie continuellement la position et valeur des sensors distance à l'ordinateur
-    """
-    #while True :
-        #b.sendPositionAndSensor(s,d)
-
-
-#t1 = _thread.start_new_thread(sendData, ())
+b = Bluetooth()
 
 def periodicMain():
     """
@@ -304,9 +281,16 @@ def periodicMain():
     """
     while True:
         s.periodic()
-        #d.periodic()
+        d.periodic()
+        
     
+def bluetoothMain():
+    global b
+    while True:
+        b.sendPositionAndWalls(d, a)
+
 periodicThread = _thread.start_new_thread(periodicMain, ())
+bluetoothTread = _thread.start_new_thread(bluetoothMain, ())
 
 a.main()
 

@@ -3,6 +3,7 @@ from pybricks.messaging import BluetoothMailboxServer, Mailbox
 from sensors import Sensors
 from Drivebase import Drivebase
 from autonomousMoving import AutonomousMoving
+from Point2D import Point2D
 
 class Bluetooth :
     server = BluetoothMailboxServer()
@@ -30,10 +31,19 @@ class Bluetooth :
 
     def sendPositionAndWalls(self, d:Drivebase, a:AutonomousMoving):
         data = d._pos.__str__()
-        for i in range(len(a.points) - self.lastWallSent):
-            data += str(a.points[self.lastWallSent + i])
-        print(data)
+        if(len(a.points)-self.lastWallSent>0):
+            print("dans la boucle")
+            for i in range(len(a.points) - self.lastWallSent):
+                pointTemp = a.points[self.lastWallSent + i]
+                print(pointTemp)
+                temp = Point2D(pointTemp[0]/1000, pointTemp[1]/1000)
+                data += ";"+ temp.__str__()
         self.lastWallSent = len(a.points)
+        self.mbox.send(data)
+        #print("avant wait")
+        self.mbox.wait()
+        print(data)
+        print("exited")
     
     def sendOtherData(self, text:str):
         self.mbox.send(text)

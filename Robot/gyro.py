@@ -89,7 +89,7 @@ class Gyro :
                         bool = False
                         if self._gyroOffset == None:
                             self._gyroOffset = float(strline)
-                            return self._gyroOffset
+#                            return self._gyroOffset
                         else :
                             #print("angle : "+str((float(strline)-self._gyroOffset)%float(360)))
                             self._angle = (float(strline)-self._gyroOffset)%float(360)
