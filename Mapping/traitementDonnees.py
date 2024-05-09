@@ -164,6 +164,10 @@ class traitementDonnees :
         dernierPointeurY = 0
         
         while continuerMur(grille) :
+            if(posXPointeur == 17 and posYPointeur == 0):
+                print("in")
+
+
             #case en haut à gauche
             if (posXPointeur-1 >= 0 and posYPointeur-1 >= 0 and grille[posXPointeur-1][posYPointeur-1].mur == False):
                 casesAutourListe[0].posX = posXPointeur-1
