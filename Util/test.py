@@ -1,7 +1,9 @@
-from Point2D import Point2D
-p1 = Point2D(2.5, 2.5)
-p2 = Point2D(-1.2, -1.2)
-p = [p1, p2]
-print(p1)
-for i in range(len(p)):
-    print(p[i])
+t = tuple(("maison", 1))
+t2 = tuple(("maison", 1))
+t3 = tuple
+t4 = tuple
+
+print(t)
+print(t2)
+print(t3)
+print(t == t2)

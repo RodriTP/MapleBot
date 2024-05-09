@@ -99,9 +99,9 @@ class Drivebase :
         return self._kLeftMotor.angle()+self._kRightMotor.angle()/2 * self._kWheelCirconference/ float(360)
     
     #droite = angle positif, gauche = angle négatif
-    def turn(self, angle, speed):
+    def turn(self, angle, speed, sensors : Sensors):
         self._hasFinishedAction = False
-        targetAngle = self.getAngle()+angle
+        targetAngle = sensors.degrés()+angle
         print(float(targetAngle))
         if(angle > 0): #tourne vers la droite
             rightSpeed = float(speed)*-1
@@ -116,7 +116,7 @@ class Drivebase :
         while True:
             #peux faire mieux pour plus de précision mais flemme/condition 
             #bcp plus complexe faut vérifier sens de rotation
-            if(int(self.getAngle()) == int(targetAngle)): 
+            if(int(sensors.degrés()) == int(targetAngle)): 
                 self.stopMotors()
                 self._hasFinishedAction = True
                 break
@@ -154,7 +154,7 @@ class Drivebase :
         print("J'AI AVANCÉ : "+str(self.getDistanceWithoutReset()))
         self.stopMotors()
 
-    def moveAuto(self, sensor):
+    def moveAuto(self, sensor : Sensors):
         hasObstacleInFront = False
         while True:#à determiner la condition de fin du movement autonome
             #commence a avancer
@@ -169,14 +169,14 @@ class Drivebase :
             if(hasObstacleInFront):
                 print("avoiding obstacle")
                 #tourne a droite
-                if(not sensor.getIsObstacleRight()):
+                if(not sensor.isObstacleRight()):
                     self._kRightMotor.run(-100)
                     self._kLeftMotor.run(100)
                     if(sensor.getFrontValue() > self.VALUE_FROM_OBSTACLE and self._hasFinishedAction):
                         self.turn(30, 100)
 
                 #tourne a gauche
-                if(not sensor.getIsObstacleLeft()):
+                if(not sensor.isObstacleLeft()):
                     self._kRightMotor.run(100)
                     self._kLeftMotor.run(-100)
                     if(sensor.getFrontValue() > self.VALUE_FROM_OBSTACLE and self._hasFinishedAction):

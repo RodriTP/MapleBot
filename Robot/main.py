@@ -14,6 +14,7 @@ from autonomousMoving import AutonomousMoving
 import time
 import _thread
 from bluetooth import Bluetooth
+from autonomousMovingEnhanced import AutonomousMovingEnhaced
 import multiprocessing
 # This program requires LEGO EV3 MicroPython v2.0 or higher.
 # Click "Open user guide" on the EV3 extension tab for more information.
@@ -273,6 +274,7 @@ print('pos 3 :'+ str(d._pos))
 
 
 b = Bluetooth()
+a2 = AutonomousMovingEnhaced(d, s)
 
 def periodicMain():
     """
@@ -283,8 +285,6 @@ def periodicMain():
         s.periodic()
         d.periodic()
 
-
-#a.main()
 def bluetoothMain():
     global b
     while True:
@@ -301,7 +301,8 @@ bluetoothTread = _thread.start_new_thread(bluetoothMain, ())
  #   d.avanceUntilObstacle()
  #   d.turnRad(-178, 2)
 
-a.main()
+#a.main()
+a2.start()
 
 #d.avanceDistance(300)
 # while True:

@@ -98,6 +98,7 @@ class Gyro :
                         else :
                             #print("angle : "+str((float(strline)-self._gyroOffset)%float(360)))
                             Gyro._angle = (float(strline)-self._gyroOffset)%float(360)
+                            print(Gyro._angle)
             except :
                 print("Erreur, à lu : "+str(strline))
                 return float(0)

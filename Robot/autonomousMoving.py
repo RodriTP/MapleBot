@@ -70,7 +70,7 @@ class AutonomousMoving :
             self.d.turnRad(-88,2)
         elif(not self.s.isObstacleRight() and self.s.isObstacleLeft()):
             #tourne a droite
-            self.d.turnRad(90)
+            self.d.turnRad(90,2)
         elif(self.s.isObstacleInFront()):
             print("need to do undo function")
 

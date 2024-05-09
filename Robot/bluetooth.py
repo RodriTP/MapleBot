@@ -28,7 +28,7 @@ class Bluetooth :
         data += ";UR:" + str(s.getRightDistance())
         self.mbox.send(data)
         self.mbox.wait()
-        print(data)
+        #print(data)
 
     def sendPositionAndWalls(self, d:Drivebase, a:AutonomousMoving):
         data = d._pos.__str__()

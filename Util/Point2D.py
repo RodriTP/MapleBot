@@ -1,5 +1,3 @@
-import math
-
 class Point2D:
     """
     Classe modélisant un point 2D (x,y) par rapport à l'origine un plan
@@ -15,11 +13,15 @@ class Point2D:
             y (float): coordonnée en y du point sur le plan
             (facultatif) dir (float) : orientation vers où le point fait face
         """
+        print(args)
         if len(args) == 2:
-            self.set(args[0], args[1])
+            self.setX(args[0])
+            self.setY(args[1])
         
         if len(args) == 3:
-            self.set(args[0], args[1], args[2])
+            self.setX(args[0])
+            self.setY(args[1])
+            self.setDir(args[2])
     
     def __str__(self):
         """
@@ -29,13 +31,13 @@ class Point2D:
         return "x:" + str(self._x/1000) + ";y:" + str(self._y/1000)
 
     #getters: always return a float
-    def getX(self):
+    def getX(self) -> float:
         """Return : (float) valeur en x du point"""
         return self._x
-    def getY(self):
+    def getY(self) -> float:
         """Return : (float) valeur en y du point"""
         return self._y
-    def getDir(self):
+    def getDir(self) -> float:
         """return : (float) direction où le point fait face"""
         return self._dir
     
