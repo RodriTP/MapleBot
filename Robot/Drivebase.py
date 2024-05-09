@@ -327,3 +327,6 @@ class Drivebase :
                 print("RE-CALIBRATING DROIT diff : " + str(self._s.degrés() - deg)+" deg: " +  str(self._s.degrés()))
                 self._kLeftMotor.run(-45/10)
                 self._kRightMotor.run(45/10)
+    
+    def getPosition(self):
+        return self._pos

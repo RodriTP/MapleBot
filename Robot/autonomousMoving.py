@@ -32,6 +32,7 @@ class AutonomousMoving :
     p = None
     _RANGE = math.sqrt(math.pow(90,2)+ math.pow(90,2))/2
     #position du robot
+    placesTravelled = []
     pos = []
     steps = []
     #x,y,orientationActuel, orientation Du quest
@@ -61,9 +62,21 @@ class AutonomousMoving :
     #-tourne à gauche si possible, sinon droit, sinon recul? (scénario de tourne à droit?)
     def caseOne(self):
         #print(len(self.tasks))
+        print("Entering case ONE")
         print(str(len(self.quests)) + " : Quests amount")
-        self.d.turnRad(-88,2)
+
+        if(not self.s.getIsObstacleLeft() and self.s.getIsObstacleRight()):
+            #tourne a gauche
+            self.d.turnRad(-88,2)
+        elif(not self.s.getIsObstacleRight() and self.s.getIsObstacleLeft()):
+            #tourne a droite
+            self.d.turnRad(90)
+        elif(self.s.getIsObstacleFront()):
+            print("need to do undo function")
+
+        
         self.steps.append([self.p.getX(), self.p.getY(), 1])
+        print("End case ONE")
         #print("One")
 
     #Wall has appeared in sights left/right
@@ -115,9 +128,9 @@ class AutonomousMoving :
         self.nbAppelé = self.nbAppelé + 1
         self.d.updatePos()
 
-    def placesTravelled(self):
+    def addNewPlaceTravelled(self):
         self.d.updatePos()
-        self.pos.append(self.getCurrentPos())
+        self.placesTravelled.append(self.getCurrentPos())
         #print("[ " + str(round(self.p.getX())) + ", " + str(round(self.p.getY())) + " ]")
 
     #cette fonct retourne vrai si le robot était passé par cette position autrefois, pour trigger case 4
@@ -137,9 +150,12 @@ class AutonomousMoving :
         return response
 
     def main(self):
+        #première action
         self.calibrate(0)
-        self.placesTravelled()
-        while (True):#CONDITION QUI FAIT QUE LE ROBOT DÉCIDE D'AVOIR FINIDAWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+        self.addNewPlaceTravelled()
+
+
+        while (True):#CONDITION QUI FAIT QUE LE ROBOT DÉCIDE D'AVOIR FINI
             self.avanceUntilObstacle()
             self.transposeTasks()
             if(len(self.quests) == 0):
@@ -223,7 +239,7 @@ class AutonomousMoving :
             #print(self.s.getFrontValue())
             r = self.s.getRightDistance()
             l = self.s.getLeftDistance()
-            self.placesTravelled()
+            self.addNewPlaceTravelled()
             if( l < 1000):
                 if(self.leftView == False): self.caseTwo(-1)
                 self.leftView = True

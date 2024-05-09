@@ -33,6 +33,8 @@ class Sensors :
     _rightUltrasonic = UltrasonicSensor(Port.S4)
     _isObstacleRight = False
     _isObstacleLeft = False
+    isObstacleLeftTab = []
+    isObstacleRightTab = []
     _gyro = Gyro()
     
 
@@ -52,20 +54,26 @@ class Sensors :
         Cette fonction va être appelé dans une boucle infinie dans le main
         """
         self.updateObastaclePresence()
+        self.updateTabs()
         self._gyro.periodic()
     
-    _DISTANCE_FROM_OBSTACLE = float(2000.0)
+    _SIDE_DISTANCE_FROM_OBSTACLE = float(2000.0)
+    _FRONT_DISTANCE_FROM_OBSTACLE = float(300.0)
 
     def updateObastaclePresence(self):
         """Update périodiquement les booleans permettant savoir s'il y a un obstacle ou pas"""
-        if(self.getLeftDistance() < self._DISTANCE_FROM_OBSTACLE):
+        if(self.getLeftDistance() < self._SIDE_DISTANCE_FROM_OBSTACLE):
             self._isObstacleLeft  = True
         else:
             self._isObstacleLeft = False
-        if(self.getRightDistance() < self._DISTANCE_FROM_OBSTACLE):
+        if(self.getRightDistance() < self._SIDE_DISTANCE_FROM_OBSTACLE):
             self._isObstacleRight = True
         else:
             self._isObstacleRight = False
+
+    def updateTabs(self):
+        Sensors.isObstacleLeftTab.append(self._isObstacleLeft)
+        Sensors.isObstacleRightTab.append(self._isObstacleRight)
 
     def getLeftDistance(self):
         """
@@ -81,27 +89,56 @@ class Sensors :
         """
         return float(self._rightUltrasonic.distance()) #mm
     
-    def getFrontValue(self):
-        """Return : valeur arbitraire (varie en fonction de T°, distance, et autre) à un obstacle"""
-        return float(self._frontUltrasonic.distance()) #retourne une val entre 0 et 100 (faut multiplier par un scalaire)
-    
     def getIsObstacleLeft(self):
         """
         Return
-            True: un objet est detecté
-            False: aucun objet n'est detecté
+            True: un obstacle est detecté
+            False: aucun obstacle n'est detecté
         """
-        return bool(self._isObstacleLeft)
+        return self.isObstacleReal(Sensors.isObstacleLeftTab)
     
     def getIsObstacleRight(self):
         """
         Return
-            True: un objet est detecté
-            False: aucun objet n'est detecté
+            True: un obstacle est detecté
+            False: aucun obstacle n'est detecté
         """
-        return bool(self._isObstacleRight)
-    #self.device.read(reg = 0x0F, length=1)
+        return self.isObstacleReal(Sensors.isObstacleRightTab)
 
+    def isObstacleReal(self, tab):
+        """
+        Vérifie si il y réelement un obstacle en regardant la constance des 10\n
+        dernières valeurs lues.
+        """
+        nbTrue = 0
+        nbFalse = 0
+        length = len(tab)
+        if(length < 10):
+            return False
+        else:
+            rtab = list(reversed(tab))
+            for i in range(10):
+                if(rtab[i]):
+                    nbTrue +=1                        
+                else:
+                    nbFalse+=1
+            return nbTrue>=7
+        
     def degrés(self):
         """Return: (float) la lecture du gyro en degré"""
         return Sensors._gyro._angle
+    
+    def getFrontValue(self):
+        """
+        Return : 
+                distance entre l'avant du robot et l'objet le plus proche (en mm)
+        """
+        return float(self._frontUltrasonic.distance()) #mm
+    
+    def getIsObstacleFront(self):
+        """
+        Return
+            True: un obstacle est detecté
+            False: aucun obstacle n'est detecté
+        """
+        return bool(self.getFrontValue() < self._FRONT_DISTANCE_FROM_OBSTACLE)
