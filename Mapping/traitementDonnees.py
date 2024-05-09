@@ -60,38 +60,6 @@ class traitementDonnees :
 
     # --- MÉTHODES DÉDIÉS AUX MURS ---
 
-   
-
-    # def finMur(grille):
-    #     nbMursAutour = 0
-    #     for i in range(len(grille)): # on parcours les colonnes |
-    #             for j in range (len(grille[0])): # on parcours les lignes -
-    #                 if (grille[i][j].mur == True): # Si nous somme a une case ayant un mur
-    #                     # on vérifie si au moins 2 des cases autour a un mur
-    #                     if (grille[i-1][j-1].mur == True): #case en haut à gauche
-    #                         nbMursAutour += 1
-    #                     if (grille[i][j-1].mur == True): #case en haut
-    #                         nbMursAutour += 1
-    #                     if (grille[i+1][j-1].mur == True): #case en haut à droite
-    #                         nbMursAutour += 1
-    #                     if (grille[i-1][j].mur == True): #case à gauche
-    #                         nbMursAutour += 1
-    #                     if (grille[i+1][j].mur == True): #case à droite
-    #                         nbMursAutour += 1
-    #                     if (grille[i-1][j+1].mur == True): #case en bas à gauche
-    #                         nbMursAutour += 1
-    #                     if (grille[i][j+1].mur == True): #case en bas
-    #                         nbMursAutour += 1
-    #                     if (grille[i+1][j+1].mur == True): #case en bas à droite
-    #                         nbMursAutour += 1
-                        
-    #                     if(nbMursAutour<2): #si chaque mur a moins d'un mur autour alors on retourne false
-    #                         return False
-                        
-    #                     nbMursAutour = 0
-    #     return True
-                         
-
     # Détermine où sont les murs
     def determinerMur(grille):
 
@@ -160,8 +128,6 @@ class traitementDonnees :
         casesAutourListe = [casesAutour() for i in range(8)]
         
         compteurFois = 0
-        dernierPointeurX = 0
-        dernierPointeurY = 0
         
         while continuerMur(grille) :
             if(posXPointeur == 17 and posYPointeur == 0):
@@ -254,28 +220,15 @@ class traitementDonnees :
                 if casesAutourListe[i].quantite == mx:
                     mx_pos = i
 
-            #À ENLEVER
-            #print("1: ",  casesAutourListe[0].quantite)
-            # print("2: ",  casesAutourListe[1].quantite)
-            # print("3: ",  casesAutourListe[2].quantite)
-            # print("4: ",  casesAutourListe[3].quantite)
-            # print("5: ",  casesAutourListe[4].quantite)
-            # print("6: ",  casesAutourListe[5].quantite)
-            # print("7: ",  casesAutourListe[6].quantite)
-            # print("8: ",  casesAutourListe[7].quantite)
-
             grille[casesAutourListe[mx_pos].posX][casesAutourListe[mx_pos].posY].mur = True
-        
-            dernierPointeurX = posXPointeur
-            dernierPointeurY = posYPointeur
 
             posXPointeur = casesAutourListe[mx_pos].posX
             posYPointeur = casesAutourListe[mx_pos].posY
 
-
+            #pour éviter d'être dans une boucle infinie (seulement quand il y a un bug)
             compteurFois += 1
             print(compteurFois)
-            if (compteurFois == 10000):
+            if (compteurFois == 5000):
                 break
         
         return grille
