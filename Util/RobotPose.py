@@ -23,7 +23,7 @@ class RobotPose(Point2D):
         return super().__str__() + ";a:"+str(self._yaw)
     #returns degrees
     def getOrientation(self):
-        """return : (float) yaw du robot"""
+        """return : (float) yaw du robot en degré(s)"""
         return self._yaw
     
     def setOrientation(self, yaw : float):

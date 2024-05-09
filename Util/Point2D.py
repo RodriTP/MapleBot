@@ -6,15 +6,20 @@ class Point2D:
     """
     _x = float(0)
     _y = float(0)
+    _dir = float(0)
 
-    def __init__(self, x : float, y : float):
+    def __init__(self, *args):
         """
         Params
             x (float): coordonnée en x du point sur le plan
             y (float): coordonnée en y du point sur le plan
+            (facultatif) dir (float) : orientation vers où le point fait face
         """
-        self._x = x
-        self._y = y
+        if len(args) == 2:
+            self.set(args[0], args[1])
+        
+        if len(args) == 3:
+            self.set(args[0], args[1], args[2])
     
     def __str__(self):
         """
@@ -30,6 +35,9 @@ class Point2D:
     def getY(self):
         """Return : (float) valeur en y du point"""
         return self._y
+    def getDir(self):
+        """return : (float) direction où le point fait face"""
+        return self._dir
     
     #setters
     def setX(self, x : float):
@@ -39,12 +47,17 @@ class Point2D:
     def setY(self, y : float):
         """Params : (float) valeur en y du point"""
         self._y = y
-    
-    def set(self, x : float, y : float):
+    def setDir(self, dir : float):
+        """Params : (float) direction où le point fait face"""
+        self._dir = dir
+
+    def set(self, x : float, y : float, dir = None):
         """
         Params
             x (float): coordonnée en x du point sur le plan
             y (float): coordonnée en y du point sur le plan
+            dir (float) : orientation vers où le point fait face
         """
         self._x = x
         self._y = y
+        self._dir = dir

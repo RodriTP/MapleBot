@@ -65,13 +65,13 @@ class AutonomousMoving :
         print("Entering case ONE")
         print(str(len(self.quests)) + " : Quests amount")
 
-        if(not self.s.getIsObstacleLeft() and self.s.getIsObstacleRight()):
+        if(not self.s.isObstacleLeft() and self.s.isObstacleRight()):
             #tourne a gauche
             self.d.turnRad(-88,2)
-        elif(not self.s.getIsObstacleRight() and self.s.getIsObstacleLeft()):
+        elif(not self.s.isObstacleRight() and self.s.isObstacleLeft()):
             #tourne a droite
             self.d.turnRad(90)
-        elif(self.s.getIsObstacleFront()):
+        elif(self.s.isObstacleInFront()):
             print("need to do undo function")
 
         

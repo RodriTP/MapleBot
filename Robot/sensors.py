@@ -89,7 +89,7 @@ class Sensors :
         """
         return float(self._rightUltrasonic.distance()) #mm
     
-    def getIsObstacleLeft(self):
+    def isObstacleLeft(self):
         """
         Return
             True: un obstacle est detecté
@@ -97,7 +97,7 @@ class Sensors :
         """
         return self.isObstacleReal(Sensors.isObstacleLeftTab)
     
-    def getIsObstacleRight(self):
+    def isObstacleRight(self):
         """
         Return
             True: un obstacle est detecté
@@ -125,7 +125,7 @@ class Sensors :
             return nbTrue>=7
         
     def degrés(self):
-        """Return: (float) la lecture du gyro en degré"""
+        """Return: (float) [0,360[ degré(s) en sens horaire"""
         return Sensors._gyro._angle
     
     def getFrontValue(self):
@@ -135,7 +135,7 @@ class Sensors :
         """
         return float(self._frontUltrasonic.distance()) #mm
     
-    def getIsObstacleFront(self):
+    def isObstacleInFront(self):
         """
         Return
             True: un obstacle est detecté
