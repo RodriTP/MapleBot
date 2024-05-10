@@ -288,7 +288,7 @@ def periodicMain():
 def bluetoothMain():
     global b
     while True:
-        #b.sendPositionAndWalls(d, a)
+        b.sendPositionAndWalls(d, a)
         b.sendPositionAndSensor(s, d)
 
 periodicThread = _thread.start_new_thread(periodicMain, ())
@@ -302,6 +302,38 @@ bluetoothTread = _thread.start_new_thread(bluetoothMain, ())
  #   d.turnRad(-178, 2)
 
 #a.main()
+
+
+#tourner droite = 90 gauche = -90 et 180dgr = 180
+def turnNotTime(code):
+    if(code == 180):
+        d._kLeftMotor.run(-45)
+        d._kRightMotor.run(+45)
+        start = time.time()
+        stopp = False
+        while(not stopp):
+            if(time.time() - start > 15.6):
+                stopp = True
+                d.stopMotors()
+    if(code == 90):
+        d._kLeftMotor.run(-45)
+        d._kRightMotor.run(+45)
+        start = time.time()
+        stopp = False
+        while(not stopp):
+            if(time.time() - start > 8.3):
+                stopp = True
+                d.stopMotors()
+    if(code == -90):
+        d._kLeftMotor.run(+45)
+        d._kRightMotor.run(-45)
+        start = time.time()
+        stopp = False
+        while(not stopp):
+            if(time.time() - start > 8.3):
+                stopp = True
+                d.stopMotors()
+
 a2.start()
 
 #d.avanceDistance(300)

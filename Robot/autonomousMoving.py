@@ -32,7 +32,6 @@ class AutonomousMoving :
     p = None
     _RANGE = math.sqrt(math.pow(90,2)+ math.pow(90,2))/2
     #position du robot
-    placesTravelled = []
     pos = []
     steps = []
     #x,y,orientationActuel, orientation Du quest
@@ -49,7 +48,8 @@ class AutonomousMoving :
         self.s = S
         self.p = self.d._pos
     
-    #Cette fonction calibre le robot d'une position face contre le mur
+    #Cette fonction calibre le robot d'une position face contre le mur, le recul et
+    # lui fait tourner 180 degrés, btw jsp pk mais 176 = 180
     def calibrate(self, x):
         while (x < 10000):
             self.d._kLeftMotor.run(45)
@@ -59,50 +59,35 @@ class AutonomousMoving :
         self.d.turnRad(176, 2)
 
     #Un mur est devant
-    #-tourne à gauche si possible, sinon droit, sinon recul? (scénario de tourne à droit?)
+    #-tourne à gauche
     def caseOne(self):
         #print(len(self.tasks))
-        print("Entering case ONE")
-        print(str(len(self.quests)) + " : Quests amount")
-
-        if(not self.s.isObstacleLeft() and self.s.isObstacleRight()):
-            #tourne a gauche
-            self.d.turnRad(-88,2)
-        elif(not self.s.isObstacleRight() and self.s.isObstacleLeft()):
-            #tourne a droite
-            self.d.turnRad(90,2)
-        elif(self.s.isObstacleInFront()):
-            print("need to do undo function")
-
-        
+        print("Quests amount : " + str(len(self.quests)))
+        self.d.turnRad(-88,2)
         self.steps.append([self.p.getX(), self.p.getY(), 1])
-        print("End case ONE")
-        #print("One")
 
-    #Wall has appeared in sights left/right
+    #Wall has APPEARED in sights left/right
     #-note le quest et continue ton trajet
-    def caseTwo(self, direction):
+    def caseWallAppeared(self, direction):
         #print(self.s.getFrontValue())
         print("Wall has appeared in sights " + str(direction))
         #if(not self.comparerPosAuVisites(direction, 1)):
         self.d.updatePos() 
         self.tasks.append([self.p.getX(), self.p.getY(), self.s.degrés(), direction, len(self.steps), self.getPointVue(direction), 2])
-        #print("Two")
         
 
     #Wall has DISSAPPEARED in sights left/right
     #-note le quest et continue ton trajet
-    def caseThree(self, direction):
+    def caseWallDissapeared(self, direction):
         print("Wall has DISSAPPEARED in sights " + str(direction))
         #if(not self.comparerPosAuVisites(direction, 1)):    
         self.d.updatePos()
         #print(str(self.p.getX()))
         self.tasks.append([self.p.getX(), self.p.getY(), self.s.degrés(), direction, len(self.steps), self.getPointVue(direction),3])
         #self.d.stopMotors()
-        #print("Three")
         
     
-    #You've hit a wall youve been to before
+    #You've hit a wall youve been to before (tu sais ça en utilisant la ligne 153 ou tu compare tes valeurs) So:
     #-visit the most recently active created quest
     def caseFour(self):
         (x, y, deg, direction, stepNb, case) = self.quests[-1]
@@ -128,9 +113,9 @@ class AutonomousMoving :
         self.nbAppelé = self.nbAppelé + 1
         self.d.updatePos()
 
-    def addNewPlaceTravelled(self):
+    def placesTravelled(self):
         self.d.updatePos()
-        self.placesTravelled.append(self.getCurrentPos())
+        self.pos.append(self.getCurrentPos())
         #print("[ " + str(round(self.p.getX())) + ", " + str(round(self.p.getY())) + " ]")
 
     #cette fonct retourne vrai si le robot était passé par cette position autrefois, pour trigger case 4
@@ -150,12 +135,9 @@ class AutonomousMoving :
         return response
 
     def main(self):
-        #première action
         self.calibrate(0)
-        self.addNewPlaceTravelled()
-
-
-        while (True):#CONDITION QUI FAIT QUE LE ROBOT DÉCIDE D'AVOIR FINI
+        self.placesTravelled()
+        while (True):#CONDITION QUI FAIT QUE LE ROBOT DÉCIDE D'AVOIR FINIDAWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
             self.avanceUntilObstacle()
             self.transposeTasks()
             if(len(self.quests) == 0):
@@ -217,7 +199,7 @@ class AutonomousMoving :
         else:
             return False
 
-
+# Puisque loader les quests c'eset long 
     def transposeTasks(self):
         i = 0
         p = 0
@@ -239,22 +221,22 @@ class AutonomousMoving :
             #print(self.s.getFrontValue())
             r = self.s.getRightDistance()
             l = self.s.getLeftDistance()
-            self.addNewPlaceTravelled()
+            self.placesTravelled()
             if( l < 1000):
-                if(self.leftView == False): self.caseTwo(-1)
+                if(self.leftView == False): self.caseWallAppeared(-1)
                 self.leftView = True
                 self.points.append(self.getPointVue(-1))
             else:
             #elif(not l == 2550.0): 
-                if(self.leftView == True): self.caseThree(-1)
+                if(self.leftView == True): self.caseWallDissapeared(-1)
                 self.leftView = False
             if( r < 1000):
-                if(self.rightView == False): self.caseTwo(1)
+                if(self.rightView == False): self.caseWallAppeared(1)
                 self.rightView = True
                 self.points.append(self.getPointVue(1))
             else:
                 #if(not r == 2550.0):
-                if(self.rightView == True): self.caseThree(1)
+                if(self.rightView == True): self.caseWallDissapeared(1)
                 self.rightView = False
             if(self.s.getFrontValue() < self.d.VALUE_FROM_OBSTACLE):
                 print("OBSTACLE SEEN IN FRONT")

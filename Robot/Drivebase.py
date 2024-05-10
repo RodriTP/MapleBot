@@ -9,6 +9,7 @@ from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
                                  InfraredSensor, UltrasonicSensor, GyroSensor)
 from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.tools import wait, StopWatch, DataLog
+import time
 
 
 class Drivebase :
@@ -144,11 +145,11 @@ class Drivebase :
         self.setEncoders(0)
         self.setSpeed(-200)
         
-        print(distance)
+        #print(distance)
 
         distance = -3.22 * distance
         while self._hasFinishedAction == False:
-            print(self.getDistanceWithoutReset())
+            #print(self.getDistanceWithoutReset())
             self._hasFinishedAction = (self.getDistanceWithoutReset() <= distance)
         
         print("J'AI AVANCÉ : "+str(self.getDistanceWithoutReset()))
@@ -340,3 +341,36 @@ class Drivebase :
     
     def getPosition(self) -> RobotPose:
         return self._pos
+
+    #tourner droite = 90 gauche = -90 et 180dgr = 180
+    def turnNotTime(self, code):
+        """
+        tourner droite = 90 gauche = -90 et 180dgr = 180
+        """
+        if(code == 180):
+            self._kLeftMotor.run(-45)
+            self._kRightMotor.run(+45)
+            start = time.time()
+            stopp = False
+            while(not stopp):
+                if(time.time() - start > 15.6):
+                    stopp = True
+                    self.stopMotors()
+        if(code == 90):
+            self._kLeftMotor.run(-45)
+            self._kRightMotor.run(+45)
+            start = time.time()
+            stopp = False
+            while(not stopp):
+                if(time.time() - start > 8):
+                    stopp = True
+                    self.stopMotors()
+        if(code == -90):
+            self._kLeftMotor.run(+45)
+            self._kRightMotor.run(-45)
+            start = time.time()
+            stopp = False
+            while(not stopp):
+                if(time.time() - start > 8):
+                    stopp = True
+                    self.stopMotors()
