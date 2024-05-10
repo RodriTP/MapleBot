@@ -233,7 +233,7 @@ class Drivebase :
                 ex : spd = 2, vitesse angulaire = 10
         """
         currDeg = self._s.degrés()
-        print("currDeg : "+str(currDeg))
+        #print("currDeg : "+str(currDeg))
         quadActuel = self.déterminerQuad(0)    
         quadVoulu = self.déterminerQuad(deg)
         #print(quadActuel)

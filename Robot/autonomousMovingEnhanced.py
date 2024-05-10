@@ -29,6 +29,7 @@ class States:
     ADVANCE_UNTIL_OBSTACLE = tuple(("ADVANCE_UNTIL_OBSTACLE", 1))
     TURN = tuple(("TURN", 2))
     GO_TO_LAST_POINT_OF_INTEREST = tuple(("UNDO", 3)) #a changer de nom potentiellement pour un plus clair
+    FINISHED_EXLORATION = tuple(("FINISHED_EXLORATION"), 4)
 
 class AutonomousMovingEnhaced :
     drivebase = None
@@ -40,10 +41,12 @@ class AutonomousMovingEnhaced :
 
     #variables nécessaire au fonctionnement de l'algorithme de déplacament autonome
     _RANGE = math.sqrt(math.pow(90,2)+ math.pow(90,2))/2 /10 #avant était math.sqrt(math.pow(90,2)+ math.pow(90,2))/2
-    pointsOfInterestTravelled = [] #la position 0 du tableau est la position de départ du robot
-    quests = [] #places to explore aka quests available
+    pointsOfInterestTravelled = [Point2D] #la position 0 du tableau est la position de départ du robot
+    quests = [Point2D] #places to explore aka quests available
     indexOfActiveQuest = int
-    
+    lastPointOfInterest = Point2D
+    repeatLastAction = False
+    indexToRemove = int
 
 
     def __init__(self, d : Drivebase, s : Sensors):
@@ -66,7 +69,7 @@ class AutonomousMovingEnhaced :
         if self.currentState == States.CALIBRATING and self.previousState != States.CALIBRATING:
             print("Entering state CALIBRATING")
             self.calibrate(0)
-            self.addNewPlaceTravelled()
+            self.addNewPointOfInterestTravelled()
             print("End of CALIBRATING")
             self.setState(States.ADVANCE_UNTIL_OBSTACLE)
 
@@ -107,13 +110,30 @@ class AutonomousMovingEnhaced :
             self.drivebase.stopMotors()
             
             if not self.isPositionAlreadyExplored(self.drivebase.getPosition()): #si la position ou il est rendu est nouvelle (pas encore exploré) il continue avec un TURN
-                self.addNewPlaceTravelled()
+                self.addNewPointOfInterestTravelled()
                 self.setState(States.TURN)
                 print("Exiting ADVANCE_UNTIL_OBSTACLE")
-            else : #la position ou il est rendu est déjà connues
-                print("position déjà exporé")
-                print("doit se rendre à la prochaine quest")
-                      
+            else : #la position où il est rendu est déjà marqué comme un pointOfInterestTravelled
+                print("position already explored")
+                self.pointsOfInterestTravelled.pop(self.indexToRemove)
+                
+                for i in range(len(self.quests)):
+                    if self.arePointsInRange(self.drivebase.getPosition(), self.quests[i], self._RANGE): #est-ce que position actuelle correspond à une quest?
+                        if self.equalsWithTolerance(self.quests[i].getDir(), self.drivebase.getPosition().getDir()+180, 2.0): #est-ce que la quest et la position du robot font face dans la direction opposé +- 2°?
+                            self.quests.remove(self.indexToRemove) #enlève la quest, car on vient de l'accomplir à sens inverse par une autre quest
+                            self.setState(States.GO_TO_LAST_POINT_OF_INTEREST)
+                            break
+                        elif self.equalsWithTolerance(self.quests[i].getDir(), self.drivebase.getPosition().getDir(), 2.0) :#est-ce que la quest et la position du robot font face dans la même direction +- 2°?
+                            self.indexOfActiveQuest = i
+                            self.setState(States.ADVANCE_UNTIL_OBSTACLE)#part explorer la quest
+                            break
+                        else :
+                            self.drivebase.turnRad(self.drivebase.getPosition().deltaDir(self.quests[i])) #aligne le robot dans la direction de la quest
+                            self.indexOfActiveQuest = i
+                            self.setState(States.ADVANCE_UNTIL_OBSTACLE) #part explorer la quest
+                            break
+                
+                self.setState(States.FINISHED_EXLORATION)#je vois pas d'autre raison sur pourquoi le robot reviendrait sur un point déjà connu qui ne corresponds pas a une quest
           
 ############### TURN ##########################
         if self.currentState == States.TURN and self.previousState != States.TURN:
@@ -138,12 +158,43 @@ class AutonomousMovingEnhaced :
             
             else : #mur des 2 cotés
                 print("nowhere to turn, undoing last action")
-                self.setState(States.UNDO)
+                self.pointsOfInterestTravelled.pop()
+                self.setState(States.GO_TO_LAST_POINT_OF_INTEREST)
 
 
-############### UNDO ##########################
-        if self.currentState == States.UNDO :
-            print("Starting state UNDO")
+############### GO_TO_LAST_POINT_OF_INTEREST ##########################
+        if self.currentState == States.GO_TO_LAST_POINT_OF_INTEREST or self.repeatLastAction:
+            print("Starting state GO_TO_LAST_POINT_OF_INTEREST")
+            indexOfLastPointOfInterest = len(self.pointsOfInterestTravelled)-1
+            lastPointOfInterest = self.pointsOfInterestTravelled[indexOfLastPointOfInterest]
+
+            #1) yaw du robot doit être a 90° de dir du point d'interet
+            diffAngle = lastPointOfInterest.deltaDir(self.drivebase.getPosition())
+            self.drivebase.turnRad(90.0 - diffAngle, 2)
+            #2) deplacement en x de la distance qui sépare le robot du point d'interet
+            self.drivebase.avanceDistance(lastPointOfInterest.deltaX(self.drivebase.getPosition()))
+            #3) faire tourner le robot pour qu'il soit dans la même direction que le point d'interet
+            self.drivebase.turnRad(diffAngle, 2)
+            #4) déplacement en y de la distance qui sépare le robot du point d'interet
+            self.drivebase.avanceDistance(lastPointOfInterest.deltaY(self.drivebase.getPosition()))
+
+            if self.arePointsInRange(lastPointOfInterest, self.quests[len(self.quests)-1],self._RANGE) and self.arePointsInRange(lastPointOfInterest, self.drivebase.getPosition(), self._RANGE):
+                self.pointsOfInterestTravelled.pop(indexOfLastPointOfInterest)
+
+                self.setState(States.ADVANCE_UNTIL_OBSTACLE)
+                print("End of GO_TO_LAST_POINT_OF_INTEREST")
+                print("Starting Quest #"+str(len(self.quests)-1))
+            else : #le point où le robot est n'est pas un point de quest
+                self.pointsOfInterestTravelled.pop(indexOfLastPointOfInterest) #enleve le point
+                self.repeatLastAction = True #répète l'action pour aller au point d'intêret précédent
+                print("REPEATING of GO_TO_LAST_POINT_OF_INTEREST")
+
+############### FINISHED_EXLORATION ##########################
+        if self.currentState == States.FINISHED_EXLORATION :
+            self.drivebase.stopMotors()
+            print("FINISHED_EXLORATION")
+            quit()
+
     
     previousState = currentState
 ### fin du consumeStateInput()
@@ -161,7 +212,7 @@ class AutonomousMovingEnhaced :
             x = x + 1
         self.drivebase.turnRad(176, 2)
 
-    def addNewPlaceTravelled(self):
+    def addNewPointOfInterestTravelled(self):
             """Ajoute une position (x,y,yaw) d'intéret au tableau de places déjà visité"""
             self.pointsOfInterestTravelled.append(self.drivebase.getPosition())
 
@@ -177,14 +228,15 @@ class AutonomousMovingEnhaced :
         """
         i = 0
         while (i< len(self.pointsOfInterestTravelled)):
-            if(self.estEntreVals(currentPosition, self.pointsOfInterestTravelled[i], self._RANGE)):
+            if(self.arePointsInRange(currentPosition, self.pointsOfInterestTravelled[i], self._RANGE)):
                 print("place already explored")
+                self.indexToRemove = i
                 return True
             else:
                 i += 1
         return False
     
-    def estEntreVals(self, point1 : Point2D, point2 : Point2D, range  : float):
+    def arePointsInRange(self, point1 : Point2D, point2 : Point2D, range  : float):
         """
         Vérifie si deux points sont égaux selon une certaine marge d'erreur\n
         Params 
@@ -202,3 +254,17 @@ class AutonomousMovingEnhaced :
     def setState(self, newState : States):
         self.previousState = self.currentState
         self.currentState = newState
+
+    def equalsWithTolerance(self, value1 : float, value2 : float, tolerance : float) -> bool:
+        """
+        Compare deux valeurs en tenant compte de la tolérance spécifié\n
+        Param
+            value1 (float) : valeur qu'on veut comparer
+            value2 (float) : valeur avec la quelle on compare
+            tolerance (float) : tolérance de la valeur2
+        """
+        if(float(value1) <= float(value2) + float(tolerance) 
+           and float(value1) >= float(value2)+float(tolerance)):
+            return True
+        else:
+            return False
