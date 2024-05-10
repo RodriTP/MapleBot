@@ -292,7 +292,7 @@ def bluetoothMain():
         b.sendPositionAndSensor(s, d)
 
 periodicThread = _thread.start_new_thread(periodicMain, ())
-bluetoothTread = _thread.start_new_thread(bluetoothMain, ())
+bluetoothThread = _thread.start_new_thread(bluetoothMain, ())
 
 #while True:
 #    b.sendPositionAndWalls(d, a)
