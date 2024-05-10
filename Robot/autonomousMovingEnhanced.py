@@ -29,7 +29,7 @@ class States:
     ADVANCE_UNTIL_OBSTACLE = tuple(("ADVANCE_UNTIL_OBSTACLE", 1))
     TURN = tuple(("TURN", 2))
     GO_TO_LAST_POINT_OF_INTEREST = tuple(("UNDO", 3)) #a changer de nom potentiellement pour un plus clair
-    FINISHED_EXLORATION = tuple(("FINISHED_EXLORATION"), 4)
+    FINISHED_EXLORATION = tuple(("FINISHED_EXLORATION", 4))
 
 class AutonomousMovingEnhaced :
     drivebase = None
@@ -40,9 +40,9 @@ class AutonomousMovingEnhaced :
     previousState = tuple
 
     #variables nécessaire au fonctionnement de l'algorithme de déplacament autonome
-    _RANGE = math.sqrt(math.pow(90,2)+ math.pow(90,2))/2 /10 #avant était math.sqrt(math.pow(90,2)+ math.pow(90,2))/2
-    pointsOfInterestTravelled = [Point2D] #la position 0 du tableau est la position de départ du robot
-    quests = [Point2D] #places to explore aka quests available
+    _RANGE = math.sqrt(math.pow(90,2)+ math.pow(90,2))/2 /1000 #avant était math.sqrt(math.pow(90,2)+ math.pow(90,2))/2
+    pointsOfInterestTravelled = [] #la position 0 du tableau est la position de départ du robot
+    quests = [] #places to explore aka quests available
     indexOfActiveQuest = int
     lastPointOfInterest = Point2D
     repeatLastAction = False
@@ -108,8 +108,9 @@ class AutonomousMovingEnhaced :
 
             print("Wall in front")
             self.drivebase.stopMotors()
-            
-            if not self.isPositionAlreadyExplored(self.drivebase.getPosition()): #si la position ou il est rendu est nouvelle (pas encore exploré) il continue avec un TURN
+            print(self.drivebase.getPosition())
+            if self.isPositionAlreadyExplored(self.drivebase.getPosition()) == False: #si la position ou il est rendu est nouvelle (pas encore exploré) il continue avec un TURN
+                print("new position explored")
                 self.addNewPointOfInterestTravelled()
                 self.setState(States.TURN)
                 print("Exiting ADVANCE_UNTIL_OBSTACLE")
@@ -193,8 +194,7 @@ class AutonomousMovingEnhaced :
         if self.currentState == States.FINISHED_EXLORATION :
             self.drivebase.stopMotors()
             print("FINISHED_EXLORATION")
-            quit()
-
+            exit()
     
     previousState = currentState
 ### fin du consumeStateInput()
@@ -228,7 +228,11 @@ class AutonomousMovingEnhaced :
         """
         i = 0
         while (i< len(self.pointsOfInterestTravelled)):
+            print("list  : "+ str(self.pointsOfInterestTravelled))
+            print("pt : "+ str(self.pointsOfInterestTravelled[i].__str__()))
+            print("x pt : "+ str(self.pointsOfInterestTravelled[i].getX()))
             if(self.arePointsInRange(currentPosition, self.pointsOfInterestTravelled[i], self._RANGE)):
+                print(str(currentPosition) + " " + str(self.pointsOfInterestTravelled[i]))
                 print("place already explored")
                 self.indexToRemove = i
                 return True
@@ -245,8 +249,8 @@ class AutonomousMovingEnhaced :
             range (float) : marge d'erreur accepté
         """
 
-        if(point1.getX() > point2.getX() - self._RANGE and point1.getX() < point2.getX() + range
-           and point1.getY() > point2.getY() - self._RANGE and point1.getY() < point2.getY() + range):
+        if(point1.getX() > (point2.getX() - self._RANGE) and point1.getX() < (point2.getX() + range)
+           and point1.getY() > (point2.getY() - self._RANGE) and point1.getY() < (point2.getY() + range)):
             return True
         else : 
             return False

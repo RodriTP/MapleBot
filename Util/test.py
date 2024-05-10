@@ -1,9 +1,6 @@
-t = tuple(("maison", 1))
-t2 = tuple(("maison", 1))
-t3 = tuple
-t4 = tuple
+from Point2D import Point2D
 
-print(t)
-print(t2)
-print(t3)
-print(t == t2)
+p1 = Point2D(1,3)
+p2 = Point2D(4,5)
+
+print(p1.getX() > p1.getX())

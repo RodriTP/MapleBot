@@ -1,20 +1,3 @@
-from Point2D import Point2D
-
-def estEntreVals(self, point1 : Point2D, point2 : Point2D, range  : float):
-        """
-        Vérifie si deux points sont égaux selon une certaine marge d'erreur\n
-        Params 
-            point1 (Point2D) : premier point qu'on veut comparer\n
-            point2 (Point2D) : deuxième point qu'on veux comparer\n
-            range (float) : marge d'erreur accepté
-        """
-
-        if(point1.getX() > point2.getX() - self._RANGE and point1.getX() < point2.getX() + range
-           and point1.getY() > point2.getY() - self._RANGE and point1.getY() < point2.getY() + range):
-            return True
-        else : 
-            return False
-
 class Point2D:
     """
     Classe modélisant un point 2D (x,y) par rapport à l'origine un plan
@@ -30,7 +13,7 @@ class Point2D:
             y (float): coordonnée en y du point sur le plan
             (facultatif) dir (float) : orientation vers où le point fait face (angle en degré)
         """
-        print(args)
+#        print(args)
         if len(args) == 2:
             self.setX(args[0])
             self.setY(args[1])
@@ -81,7 +64,7 @@ class Point2D:
         self._y = y
         self._dir = dir
 
-    def deltaX(self, autrePt : Point2D) -> float:
+    def deltaX(self, autrePt) -> float:
         """
         Calcule la différence en x avec un autre point (autrePt).\n
         Formule : X de pointActuel - X de autrePt\n
@@ -90,7 +73,7 @@ class Point2D:
         """
         return self._x - autrePt._x
     
-    def deltaY(self, autrePt : Point2D) -> float:
+    def deltaY(self, autrePt) -> float:
         """
         Calcule la différence en Y avec un autre point (autrePt).\n
         Formule : Y de pointActuel - Y de autrePt\n
@@ -99,7 +82,7 @@ class Point2D:
         """
         return self._y - autrePt._y
     
-    def deltaDir(self, autrePt : Point2D) -> float:
+    def deltaDir(self, autrePt) -> float:
         """
         Calcule la différence d'angle entre la direction du point avec la direction d'un autre point (autrePt).\n
         Formule : angle de pointActuel - angle de autrePt\n
