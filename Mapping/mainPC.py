@@ -46,18 +46,18 @@ def fonction1():
                     _y.append(connexionBluetooth.getNumData(sensorData[i+3]))
         """
 
-        
-        distanceGauche = connexionBluetooth.getNumData(sensorData[3])/1000 #transforme la distance vue par l'ultrason gauche en mm en m
-        if(distanceGauche < 2.0):
-            _x.append(calculerPointX(_x[0], distanceGauche, (connexionBluetooth.getNumData(sensorData[2])-90)%360)) #La position x du point ultrason gauche
-            _y.append(calculerPointY(_y[0], distanceGauche, (connexionBluetooth.getNumData(sensorData[2])-90)%360)) #La position Y du point ultrason gauche
-            #print("x = " + calculerPointX(_x[0],connexionBluetooth.getNumData(sensorData[3]), connexionBluetooth.getNumData(sensorData[2])) + ", y = " + calculerPointY(_y[0],connexionBluetooth.getNumData(sensorData[3]), connexionBluetooth.getNumData(sensorData[2])))
+        if(len(sensorData)>3):
+            distanceGauche = connexionBluetooth.getNumData(sensorData[3])/1000 #transforme la distance vue par l'ultrason gauche en mm en m
+            if(distanceGauche < 2.0):
+                _x.append(calculerPointX(_x[0], distanceGauche, (connexionBluetooth.getNumData(sensorData[2])-90)%360)) #La position x du point ultrason gauche
+                _y.append(calculerPointY(_y[0], distanceGauche, (connexionBluetooth.getNumData(sensorData[2])-90)%360)) #La position Y du point ultrason gauche
+                #print("x = " + calculerPointX(_x[0],connexionBluetooth.getNumData(sensorData[3]), connexionBluetooth.getNumData(sensorData[2])) + ", y = " + calculerPointY(_y[0],connexionBluetooth.getNumData(sensorData[3]), connexionBluetooth.getNumData(sensorData[2])))
 
-        distanceDroite = connexionBluetooth.getNumData(sensorData[4])/1000 #transforme la distance vue par l'ultrason droit en mm en m
-        if(distanceDroite < 2.0):
-            _x.append(calculerPointX(_x[0], distanceDroite, (connexionBluetooth.getNumData(sensorData[2])+90)%360))
-            _y.append(calculerPointY(_y[0], distanceDroite, (connexionBluetooth.getNumData(sensorData[2])+90)%360))
-            #print("_x = " + str(_x[len(_x)-1]) + "_y = " + str(_y[len(_y)-1]))
+            distanceDroite = connexionBluetooth.getNumData(sensorData[4])/1000 #transforme la distance vue par l'ultrason droit en mm en m
+            if(distanceDroite < 2.0):
+                _x.append(calculerPointX(_x[0], distanceDroite, (connexionBluetooth.getNumData(sensorData[2])+90)%360))
+                _y.append(calculerPointY(_y[0], distanceDroite, (connexionBluetooth.getNumData(sensorData[2])+90)%360))
+                #print("_x = " + str(_x[len(_x)-1]) + "_y = " + str(_y[len(_y)-1]))
         
         
 
@@ -76,7 +76,7 @@ def animate(i):
     ax.scatter(_x[0], _y[0], color='red')
     #print("_x = " + str(_x[len(_x)-1]) + "_y = " + str(_y[len(_y)-1]))
 
-ani = FuncAnimation(fig, animate, interval=33.3333)
+ani = FuncAnimation(fig, animate, interval=33.3333, frames=100)
 
 plt.show()
 

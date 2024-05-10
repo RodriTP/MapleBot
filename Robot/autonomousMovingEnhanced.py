@@ -40,7 +40,7 @@ class AutonomousMovingEnhaced :
     previousState = tuple
 
     #variables nécessaire au fonctionnement de l'algorithme de déplacament autonome
-    _RANGE = math.sqrt(math.pow(90,2)+ math.pow(90,2))/2 /1000 #avant était math.sqrt(math.pow(90,2)+ math.pow(90,2))/2
+    _RANGE = math.sqrt(math.pow(90,2)+ math.pow(90,2))/2 /300 * 1000 # dest d'environ 0.2121 mètres #avant était math.sqrt(math.pow(90,2)+ math.pow(90,2))/2
     pointsOfInterestTravelled = [] #la position 0 du tableau est la position de départ du robot
     quests = [] #places to explore aka quests available
     indexOfActiveQuest = int
@@ -142,25 +142,29 @@ class AutonomousMovingEnhaced :
 
             if(self.sensors.isObstacleLeft() and not self.sensors.isObstacleRight()):#peut tourner a droite
                 print("Turning right")
-                self.drivebase.turnRad(90,2)
+                self.drivebase.turnNotTime(90)
                 self.setState(States.ADVANCE_UNTIL_OBSTACLE)
             
             elif (self.sensors.isObstacleRight() and not self.sensors.isObstacleLeft()):#peut tourner a gauche
                 print("Turning left")
-                self.drivebase.turnRad(-88,2)
+                self.drivebase.turnNotTime(-90)
                 self.setState(States.ADVANCE_UNTIL_OBSTACLE)
             
             elif (self.sensors.isObstacleLeft() == False and self.sensors.isObstacleRight() == False): #pas de mur ni a gauche ni a droite
                 print("NO walls on the SIDES")
                 self.pointsOfInterestTravelled.append(Point2D(self.drivebase.getPosition().getX(), self.drivebase.getPosition().getY(), self.drivebase.getPosition().getOrientation()-90.0)) #crée quest a gauche
                 print("Turning right")
-                self.drivebase.turnRad(90,2) #tourne a droite
+                self.drivebase.turnNotTime(90) #tourne a droite
                 self.setState(States.ADVANCE_UNTIL_OBSTACLE)
             
             else : #mur des 2 cotés
-                print("nowhere to turn, undoing last action")
-                self.pointsOfInterestTravelled.pop()
-                self.setState(States.GO_TO_LAST_POINT_OF_INTEREST)
+                #print("nowhere to turn, undoing last action")
+                #self.pointsOfInterestTravelled.pop()
+                #self.setState(States.GO_TO_LAST_POINT_OF_INTEREST)
+                print("wall on two side, turning right")
+                self.drivebase.turnNotTime(-90)
+                self.setState(States.ADVANCE_UNTIL_OBSTACLE)
+
 
 
 ############### GO_TO_LAST_POINT_OF_INTEREST ##########################
@@ -204,17 +208,19 @@ class AutonomousMovingEnhaced :
         """
         Cette fonction calibre le robot d'une position face contre le mur.\n
         Params
-            x : ?????????????
+            x : valeur arbitraire qui determine la distance qu'il recule
         """
         time.sleep(3)
         while (x < 5000):
             self.drivebase.setSpeed(-45)
             x = x + 1
-        self.drivebase.turnRad(176, 2)
+        self.drivebase.turnNotTime(180)
 
     def addNewPointOfInterestTravelled(self):
             """Ajoute une position (x,y,yaw) d'intéret au tableau de places déjà visité"""
-            self.pointsOfInterestTravelled.append(self.drivebase.getPosition())
+            pt = Point2D(self.drivebase.getPosition().getX(), self.drivebase.getPosition().getY(), self.drivebase.getPosition().getOrientation())
+            print("pt added to list : " + str(pt))
+            self.pointsOfInterestTravelled.append(pt)
 
     #cette fonct retourne vrai si le robot était passé par cette position autrefois
     def isPositionAlreadyExplored(self, currentPosition : Point2D):
@@ -227,20 +233,22 @@ class AutonomousMovingEnhaced :
             False : si le robot n'est jamais passé par la coordonnée
         """
         i = 0
-        while (i< len(self.pointsOfInterestTravelled)):
-            print("list  : "+ str(self.pointsOfInterestTravelled))
-            print("pt : "+ str(self.pointsOfInterestTravelled[i].__str__()))
-            print("x pt : "+ str(self.pointsOfInterestTravelled[i].getX()))
-            if(self.arePointsInRange(currentPosition, self.pointsOfInterestTravelled[i], self._RANGE)):
-                print(str(currentPosition) + " " + str(self.pointsOfInterestTravelled[i]))
+        bool = False
+        while (i< len(self.pointsOfInterestTravelled) and not bool):
+            print("comparing with range of : "+str(self._RANGE))
+            print("pt : "+ self.pointsOfInterestTravelled[i].__str__()+" RobotPose : "+self.drivebase.getPosition().__str__())
+            print(self.arePointsInRange(self.drivebase.getPosition(), self.pointsOfInterestTravelled[i], self._RANGE))
+            if(self.arePointsInRange(self.drivebase.getPosition(), self.pointsOfInterestTravelled[i], self._RANGE)):
+                print(str(self.drivebase.getPosition()) + " " + str(self.pointsOfInterestTravelled[i]))
                 print("place already explored")
                 self.indexToRemove = i
-                return True
+                bool = True
             else:
                 i += 1
-        return False
+        
+        return bool
     
-    def arePointsInRange(self, point1 : Point2D, point2 : Point2D, range  : float):
+    def arePointsInRange(self, point1 : Point2D, point2 : Point2D, range  : float) -> bool:
         """
         Vérifie si deux points sont égaux selon une certaine marge d'erreur\n
         Params 
@@ -249,11 +257,9 @@ class AutonomousMovingEnhaced :
             range (float) : marge d'erreur accepté
         """
 
-        if(point1.getX() > (point2.getX() - self._RANGE) and point1.getX() < (point2.getX() + range)
-           and point1.getY() > (point2.getY() - self._RANGE) and point1.getY() < (point2.getY() + range)):
-            return True
-        else : 
-            return False
+        print("dx : "+str(abs(point1.getX() - point2.getX()) <= range))
+        print("dy : "+str(abs(point1.getY() - point2.getY()) <= range))
+        return abs(point1.getX() - point2.getX()) <= range and abs(point1.getY() - point2.getY()) <= range
 
     def setState(self, newState : States):
         self.previousState = self.currentState
