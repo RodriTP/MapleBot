@@ -94,11 +94,10 @@ class Gyro :
                         bool = False
                         if self._gyroOffset == None:
                             self._gyroOffset = float(strline)
-#                            return self._gyroOffset
+                            print(self._gyroOffset)
                         else :
                             #print("angle : "+str((float(strline)-self._gyroOffset)%float(360)))
                             Gyro._angle = (float(strline)-self._gyroOffset)%float(360)
-                            print(Gyro._angle)
             except :
                 print("Erreur, à lu : "+str(strline))
                 return float(0)

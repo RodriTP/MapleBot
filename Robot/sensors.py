@@ -57,8 +57,8 @@ class Sensors :
         self.updateTabs()
         self._gyro.periodic()
     
-    _SIDE_DISTANCE_FROM_OBSTACLE = float(2000.0)
-    _FRONT_DISTANCE_FROM_OBSTACLE = float(300.0)
+    _SIDE_DISTANCE_FROM_OBSTACLE = float(150.0) #mm avant était 2000.0
+    _FRONT_DISTANCE_FROM_OBSTACLE = float(100.0) #mm avant était 300.0
 
     def updateObastaclePresence(self):
         """Update périodiquement les booleans permettant savoir s'il y a un obstacle ou pas"""

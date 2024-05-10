@@ -28,7 +28,7 @@ class States:
     CALIBRATING = tuple(("CALIBRATING", 0))
     ADVANCE_UNTIL_OBSTACLE = tuple(("ADVANCE_UNTIL_OBSTACLE", 1))
     TURN = tuple(("TURN", 2))
-    UNDO = tuple(("UNDO", 3)) #a changer de nom potentiellement pour un plus clair
+    GO_TO_LAST_POINT_OF_INTEREST = tuple(("UNDO", 3)) #a changer de nom potentiellement pour un plus clair
 
 class AutonomousMovingEnhaced :
     drivebase = None
@@ -39,9 +39,11 @@ class AutonomousMovingEnhaced :
     previousState = tuple
 
     #variables nécessaire au fonctionnement de l'algorithme de déplacament autonome
-    placesOfInterestTravelled = [] #la position 0 du tableau est la position de départ du robot
+    _RANGE = math.sqrt(math.pow(90,2)+ math.pow(90,2))/2 /10 #avant était math.sqrt(math.pow(90,2)+ math.pow(90,2))/2
+    pointsOfInterestTravelled = [] #la position 0 du tableau est la position de départ du robot
     quests = [] #places to explore aka quests available
-    _RANGE = math.sqrt(math.pow(90,2)+ math.pow(90,2))/2
+    indexOfActiveQuest = int
+    
 
 
     def __init__(self, d : Drivebase, s : Sensors):
@@ -55,10 +57,12 @@ class AutonomousMovingEnhaced :
             self.consumeStateInput()
     
     def consumeStateInput(self): # il faut faire boucler le consume state input jusqu'à ce que quests = 0
+############### None ##########################
         if self.currentState == None:
             print("current state == Null")
             self.drivebase.stopMotors()
 
+############### CALIBRATING ##########################
         if self.currentState == States.CALIBRATING and self.previousState != States.CALIBRATING:
             print("Entering state CALIBRATING")
             self.calibrate(0)
@@ -66,6 +70,7 @@ class AutonomousMovingEnhaced :
             print("End of CALIBRATING")
             self.setState(States.ADVANCE_UNTIL_OBSTACLE)
 
+############### ADVANCE_UNTIL_OBSTACLE ##########################
         if self.currentState == States.ADVANCE_UNTIL_OBSTACLE and self.previousState != States.ADVANCE_UNTIL_OBSTACLE:
             print("Entering state ADVANCE_UNTIL_OBSTACLE")
             self.drivebase.setSpeed(400)
@@ -73,29 +78,47 @@ class AutonomousMovingEnhaced :
             wasObstacleLeft = self.sensors.isObstacleLeft()
             wasObstacleRight = self.sensors.isObstacleRight()
 
-            while not self.sensors.isObstacleInFront():
-                if not self.sensors.isObstacleLeft() and wasObstacleLeft == True: 
-                    print("Wall has DISAPPEARED")
+            while not self.sensors.isObstacleInFront(): #tant qu'il n'a pas de mur en face il vérifier les cotés pour créer des quests
+
+                if wasObstacleLeft == True and self.sensors.isObstacleLeft() == False : #mur avant et pas mur actuellement
+                    print("LEFT wall has DISAPPEARED")
+                    self.pointsOfInterestTravelled.append(Point2D(self.drivebase.getPosition().getX(), self.drivebase.getPosition().getY(), self.drivebase.getPosition().getOrientation()-90.0)) #crée quest a gauche
                     self.quests.append(Point2D(self.drivebase.getPosition().getX(), self.drivebase.getPosition().getY(), self.drivebase.getPosition().getOrientation()-90.0))
                     wasObstacleLeft = False
                 
-                if not self.sensors.isObstacleRight() and wasObstacleRight == True:
-                    print("Wall has APPEARED")
+                if wasObstacleLeft == False and self.sensors.isObstacleLeft() == True:
+                    print("LEFT wall has APPEARED")
+                    self.quests.append(Point2D(self.drivebase.getPosition().getX(), self.drivebase.getPosition().getY(), self.drivebase.getPosition().getOrientation()-90.0)) #crée quest a gauche
+                    wasObstacleLeft = True
+                
+                if wasObstacleRight == True and self.sensors.isObstacleRight() == False:
+                    print("RIGHT wall has DISAPPEARED")
+                    self.pointsOfInterestTravelled.append(Point2D(self.drivebase.getPosition().getX(), self.drivebase.getPosition().getY(), self.drivebase.getPosition().getOrientation()+90.0)) #crée quest a droite
                     self.quests.append(Point2D(self.drivebase.getPosition().getX(), self.drivebase.getPosition().getY(), self.drivebase.getPosition().getOrientation()+90.0))
                     wasObstacleRight = False
 
+                if wasObstacleRight == False and self.sensors.isObstacleRight == True:
+                    print("RIGHT wall has DISAPPEARED")
+                    self.quests.append(Point2D(self.drivebase.getPosition().getX(), self.drivebase.getPosition().getY(), self.drivebase.getPosition().getOrientation()+90.0)) #crée quest a droite
+                    wasObstacleRight = True
+
+
+            print("Wall in front")
             self.drivebase.stopMotors()
             
-            if not self.isPositionAlreadyExplored(self.drivebase.getPosition()):
+            if not self.isPositionAlreadyExplored(self.drivebase.getPosition()): #si la position ou il est rendu est nouvelle (pas encore exploré) il continue avec un TURN
                 self.addNewPlaceTravelled()
                 self.setState(States.TURN)
-            else :
+                print("Exiting ADVANCE_UNTIL_OBSTACLE")
+            else : #la position ou il est rendu est déjà connues
                 print("position déjà exporé")
-                print("doit se rendre à la prochaine quest")      
-        #fin du if pour avancer jusqu'à un obstacle  
-
+                print("doit se rendre à la prochaine quest")
+                      
+          
+############### TURN ##########################
         if self.currentState == States.TURN and self.previousState != States.TURN:
             print("Entering state TURN")
+
             if(self.sensors.isObstacleLeft() and not self.sensors.isObstacleRight()):#peut tourner a droite
                 print("Turning right")
                 self.drivebase.turnRad(90,2)
@@ -104,18 +127,27 @@ class AutonomousMovingEnhaced :
             elif (self.sensors.isObstacleRight() and not self.sensors.isObstacleLeft()):#peut tourner a gauche
                 print("Turning left")
                 self.drivebase.turnRad(-88,2)
+                self.setState(States.ADVANCE_UNTIL_OBSTACLE)
             
-            else :
+            elif (self.sensors.isObstacleLeft() == False and self.sensors.isObstacleRight() == False): #pas de mur ni a gauche ni a droite
+                print("NO walls on the SIDES")
+                self.pointsOfInterestTravelled.append(Point2D(self.drivebase.getPosition().getX(), self.drivebase.getPosition().getY(), self.drivebase.getPosition().getOrientation()-90.0)) #crée quest a gauche
+                print("Turning right")
+                self.drivebase.turnRad(90,2) #tourne a droite
+                self.setState(States.ADVANCE_UNTIL_OBSTACLE)
+            
+            else : #mur des 2 cotés
                 print("nowhere to turn, undoing last action")
                 self.setState(States.UNDO)
 
 
-
+############### UNDO ##########################
         if self.currentState == States.UNDO :
             print("Starting state UNDO")
     
     previousState = currentState
-    
+### fin du consumeStateInput()
+
     
     def calibrate(self, x):
         """
@@ -123,14 +155,15 @@ class AutonomousMovingEnhaced :
         Params
             x : ?????????????
         """
-        while (x < 10000):
-            self.drivebase.setSpeed(45)
+        time.sleep(3)
+        while (x < 5000):
+            self.drivebase.setSpeed(-45)
             x = x + 1
         self.drivebase.turnRad(176, 2)
 
     def addNewPlaceTravelled(self):
             """Ajoute une position (x,y,yaw) d'intéret au tableau de places déjà visité"""
-            self.placesOfInterestTravelled.append(self.drivebase.getPosition())
+            self.pointsOfInterestTravelled.append(self.drivebase.getPosition())
 
     #cette fonct retourne vrai si le robot était passé par cette position autrefois
     def isPositionAlreadyExplored(self, currentPosition : Point2D):
@@ -143,8 +176,8 @@ class AutonomousMovingEnhaced :
             False : si le robot n'est jamais passé par la coordonnée
         """
         i = 0
-        while (i< len(self.placesOfInterestTravelled)):
-            if(self.estEntreVals(currentPosition, self.placesOfInterestTravelled[i], self._RANGE)):
+        while (i< len(self.pointsOfInterestTravelled)):
+            if(self.estEntreVals(currentPosition, self.pointsOfInterestTravelled[i], self._RANGE)):
                 print("place already explored")
                 return True
             else:

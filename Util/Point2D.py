@@ -1,3 +1,5 @@
+from Point2D import Point2D
+
 class Point2D:
     """
     Classe modélisant un point 2D (x,y) par rapport à l'origine un plan
@@ -11,7 +13,7 @@ class Point2D:
         Params
             x (float): coordonnée en x du point sur le plan
             y (float): coordonnée en y du point sur le plan
-            (facultatif) dir (float) : orientation vers où le point fait face
+            (facultatif) dir (float) : orientation vers où le point fait face (angle en degré)
         """
         print(args)
         if len(args) == 2:
@@ -38,7 +40,7 @@ class Point2D:
         """Return : (float) valeur en y du point"""
         return self._y
     def getDir(self) -> float:
-        """return : (float) direction où le point fait face"""
+        """return : (float) direction où le point fait face (angle en degré)"""
         return self._dir
     
     #setters
@@ -50,7 +52,7 @@ class Point2D:
         """Params : (float) valeur en y du point"""
         self._y = y
     def setDir(self, dir : float):
-        """Params : (float) direction où le point fait face"""
+        """Params : (float) direction où le point fait face (angle en degré)"""
         self._dir = dir
 
     def set(self, x : float, y : float, dir = None):
@@ -58,8 +60,36 @@ class Point2D:
         Params
             x (float): coordonnée en x du point sur le plan
             y (float): coordonnée en y du point sur le plan
-            dir (float) : orientation vers où le point fait face
+            dir (float) : direction vers où le point fait face (angle en degré)
         """
         self._x = x
         self._y = y
         self._dir = dir
+
+    def deltaX(self, autrePt : Point2D) -> float:
+        """
+        Calcule la différence en x avec un autre point (autrePt).\n
+        Param
+            autrePt (float) : Point avec lequel on veut calculer la différence de x
+        """
+        return self._x - autrePt._x
+    
+    def deltaY(self, autrePt : Point2D) -> float:
+        """
+        Calcule la différence en Y avec un autre point (autrePt).\n
+        Param
+            autrePt (float) : Point avec lequel on veut calculer la différence de Y
+        """
+        return self._y - autrePt._y
+    
+    def deltaDir(self, autrePt : Point2D) -> float:
+        """
+        Calcule la différence d'angle entre la direction du point avec la direction d'un autre point (autrePt).\n
+        Param
+            autrePt (float) : Point avec lequel on veut calculer la différence d'angle (en degré)
+        """
+        if self._dir == None or autrePt._dir == None :
+            print("Impossible de calculer la différence d'angle entre les directions des points. La direction d'un des points est nulle")
+            return 0.0
+        else :
+            return self._dir - autrePt._dir

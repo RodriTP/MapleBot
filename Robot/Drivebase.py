@@ -73,8 +73,8 @@ class Drivebase :
         Param
             speed (number) : vitesse voulue (positif = avancer, négatif = reculer)
         """
-        self._kLeftMotor.run(speed)
-        self._kRightMotor.run(speed)
+        self._kLeftMotor.run(-speed)
+        self._kRightMotor.run(-speed)
     
     def getSpeed(self):
         """Return : la vitesse des moteurs"""
@@ -223,8 +223,17 @@ class Drivebase :
         """
         return ((dist * 0.0949) * 360)
     
-    def turnRad(self, deg : float, spd):
+    def turnRad(self, deg : float, spd : int):
+        """
+        Permet de tourner le nombre de degrés voulus à la vitesse voulue.\n
+        Param
+            deg (float) : nombre de degrés qu'on veux tourner (+ troune a droite, - tourne a gauche)
+                ex : angle actuel = 20, deg = 10, angle final = 30
+            spd (int) : facteur de vitesse (spd va etre multiplié par 5 pour définir la vraie vitesse)
+                ex : spd = 2, vitesse angulaire = 10
+        """
         currDeg = self._s.degrés()
+        print("currDeg : "+str(currDeg))
         quadActuel = self.déterminerQuad(0)    
         quadVoulu = self.déterminerQuad(deg)
         #print(quadActuel)
@@ -233,6 +242,7 @@ class Drivebase :
         works = True
         #prob = quee il stop le quad après le but alors y arrête pas
         while(quadActuel != quadVoulu and works):
+            print("angle : "+str(self._s.degrés()))
             #print(str(tooBig(distToDeg(deg,currDeg))) + " quadFonct")
             #print("QuadActuel : " + str(quadActuel) + "---QuadVoulu : " + str(quadVoulu))
             self.gaucheOuDroiteSpd(deg, spd)
@@ -328,5 +338,5 @@ class Drivebase :
                 self._kLeftMotor.run(-45/10)
                 self._kRightMotor.run(45/10)
     
-    def getPosition(self):
+    def getPosition(self) -> RobotPose:
         return self._pos
