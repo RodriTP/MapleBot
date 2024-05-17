@@ -926,4 +926,3 @@ class Data:
             
         
         return minY
-################## FIN Classe Traitement Donnes ######################
