@@ -228,7 +228,6 @@ class traitementDonnees :
 
             #pour éviter d'être dans une boucle infinie (seulement quand il y a un bug)
             compteurFois += 1
-            print(compteurFois)
             if (compteurFois == 5000):
                 break
         

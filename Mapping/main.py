@@ -5,6 +5,9 @@ from Data2 import Data
 from TraitementDonnees import traitementDonnees
 
 ################## Début classe mainTraitementDonnees (sert de main) #######################
+# nous avons décidé de garder cet algorithme ici malgré le fait que nous ne l'utilisons pas pour générer une carte dans le projet final, 
+# vu que c'était un essai de génération de carte sans utiliser la heatnap de MatPlotLib
+
 #### creer une grille la remplis avec les données et affiche la grille
 class main :
         traitement_instance = traitementDonnees
@@ -12,6 +15,7 @@ class main :
         #création du array 2D grille
         grille = [[grilleSalle() for i in range(int((Data.trouverMaxY(Data.data)-Data.trouverMinY(Data.data))/Data.espacement)+1)] for j in range(int((Data.trouverMaxX(Data.data)-Data.trouverMinX(Data.data))/Data.espacement)+1)]
     
+        #appel de toutes les méthodes, un à la suite de l'autre
         grille = traitement_instance.creationGrille(grille, Data.data, Data)
         grille = traitement_instance.insertionDonnees(grille, Data.data)
         grille = traitement_instance.determinerMur(grille)
