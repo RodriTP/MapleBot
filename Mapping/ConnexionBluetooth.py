@@ -29,13 +29,16 @@ class connexionBluetooth:
     dataToSend = []
     dataRecieved = []
 
+    #Sauvegarde du nombre d'échange bluetooth avec le robot
+    nombreDechangeBluetooth = 0
+
     #L'adresse bluetooth du EV3
     SERVER = "00:17:ec:f4:9d:c8"
 
     #Initialisation des classes nécessaires pour créer la connexion
     client = BluetoothMailboxClient()
     mbox = TextMailbox("greeting", client)
-
+    
     def __init__(self):
         """
         Initialise la connexion Bluetooth au robot
@@ -50,7 +53,7 @@ class connexionBluetooth:
         #exemple de truc à recevoir
         print(self.mbox.read())
 
-    nombreDechangeBluetooth = 1
+
 
     #L'échange de donnés qui doit se faire tout le temps
     def dataExchange(self):

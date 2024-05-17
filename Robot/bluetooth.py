@@ -1,6 +1,5 @@
 #!/usr/bin/env pybricks-micropython
 from pybricks.messaging import BluetoothMailboxServer, Mailbox
-from pybricks import tools
 from sensors import Sensors
 from Drivebase import Drivebase
 from autonomousMoving import AutonomousMoving
@@ -34,7 +33,6 @@ class Bluetooth :
         data += ";UR:" + str(s.getRightDistance())
         self.mbox.send(data)
         self.mbox.wait()
-        #print(data)
 
     def sendPositionAndWalls(self, d:Drivebase, a:AutonomousMoving):
         """
@@ -51,10 +49,10 @@ class Bluetooth :
                 data += ";"+ temp.__str__()
         #Enregistre la dernière position de mur envoyée
         self.dernierMurEnvoye = len(a.points)
+        #Envoie les données
         self.mbox.send(data)
-        print(data)
-        self.mbox.wait_new()
-        print(self.mbox.read())
+        #Recoie la réponse
+        self.mbox.wait()
     
     def sendOtherData(self, text:str):
         """
