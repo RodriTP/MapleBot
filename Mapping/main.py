@@ -6,7 +6,7 @@ from TraitementDonnees import traitementDonnees
 
 ################## Début classe mainTraitementDonnees (sert de main) #######################
 # nous avons décidé de garder cet algorithme ici malgré le fait que nous ne l'utilisons pas pour générer une carte dans le projet final, 
-# vu que c'était un essai de génération de carte sans utiliser la heatnap de MatPlotLib
+# vu que c'était un essai de génération de carte sans utiliser la heatmap de MatPlotLib
 
 #### creer une grille la remplis avec les données et affiche la grille
 class main :
