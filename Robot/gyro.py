@@ -1,12 +1,7 @@
 #ev3 imports
-from pybricks.parameters import Port, Color, Button, Direction, Stop
-
+from pybricks.parameters import Port
 #gyro imports
-from pybricks.iodevices import DCMotor, UARTDevice, LUMPDevice, I2CDevice
-from pybricks.iodevices import I2CDevice
 from pybricks.iodevices import UARTDevice
-#others import
-import _thread
  
 class Gyro :
     """

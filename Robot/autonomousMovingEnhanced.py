@@ -5,10 +5,6 @@ sys.path.append('/home/robot/MapleBot/Robot')
 from Drivebase import Drivebase
 from sensors import Sensors
 import math
-from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
-                                 InfraredSensor, UltrasonicSensor, GyroSensor)
-from pybricks.parameters import Port, Stop, Direction, Button, Color
-from pybricks.tools import wait, StopWatch, DataLog
 from Point2D import Point2D
 
 class Actions:
@@ -134,19 +130,19 @@ class AutonomousMovingEnhaced :
 
             if(self.sensors.isObstacleLeft() and not self.sensors.isObstacleRight()):#peut tourner a droite
                 print("Turning right")
-                self.drivebase.turnNotTime(90)
+                self.drivebase.turnTime(90)
                 self.setAction(Actions.ADVANCE_UNTIL_OBSTACLE)
             
             elif (self.sensors.isObstacleRight() and not self.sensors.isObstacleLeft()):#peut tourner a gauche
                 print("Turning left")
-                self.drivebase.turnNotTime(-90)
+                self.drivebase.turnTime(-90)
                 self.setAction(Actions.ADVANCE_UNTIL_OBSTACLE)
             
             elif (self.sensors.isObstacleLeft() == False and self.sensors.isObstacleRight() == False): #pas de mur ni a gauche ni a droite
                 print("NO walls on the SIDES")
                 self.pointsOfInterestTravelled.append(Point2D(self.drivebase.getPosition().getX(), self.drivebase.getPosition().getY(), self.drivebase.getPosition().getOrientation()-90.0)) #crée quest a gauche
                 print("Turning right")
-                self.drivebase.turnNotTime(90) #tourne a droite
+                self.drivebase.turnTime(90) #tourne a droite
                 self.setAction(Actions.ADVANCE_UNTIL_OBSTACLE)
             
             else : #mur des 2 cotés
@@ -201,7 +197,7 @@ class AutonomousMovingEnhaced :
         while (x < 5000):
             self.drivebase.setSpeed(-45)
             x = x + 1
-        self.drivebase.turnNotTime(180)
+        self.drivebase.turnTime(180)
 
     def addNewPointOfInterestTravelled(self):
             """Ajoute une position (x,y,yaw) d'intéret au tableau de places déjà visité"""

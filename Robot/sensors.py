@@ -1,26 +1,9 @@
 #!/usr/bin/env pybricks-micropython
-#import utime
 from pybricks.ev3devices import UltrasonicSensor
 from pybricks.nxtdevices import UltrasonicSensor as UltrasonicSensor_Nxt
-#from pybricks import nxtdevices.UltrasonicSensor
-from pybricks.parameters import Port, Stop, Direction, Button, Color
-from pybricks.tools import wait, StopWatch, DataLog
-from pybricks.robotics import DriveBase
-from pybricks.media.ev3dev import SoundFile, ImageFile
-#import adafruit_bno055, board
-from pybricks.iodevices import I2CDevice
-#from bno055 import *
-
-#!/usr/bin/env pybricks-micropython
-from pybricks.parameters import Port, Color, Button, Direction, Stop
-from pybricks.iodevices import DCMotor, UARTDevice, LUMPDevice, I2CDevice
-
-
 from pybricks.parameters import Port
-from pybricks.media.ev3dev import SoundFile
-
+from pybricks.parameters import Port
 from gyro import Gyro
-import _thread
   
 class Sensors :
     """

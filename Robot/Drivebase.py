@@ -1,14 +1,11 @@
 #!/usr/bin/env pybricks-micropython
 from sensors import Sensors
-#from AutonomousMoving import AutonomousMoving
 import sys
 sys.path.append('/home/robot/MapleBot/Util')
 from RobotPose import RobotPose
 import math
-from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
-                                 InfraredSensor, UltrasonicSensor, GyroSensor)
-from pybricks.parameters import Port, Stop, Direction, Button, Color
-from pybricks.tools import wait, StopWatch, DataLog
+from pybricks.ev3devices import Motor
+from pybricks.parameters import Port
 import time
 
 
@@ -136,11 +133,11 @@ class Drivebase :
         self.setEncoders(0)
         self.setSpeed(-200)
         
-        #print(distance)
+        
 
         distance = -3.22 * distance
         while self._hasFinishedAction == False:
-            #print(self.getDistanceWithoutReset())
+            
             self._hasFinishedAction = (self.getDistanceWithoutReset() <= distance)
         
         print("J'AI AVANCÉ : "+str(self.getDistanceWithoutReset()))
@@ -201,17 +198,17 @@ class Drivebase :
             print("angle : "+str(self._s.degrés()))
             self.gaucheOuDroiteSpd(deg, spd)
             quadActuel = self.déterminerQuad(0)
-            if(abs(self.tooBig(self.distToDeg(deg,currDeg))) > 5*spd):
+            if(abs(self.distToDeg(deg,currDeg)) > 5*spd):
                 works = False
-        if(abs(self.tooBig(self.distToDeg(deg,currDeg))) >= 0.5):
-            while(abs(self.tooBig(self.distToDeg(deg,currDeg))) > 5*spd):
+        if(abs(self.distToDeg(deg,currDeg)) >= 0.5):
+            while(abs(self.distToDeg(deg,currDeg)) > 5*spd):
                 self.gaucheOuDroiteSpd(deg, spd)
-            if(self.tooBig(self.distToDeg(deg,currDeg)) >= 0.5):  
-                while(self.tooBig(self.distToDeg(deg,currDeg)) >= 0.5):
+            if(self.distToDeg(deg,currDeg) >= 0.5):  
+                while(self.distToDeg(deg,currDeg) >= 0.5):
                     self.gaucheOuDroiteSlw(deg)        
                 used = True
             if(used  != True):
-                while(self.tooBig(self.distToDeg(deg,currDeg)) <= -0.5):
+                while(self.distToDeg(deg,currDeg) <= -0.5):
                     self.gaucheOuDroiteSlw(deg)
         self.stopMotors()      
 
@@ -221,16 +218,10 @@ class Drivebase :
             answer = answer + 360
         if(answer > 360):
             answer = answer + -360
-        return answer #
-
-    def tooBig(self, distDiff):
-        # if(distDiff > 180):
-        #     return distDiff - 180
-        # if(distDiff < -180): 
-        #     return distDiff + 180
-        return distDiff
+        return answer 
     
     def déterminerQuad(self, deg):
+        """Détermine le quadrant dans lequelque l'angle voulu se trouve"""
         if (deg == 0): deg = self._s.degrés()
         if(math.sin(math.radians(deg)) > 0): si = 1
         else: si = 2 
@@ -245,6 +236,7 @@ class Drivebase :
         return quad
 
     def gaucheOuDroiteSpd(self, deg, spd):
+        """Détermine la direction qui faut tourner"""
         baseSpeed = 45 * spd
         #droite
         if(deg > 0):  
@@ -256,6 +248,7 @@ class Drivebase :
             self._kRightMotor.run(-baseSpeed)
 
     def gaucheOuDroiteSlw(self, deg):
+        """Détermine la direction qui faut tourner à vitesse réduite afin de garder de la précision"""
         #droite
         if(deg > 0):  
             self._kLeftMotor.run(-45/8)
@@ -264,16 +257,6 @@ class Drivebase :
         if(deg < 0):
             self._kLeftMotor.run(45/8)
             self._kRightMotor.run(-45/8)
-
-    def recal(self, deg):
-            while(self._s.degrés() - deg > 0.5 and deg > 0):#gauche
-                print("RE-CALIBRATING GAUCHE diff : " + str(self._s.degrés() - deg)+" deg: " +  str(self._s.degrés()))
-                self._kLeftMotor.run(45/10)
-                self._kRightMotor.run(-45/10)
-            while(self._s.degrés() - deg < -0.5 and deg < 0):#droite
-                print("RE-CALIBRATING DROIT diff : " + str(self._s.degrés() - deg)+" deg: " +  str(self._s.degrés()))
-                self._kLeftMotor.run(-45/10)
-                self._kRightMotor.run(45/10)
     
     def getPosition(self) -> RobotPose:
         """
@@ -281,7 +264,7 @@ class Drivebase :
         """
         return self._pos
 
-    def turnNotTime(self, code):
+    def turnTime(self, code):
         """
         tourner droite = 90 gauche = -90 et 180dgr = 180
         """
