@@ -133,7 +133,8 @@ class traitementDonnees :
             if(posXPointeur == 17 and posYPointeur == 0):
                 print("in")
 
-
+            #on vérifie si on peut accéder les cases autours
+            #si on ne peut pas les accéder ou bien que la case autour est déjà un mur alors on ne l'ajoute pas dans les cases autour
             #case en haut à gauche
             if (posXPointeur-1 >= 0 and posYPointeur-1 >= 0 and grille[posXPointeur-1][posYPointeur-1].mur == False):
                 casesAutourListe[0].posX = posXPointeur-1

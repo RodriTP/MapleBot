@@ -3,7 +3,6 @@ import matplotlib.patches as patches
 from  GrilleSalle import grilleSalle
 from Data2 import Data
 from TraitementDonnees import traitementDonnees
-import numpy as np
 
 ################## Début classe mainTraitementDonnees (sert de main) #######################
 #### creer une grille la remplis avec les données et affiche la grille

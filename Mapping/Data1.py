@@ -1,6 +1,9 @@
 class Data: # exemple de données 1
     data = [] # une liste contenant des points
 
+    # Sert à représenter les données qui seront reçus par le robot 
+    # On ajoute dans la liste data les coordonées du point dans le format suivant [x,y] 
+    # Tout les points doivent être dans le premier quadrant
     data.append([2.4113861250634727,19.584498808124994]) 
  
     data.append([2.458332672677697,18.551674760612062]) 
@@ -17,7 +20,7 @@ class Data: # exemple de données 1
     
     data.append([2.364439577449249,10.101296190051723]) 
     
-    data.append([3.350317077347955,9.913509999594826]) 
+    data.append([3.350317077347955,9.913509999594826])    
     
     data.append([4.946499696231575,9.819616904366377]) 
     

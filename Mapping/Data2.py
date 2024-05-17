@@ -2,7 +2,7 @@ class Data: #exemple de donées 2
 
     data = [] # une liste contenant des points
 
-    # Sert à représenter les données qui seront reçus par le robot (À ENLEVER APRÈS)
+    # Sert à représenter les données qui seront reçus par le robot 
     # On ajoute dans la liste data les coordonées du point dans le format suivant [x,y] 
     # Tout les points doivent être dans le premier quadrant
     data.append([2.100125603600003,14.230716153411098])
