@@ -1,9 +1,10 @@
 from  CasesAutour import casesAutour
 
 class traitementDonnees :
-    # --- DÉFINITION DES LIMITES X ET Y POUR CHAQUE CASE ---
-    def creationGrille(grille, data, Data): #métode pour creer un grillage et séparer les données
-
+    def creationGrille(grille, data, Data): 
+        """
+        métode pour creer un grillage et séparer les données
+        """
         #initialisation des pointeurs
         pointeurLimSuppX = Data.trouverMinX(data) 
         pointeurLimInfX = Data.trouverMinX(data)
@@ -37,9 +38,11 @@ class traitementDonnees :
            
         return grille
     
-
-    # --- INSERTION DES DONNÉES DANS LA GRILLE EN FONCTION DES LIMITES QUI ONT ÉTÉ DEFINIS ---        
+     
     def insertionDonnees(grille, data):
+        """
+        INSERTION DES DONNÉES DANS LA GRILLE EN FONCTION DES LIMITES QUI ONT ÉTÉ DEFINIS
+        """
                      
         for point in range(len(data)): # on parcours les points des données originales
             for i in range(len(grille)): # on parcours les colonnes |
@@ -56,18 +59,18 @@ class traitementDonnees :
         return grille 
     
 
-
-
-    # --- MÉTHODES DÉDIÉS AUX MURS ---
-
-    # Détermine où sont les murs
     def determinerMur(grille):
+        """
+        MÉTHODE DÉDIÉ À LA DÉTECTIONS DES MURS
+        """
 
-        # Cette méthode sert à déterminer si chaque case ayant un mur a 2 case autour ayant un mur
-        # Si ce n'est pas le cas alors il faudra continuer à chercher des murs
-        # Return False -> tout les cases ayant un mur a 2 cases ayant un mur autour
-        # Return True -> il y a au moins une case ayant un mur qui a moins de 2 cases ayant un mur autour
         def continuerMur(grille):
+            """
+            Cette méthode sert à déterminer si chaque case ayant un mur a 2 case autour ayant un mur
+            Si ce n'est pas le cas alors il faudra continuer à chercher des murs
+            Return False -> tout les cases ayant un mur a 2 cases ayant un mur autour
+            Return True -> il y a au moins une case ayant un mur qui a moins de 2 cases ayant un mur autour
+            """
             for i in range(len(grille)): # on parcours les colonnes |
                     for j in range (len(grille[0])): # on parcours les lignes -
                         if (grille[i][j].mur == True): # Si nous somme a une case ayant un mur
@@ -77,6 +80,7 @@ class traitementDonnees :
             return False
         
         def nbMurs(grille, i, j):
+            """VÉRIFICATION DU NOMBRE DE MURS AUTOURS D'UNE CASE"""
             nb = 0
             # on vérifie si au moins 2 des cases autour a un mur (tout en s'assurant de ne pas sortir de la grille)
             if (i-1>=0 and j-1>=0 and grille[i-1][j-1].mur == True): #case en haut à gauche

@@ -1,4 +1,5 @@
-class Data: # exemple de données 1
+class Data:
+    """exemple 1 de données obtenues par le robot"""
     data = [] # une liste contenant des points
 
     # Sert à représenter les données qui seront reçus par le robot 

@@ -1,7 +1,10 @@
 from Data2 import Data
 
-class grilleSalle: #Classe du grillage pour que chaque case ait les variables suivantes
+class grilleSalle:
+    """Classe du grillage pour que chaque case ait les variables suivantes: mur, dataGrille, quantite,
+      limiteSuppX, limiteInfX, limiteSuppY et limiteInfY"""
     def __init__(self):
+        """Constructeur"""
         self.mur = 0 #sert à déteminer les chances  qu'il y a présence d'un mur (valeur true ou false : true → mur, false → pas de mur)
         self.dataGrille = [] #grillage
         self.quantite = len(self.dataGrille)  #la quantité de données dans chaque case
