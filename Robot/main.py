@@ -1,25 +1,40 @@
 #!/usr/bin/env pybricks-micropython
 from pybricks.hubs import EV3Brick
-from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
-                                 InfraredSensor, UltrasonicSensor, GyroSensor)
-from pybricks.parameters import Port, Stop, Direction, Button, Color
-from pybricks.tools import wait, StopWatch, DataLog
-from pybricks.robotics import DriveBase
-from pybricks.media.ev3dev import SoundFile, ImageFile
-
-
+from Drivebase import Drivebase
+from sensors import Sensors
+from autonomousMoving import AutonomousMoving
+import _thread
+from bluetooth import Bluetooth
+from autonomousMovingEnhanced import AutonomousMovingEnhaced
 # This program requires LEGO EV3 MicroPython v2.0 or higher.
 # Click "Open user guide" on the EV3 extension tab for more information.
 
-
-# Create your objects here.
 ev3 = EV3Brick()
-obstacle_sensor = UltrasonicSensor(Port.S4)
-sensor = InfraredSensor(Port.S3)
+sensors = Sensors()
+drivebase = Drivebase()
+autonomousMoving = AutonomousMoving(drivebase,sensors)
+bluetooth = Bluetooth()
+autonomousMovingEnhaced = AutonomousMovingEnhaced(drivebase, sensors)
 
-# Write your program here.
-ev3.speaker.beep()
+def periodicMain():
+    """
+    Fonction qui permet de loop les fonctions periodic à l'infini.\n
+    Seule fonction periodic qui contient un "while True"
+    """
+    while True:
+        sensors.periodic()
+        drivebase.periodic()
 
-while True :
-    print(sensor.distance())
+def bluetoothMain():
+    """
+    Fonction qui permet d'envoyer les informations voulue vers l'ordinateur périodiquement.
+    """
+    global bluetooth
+    while True:
+        bluetooth.sendPositionAndWalls(drivebase, autonomousMoving)
 
+#Création de threads pour faire fonctionner le code qui doit etre fait périodiquement sans affecter le reste du code
+periodicThread = _thread.start_new_thread(periodicMain, ())
+bluetoothThread = _thread.start_new_thread(bluetoothMain, ())
+
+autonomousMovingEnhaced.start()
