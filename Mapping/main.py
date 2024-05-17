@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from  GrilleSalle import grilleSalle
 from Data2 import Data
-from TraitementDonnees import traitementDonnees
+from traitementDonnees import traitementDonnees
 
 ################## Début classe mainTraitementDonnees (sert de main) #######################
 # nous avons décidé de garder cet algorithme ici malgré le fait que nous ne l'utilisons pas pour générer une carte dans le projet final, 
