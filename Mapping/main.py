@@ -26,10 +26,10 @@ class main :
 
         # Séparation de la fenêtre en trois graphiques
         fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(13, 7))
-        
+
         #Dessiner les données
         ax1.scatter(x,y) # Ajoute le nuage de point, c-à-d les données que le robot à collecter, au plot 
-        
+
         #Dessiner les données avec les limites qui ont été calculée
         ax2.scatter(x,y)
         ax2.axvline(x = grille[0][0].limiteInfX, color = 'r')
@@ -41,20 +41,13 @@ class main :
             for j in range (len(grille[0])): # on parcours les lignes -
                 ax2.axvline(x = grille[i][j].limiteSuppX, color = 'r')
                 ax2.axhline(y = grille[i][j].limiteInfY, color = 'r')
-                
+
                 if grille[i][j].mur == True :
                     mur = patches.Rectangle((grille[i][j].limiteInfX, grille[i][j].limiteInfY), grille[i][j].limiteSuppX - grille[i][j].limiteInfX, grille[i][j].limiteSuppY- grille[i][j].limiteInfY, edgecolor='#FE2121', facecolor='#FE2121')
                 else:
                     mur = patches.Rectangle((grille[i][j].limiteInfX, grille[i][j].limiteInfY), grille[i][j].limiteSuppX - grille[i][j].limiteInfX, grille[i][j].limiteSuppY- grille[i][j].limiteInfY, edgecolor='#C2F6F6', facecolor='#C2F6F6')
-                # # elif grille[i][j].mur == 3 :
-                # #     mur = patches.Rectangle((grille[i][j].limiteInfX, grille[i][j].limiteInfY), grille[i][j].limiteSuppX - grille[i][j].limiteInfX, grille[i][j].limiteSuppY- grille[i][j].limiteInfY, edgecolor='#E6EE80', facecolor='#E6EE80')
-                # # elif grille[i][j].mur == 4 :
-                # #     mur = patches.Rectangle((grille[i][j].limiteInfX, grille[i][j].limiteInfY), grille[i][j].limiteSuppX - grille[i][j].limiteInfX, grille[i][j].limiteSuppY- grille[i][j].limiteInfY, edgecolor='#BBED8A', facecolor='#BBED8A')
-                
+               
                 ax3.add_patch(mur)
-            
-                
-
 
         plt.xlim(0, Data.trouverMaxX(Data.data) + 1)
         plt.ylim(0, Data.trouverMaxY(Data.data) + 1)
