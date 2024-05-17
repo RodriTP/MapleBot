@@ -45,6 +45,6 @@ def bluetoothMain():
 
 #Création de threads pour faire fonctionner le code qui doit etre fait périodiquement sans affecter le reste du code
 periodicThread = _thread.start_new_thread(periodicMain, ())
-bluetoothTread = _thread.start_new_thread(bluetoothMain, ())
+bluetoothThread = _thread.start_new_thread(bluetoothMain, ())
 
 autonomousMovingEnhaced.start()
