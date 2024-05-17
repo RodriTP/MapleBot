@@ -28,10 +28,14 @@ class Bluetooth :
         """
         Méthode qui envoie la position du robot (x, y, angle) et la distance mesurée par les ultrasons
         """
+        #Met la position actuelle du robot dans un string
         data = d._pos.__str__()
+        #Ajoute les valeurs de l'ultrason dans le string
         data += ";UL:" + str(s.getLeftDistance())
         data += ";UR:" + str(s.getRightDistance())
+        #Envoie les données
         self.mbox.send(data)
+        #Attends de recovoir la confirmation de l'ordinateur
         self.mbox.wait()
 
     def sendPositionAndWalls(self, d:Drivebase, a:AutonomousMoving):
@@ -51,7 +55,7 @@ class Bluetooth :
         self.dernierMurEnvoye = len(a.points)
         #Envoie les données
         self.mbox.send(data)
-        #Recoie la réponse
+        #Attends de recovoir la confirmation de l'ordinateur
         self.mbox.wait()
     
     def sendOtherData(self, text:str):
