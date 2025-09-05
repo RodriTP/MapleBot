@@ -6,3 +6,5 @@ Environnement : Système d’exploitation (version Windows), Visual Studio Code.
 Pour construire et contrôler le robot, nous allons utiliser un kit Lego Mindstorm EV3. Le code de contrôle pour le robot va être codé en Micropython. (https://pybricks.com/ev3-micropython/)
 
 Pour créer une map à partir des données, on va utiliser matplotlib une librairie de Python pour analyser des données et générer une map qui se met à jour au fur et à mesure que le robot explore l'environnement. (https://matplotlib.org/)
+
+(https://docs.google.com/presentation/d/1Nj3hOAsyftMFWMPpLjLsT130S3S0utpg/edit?usp=sharing&ouid=112904362443476927120&rtpof=true&sd=true) Presentation
